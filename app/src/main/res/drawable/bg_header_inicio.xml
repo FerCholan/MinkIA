@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Header del inicio: degradé verde de marca (más claro arriba, profundo abajo)
+     con esquinas inferiores redondeadas. El degradé da volumen; la textura andina
+     se monta aparte como capa tenue (ImageView en el layout, recortada por código).
+     SIN elevación: rompería el z-order con las stat cards montadas a -16dp. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="@color/verde_bosque"
+        android:endColor="@color/verde_bosque_osc"
+        android:type="linear" />
+    <corners
+        android:bottomLeftRadius="24dp"
+        android:bottomRightRadius="24dp" />
+</shape>

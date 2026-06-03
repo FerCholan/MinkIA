@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tokens de diseño de MinkIA: una sola fuente de verdad para espaciado, radios y
+  tamaños. Los estilos y layouts nuevos deben referenciar estos tokens en lugar de
+  valores sueltos, para mantener la consistencia.
+-->
+<resources>
+    <!-- Escala de espaciado (base 4) -->
+    <dimen name="espacio_xxs">4dp</dimen>
+    <dimen name="espacio_xs">8dp</dimen>
+    <dimen name="espacio_s">12dp</dimen>
+    <dimen name="espacio_m">16dp</dimen>
+    <dimen name="espacio_l">20dp</dimen>
+    <dimen name="espacio_xl">24dp</dimen>
+    <dimen name="espacio_xxl">32dp</dimen>
+
+    <!-- Semánticos -->
+    <dimen name="padding_card">14dp</dimen>
+    <dimen name="radio_card">16dp</dimen>
+    <dimen name="radio_boton">14dp</dimen>
+    <dimen name="radio_chip">20dp</dimen>
+
+    <!-- Accesibilidad: objetivo táctil mínimo recomendado (Material/WCAG) -->
+    <dimen name="touch_min">48dp</dimen>
+</resources>

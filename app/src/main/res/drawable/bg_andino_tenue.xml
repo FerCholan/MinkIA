@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de formularios con toolbar (registro, recuperar): patrón apenas
+     perceptible bajo un velo crema, un susurro de textura que no compite con los
+     campos. Mismo motivo, mucha menos presencia. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/crema" />
+    <item android:drawable="@drawable/bg_patron_andino" />
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#99F4EFE4" />
+        </shape>
+    </item>
+</layer-list>

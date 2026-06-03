@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Máscara vertical: transparente arriba (el patrón se ve) -> crema abajo (limpio
+     para los campos del formulario). Para pantallas con contenido en el medio/abajo. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:type="linear"
+        android:angle="270"
+        android:startColor="#10F4EFE4"
+        android:centerColor="#A6F4EFE4"
+        android:endColor="#FFF4EFE4" />
+</shape>

@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MinkIA · Mockups de alta fidelidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ===========================================================
+     MinkIA — Sistema de diseño (paleta tomada del logo)
+     =========================================================== */
+  :root{
+    --green-900:#0f2616;   /* verde bosque más oscuro */
+    --green-800:#1b4228;   /* verde principal (headers) */
+    --green-700:#1f4a2c;
+    --green-500:#5e8a2f;
+    --leaf:#69802d;        /* verde hoja */
+    --leaf-2:#8aa54a;
+    --orange:#bd4c18;      /* naranja terracota (CTA) */
+    --orange-600:#a23f10;
+    --orange-soft:#df7a48;
+    --bg:#F2F4EF;          /* fondo claro de la app */
+    --card:#FFFFFF;
+    --ink:#1C2421;
+    --ink-2:#3A463F;
+    --muted:#7A857F;
+    --line:#E7EAE4;
+    --sev-low:#5e8a2f;
+    --sev-mid:#E8A53A;
+    --sev-high:#bd4c18;
+    --sev-crit:#8f2810;
+    --blue:#2F6FB0;
+    --shadow:0 8px 22px rgba(20,40,25,.10);
+    --shadow-sm:0 3px 10px rgba(20,40,25,.08);
+  }
+
+  *{box-sizing:border-box; -webkit-font-smoothing:antialiased;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Poppins','Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+    background:linear-gradient(180deg,#EEF1EA 0%,#E1E7DC 100%);
+    color:var(--ink);
+    min-height:100vh;
+  }
+
+  /* ---------- Cabecera de la galería ---------- */
+  .page-head{ text-align:center; padding:40px 20px 8px; }
+  .page-head .brand{ font-weight:800; font-size:34px; letter-spacing:-.5px; }
+  .page-head .brand .g{ color:var(--green-800); }
+  .page-head .brand .o{ color:var(--orange); }
+  .page-head p{ color:var(--ink-2); margin:6px 0 0; font-weight:500; }
+  .legend{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:18px auto 0; max-width:760px;}
+  .legend .chip{ display:flex; align-items:center; gap:7px; background:#fff; border:1px solid var(--line);
+    padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:600; box-shadow:var(--shadow-sm); color:var(--ink-2);}
+  .legend .dot{ width:14px; height:14px; border-radius:50%; }
+
+  .flow-label{ display:flex; align-items:center; gap:14px; max-width:1320px; margin:46px auto 6px; padding:0 32px;}
+  .flow-label h2{ font-size:20px; font-weight:800; color:var(--green-900); margin:0; white-space:nowrap;}
+  .flow-label .tag{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+    color:#fff; background:var(--green-700); padding:4px 10px; border-radius:6px;}
+  .flow-label .tag.admin{ background:var(--orange-600); }
+  .flow-label .rule{ flex:1; height:2px; background:linear-gradient(90deg,var(--leaf),transparent); border-radius:2px;}
+
+  .gallery{ display:flex; flex-wrap:wrap; gap:46px 40px; justify-content:center; padding:26px 30px 30px; }
+  .frame-wrap{ display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .frame-cap{ display:flex; align-items:center; gap:8px; font-weight:600; color:var(--green-900); font-size:14px;}
+  .frame-cap .num{ background:var(--green-800); color:#fff; width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;}
+  .frame-cap.admin .num{ background:var(--orange-600); }
+
+  /* ---------- Marco del teléfono ---------- */
+  .device{
+    width:390px; height:844px; background:#0E1A12; border-radius:52px; padding:11px;
+    box-shadow:0 30px 60px rgba(20,40,25,.28), inset 0 0 0 2px rgba(255,255,255,.06);
+    position:relative;
+  }
+  .phone{
+    width:100%; height:100%; background:var(--bg); border-radius:42px; overflow:hidden; position:relative;
+    display:flex; flex-direction:column;
+  }
+  .notch{ position:absolute; top:0; left:50%; transform:translateX(-50%); width:128px; height:26px;
+    background:#0E1A12; border-bottom-left-radius:16px; border-bottom-right-radius:16px; z-index:40;}
+
+  /* ---------- Barra de estado ---------- */
+  .statusbar{ height:46px; flex:0 0 46px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px 0 26px; font-size:14px; font-weight:600; z-index:30; position:relative;}
+  .statusbar .right{ display:flex; align-items:center; gap:7px; }
+  .statusbar.on-color{ color:#fff; }
+  .statusbar.on-light{ color:var(--ink); }
+  .statusbar svg{ display:block; }
+
+  /* ---------- App bar (header verde) ---------- */
+  .appbar{ background:linear-gradient(160deg,var(--green-700),var(--green-900));
+    color:#fff; padding:2px 18px 22px; border-bottom-left-radius:28px; border-bottom-right-radius:28px;
+    position:relative; box-shadow:0 8px 18px rgba(20,50,28,.18);}
+  .appbar.admin{ background:linear-gradient(160deg,#21492C,#10240F); }
+  .appbar .bar-top{ display:flex; align-items:center; justify-content:space-between; height:40px; }
+  .iconbtn{ width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.14); color:#fff; }
+  .iconbtn.ghost{ background:transparent; }
+  .title-pill{ background:#fff; color:var(--green-800); border-radius:14px; padding:10px 22px; font-weight:700;
+    font-size:17px; box-shadow:0 6px 14px rgba(0,0,0,.16); display:inline-block; }
+  .pill-wrap{ text-align:center; margin-top:8px; }
+  .pill-sub{ color:rgba(255,255,255,.82); font-size:12.5px; margin-top:8px; font-weight:500; }
+
+  /* marca dentro del header */
+  .wordmark{ font-weight:800; font-size:20px; letter-spacing:-.3px; display:inline-flex; align-items:center; }
+  .wordmark .g{ color:#fff; } .wordmark .o{ color:var(--orange-soft); }
+  .leaf-dot{ color:var(--leaf-2); margin:0 1px; }
+  .wordmark .leaf-i{ position:relative; display:inline-block; }
+  .wordmark .leaf-i > svg{ position:absolute; top:-.44em; left:50%; transform:translateX(-40%) rotate(10deg); width:.6em; height:.6em; color:var(--leaf-2); }
+  .loc{ display:flex; align-items:center; gap:5px; font-size:12.5px; color:rgba(255,255,255,.85); margin-top:4px;}
+
+  /* ---------- Cuerpo ---------- */
+  .body{ flex:1; overflow:hidden; padding:16px 16px 20px; display:flex; flex-direction:column; gap:14px;
+    background:var(--bg); }
+  .body.scroll{ overflow-y:auto; }
+  .body.pad-tab{ padding-bottom:88px; }
+
+  .section{ display:flex; align-items:center; gap:9px; margin:2px 2px -2px; }
+  .section .s-ic{ width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:rgba(94,138,47,.12); color:var(--green-700); }
+  .section h3{ margin:0; font-size:14.5px; font-weight:700; color:var(--ink); flex:1; }
+  .section .chev{ color:var(--muted); }
+
+  .card{ background:var(--card); border-radius:18px; padding:15px; box-shadow:var(--shadow-sm); }
+  .card.tight{ padding:12px; }
+  .muted{ color:var(--muted); }
+  .small{ font-size:12.5px; }
+  .row{ display:flex; align-items:center; gap:12px; }
+  .between{ justify-content:space-between; }
+
+  /* chips de severidad / estado */
+  .badge{ font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:999px; display:inline-flex; align-items:center; gap:5px;}
+  .b-low{ background:rgba(94,138,47,.14); color:var(--sev-low); }
+  .b-mid{ background:rgba(232,165,58,.18); color:#B9821F; }
+  .b-high{ background:rgba(189,76,24,.14); color:var(--sev-high); }
+  .b-crit{ background:rgba(179,39,26,.14); color:var(--sev-crit); }
+  .b-blue{ background:rgba(47,111,176,.14); color:var(--blue); }
+  .b-gray{ background:#EEF0EC; color:var(--muted); }
+
+  /* botones */
+  .btn{ display:flex; align-items:center; justify-content:center; gap:9px; width:100%;
+    padding:15px; border-radius:15px; font-weight:700; font-size:15px; border:none; cursor:pointer; }
+  .btn-primary{ background:linear-gradient(135deg,var(--orange),var(--orange-600)); color:#fff;
+    box-shadow:0 10px 20px rgba(189,76,24,.32); }
+  .btn-green{ background:linear-gradient(135deg,var(--green-700),var(--green-900)); color:#fff;
+    box-shadow:0 10px 20px rgba(27,66,40,.28); }
+  .btn-ghost{ background:#fff; color:var(--ink); border:1.5px solid var(--line); box-shadow:none; }
+  .btn-text{ background:transparent; color:var(--muted); box-shadow:none; }
+
+  /* campos de formulario */
+  .field{ background:#fff; border:1.5px solid var(--line); border-radius:14px; padding:13px 14px;
+    display:flex; align-items:center; gap:11px; color:var(--ink); }
+  .field .f-ic{ color:var(--muted); }
+  .field .f-txt{ flex:1; font-size:14.5px; }
+  .field .f-txt.ph{ color:#A7B0AA; }
+  .field.focus{ border-color:var(--green-500); box-shadow:0 0 0 4px rgba(94,138,47,.12); }
+  .label{ font-size:12.5px; font-weight:600; color:var(--ink-2); margin:0 0 7px 3px; }
+
+  /* tab bar */
+  .tabbar{ position:absolute; left:0; right:0; bottom:0; height:78px; background:#fff;
+    border-top:1px solid var(--line); display:flex; align-items:flex-start; justify-content:space-around;
+    padding:11px 8px 0; box-shadow:0 -6px 18px rgba(20,40,25,.06); z-index:20; }
+  .tab{ display:flex; flex-direction:column; align-items:center; gap:3px; color:#A7B0AA; font-size:10.5px; font-weight:600;
+    flex:1; }
+  .tab.active{ color:var(--green-700); }
+  .tab.active.adm{ color:var(--orange-600); }
+  .fab{ width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,var(--orange),var(--orange-600));
+    display:flex; align-items:center; justify-content:center; color:#fff; margin-top:-26px;
+    box-shadow:0 12px 22px rgba(189,76,24,.4); border:4px solid #fff; }
+  .fab.float{ position:absolute; right:18px; bottom:96px; margin:0; z-index:25; }
+
+  /* iconos */
+  .ic{ width:22px; height:22px; flex:0 0 auto; }
+  .ic-18{ width:18px; height:18px; } .ic-16{ width:16px; height:16px; } .ic-26{ width:26px; height:26px; }
+  .ic-28{ width:28px; height:28px; }
+
+  /* ---------- Mapa estilizado ---------- */
+  .map{ position:relative; width:100%; border-radius:16px; overflow:hidden; background:#E8EDE3; }
+  .map svg.mapbg{ display:block; width:100%; height:100%; }
+  .heat{ position:absolute; border-radius:50%; transform:translate(-50%,-50%); filter:blur(13px); pointer-events:none; }
+  .heat.hi{ background:radial-gradient(circle,rgba(189,76,24,.92),rgba(189,76,24,0) 70%); }
+  .heat.mid{ background:radial-gradient(circle,rgba(232,165,58,.85),rgba(232,165,58,0) 70%); }
+  .heat.low{ background:radial-gradient(circle,rgba(94,138,47,.8),rgba(94,138,47,0) 70%); }
+  .pin{ position:absolute; width:20px; height:20px; border-radius:50% 50% 50% 0;
+    transform:translate(-50%,-100%) rotate(-45deg); box-shadow:0 3px 6px rgba(0,0,0,.35);
+    border:2px solid #fff; }
+  .pin::after{ content:""; position:absolute; inset:0; margin:auto; width:6px; height:6px; background:#fff; border-radius:50%;}
+  .pin.hi{ background:var(--sev-high);} .pin.mid{ background:var(--sev-mid);} .pin.low{ background:var(--sev-low);}
+  .pin.me{ background:var(--blue); width:24px; height:24px; }
+  .cluster{ position:absolute; transform:translate(-50%,-50%); border-radius:50%; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px; line-height:1;
+    border:3px solid rgba(255,255,255,.65); box-shadow:0 4px 12px rgba(0,0,0,.28); }
+  .cluster small{ font-size:8px; font-weight:600; opacity:.9; }
+  .cluster.hi{ background:rgba(189,76,24,.92);} .cluster.mid{ background:rgba(232,165,58,.95);}
+  .cluster.low{ background:rgba(94,138,47,.92);}
+  .map-tag{ position:absolute; top:12px; left:12px; background:rgba(255,255,255,.94); color:var(--ink);
+    font-size:12px; font-weight:700; padding:6px 11px; border-radius:10px; box-shadow:var(--shadow-sm);
+    display:flex; align-items:center; gap:6px; }
+  .map-ctrl{ position:absolute; right:12px; top:12px; display:flex; flex-direction:column; gap:7px; }
+  .map-ctrl .mc{ width:34px; height:34px; border-radius:10px; background:#fff; display:flex; align-items:center;
+    justify-content:center; box-shadow:var(--shadow-sm); color:var(--ink-2); }
+
+  /* mini stats */
+  .stats{ display:flex; gap:10px; }
+  .stat{ flex:1; background:#fff; border-radius:15px; padding:12px; box-shadow:var(--shadow-sm); }
+  .stat .n{ font-size:20px; font-weight:800; color:var(--green-800); }
+  .stat .n.o{ color:var(--orange-600); }
+  .stat .l{ font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+
+  /* KPI admin */
+  .kpis{ display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+  .kpi{ background:#fff; border-radius:16px; padding:14px; box-shadow:var(--shadow-sm); position:relative; }
+  .kpi .k-ic{ width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:9px;}
+  .kpi .k-n{ font-size:24px; font-weight:800; color:var(--ink); }
+  .kpi .k-l{ font-size:12px; color:var(--muted); font-weight:600; }
+  .kpi .k-up{ position:absolute; top:14px; right:14px; font-size:11px; font-weight:700; }
+  .up{ color:var(--sev-low);} .down{ color:var(--sev-high);}
+
+  /* bar chart */
+  .bars{ display:flex; align-items:flex-end; gap:8px; height:84px; padding-top:6px;}
+  .bars .bar{ flex:1; background:linear-gradient(180deg,var(--leaf),var(--green-700)); border-radius:6px 6px 3px 3px; }
+  .bars .bar.o{ background:linear-gradient(180deg,var(--orange-soft),var(--orange-600)); }
+  .barlabels{ display:flex; gap:8px; margin-top:6px;}
+  .barlabels span{ flex:1; text-align:center; font-size:10px; color:var(--muted); font-weight:600;}
+
+  /* progress / severity meter */
+  .meter{ height:8px; border-radius:6px; background:#EEF0EC; overflow:hidden; }
+  .meter > i{ display:block; height:100%; border-radius:6px; }
+
+  /* timeline */
+  .tl{ display:flex; flex-direction:column; gap:0; }
+  .tl .step{ display:flex; gap:12px; }
+  .tl .dot-col{ display:flex; flex-direction:column; align-items:center; }
+  .tl .d{ width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
+  .tl .d.done{ background:var(--green-600,var(--green-700)); background:var(--green-700); color:#fff; }
+  .tl .d.now{ background:#fff; border:2px solid var(--orange); color:var(--orange); }
+  .tl .d.next{ background:#fff; border:2px solid var(--line); color:#C2CABf; }
+  .tl .ln{ width:2px; flex:1; background:var(--line); min-height:18px; }
+  .tl .ln.done{ background:var(--green-700);}
+  .tl .step .txt{ padding-bottom:14px; }
+  .tl .step .txt b{ font-size:13.5px; } .tl .step .txt p{ margin:1px 0 0; font-size:11.5px; color:var(--muted);}
+
+  /* avatar / list rows */
+  .thumb{ width:54px; height:54px; border-radius:13px; flex:0 0 auto; object-fit:cover;
+    background:linear-gradient(135deg,#cdd8cd,#aebfae); position:relative; overflow:hidden; }
+  .thumb .bbox{ position:absolute; inset:22% 18% 30% 16%; border:2px solid #6BE08A; border-radius:3px; }
+  .avatar{ width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--leaf),var(--green-700));
+    color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; flex:0 0 auto; }
+
+  /* segmented control */
+  .seg{ display:flex; background:#E9ECE5; border-radius:13px; padding:4px; gap:4px; }
+  .seg span{ flex:1; text-align:center; font-size:12.5px; font-weight:600; color:var(--muted); padding:8px; border-radius:10px;}
+  .seg span.on{ background:#fff; color:var(--green-800); box-shadow:var(--shadow-sm); }
+
+  /* camera screen */
+  .camera{ flex:1; background:radial-gradient(120% 80% at 50% 30%,#3a3f3a,#16201a); position:relative; overflow:hidden;
+    display:flex; flex-direction:column; }
+  .cam-pile{ position:absolute; left:50%; bottom:30%; transform:translateX(-50%); width:62%; height:30%;
+    background:radial-gradient(ellipse at 50% 80%,rgba(70,60,45,.95),rgba(40,40,35,.2) 70%); border-radius:50%; filter:blur(2px);}
+  .bbox-live{ position:absolute; left:18%; top:34%; width:64%; height:34%; border:2.5px dashed #6BE08A; border-radius:8px;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.18); }
+  .bbox-live .tagb{ position:absolute; top:-30px; left:-2px; background:#6BE08A; color:#0E2A14; font-weight:800;
+    font-size:12px; padding:4px 10px; border-radius:8px; display:flex; align-items:center; gap:5px; }
+  .cam-top{ display:flex; justify-content:space-between; align-items:center; padding:14px 18px; gap:10px; }
+  .cam-badge{ background:rgba(0,0,0,.42); backdrop-filter:blur(6px); color:#fff; font-size:12px; font-weight:600;
+    padding:7px 12px; border-radius:999px; display:flex; align-items:center; gap:7px; border:1px solid rgba(255,255,255,.16);}
+  .cam-badge .live{ width:8px; height:8px; border-radius:50%; background:#6BE08A; box-shadow:0 0 8px #6BE08A;}
+  .cam-panel{ margin-top:auto; background:rgba(14,26,18,.86); backdrop-filter:blur(10px);
+    border-top-left-radius:24px; border-top-right-radius:24px; padding:18px 20px 22px; color:#fff; }
+  .cam-stat{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; }
+  .cam-actions{ display:flex; align-items:center; justify-content:space-between; margin-top:18px; }
+  .shutter{ width:74px; height:74px; border-radius:50%; border:5px solid #fff; background:var(--orange);
+    box-shadow:0 0 0 4px rgba(189,76,24,.35); }
+  .cam-side{ width:46px; height:46px; border-radius:14px; background:rgba(255,255,255,.16); color:#fff;
+    display:flex; align-items:center; justify-content:center;}
+
+  /* splash / auth (claros) */
+  .auth{ background:linear-gradient(180deg,#FFFFFF 0%,#F1F5EE 100%); }
+  .splash{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:radial-gradient(120% 70% at 50% 25%,#FFFFFF,#EAF1E6); gap:14px; padding:30px;}
+  .splash img{ width:230px; max-width:80%; }
+  .splash .tag{ color:var(--green-800); font-weight:600; text-align:center; font-size:15px; max-width:240px; }
+  .dots{ display:flex; gap:7px; margin-top:14px; }
+  .dots i{ width:8px; height:8px; border-radius:50%; background:var(--leaf); opacity:.4; }
+  .dots i:nth-child(2){ opacity:.7;} .dots i:nth-child(3){ opacity:1; background:var(--orange);}
+  .logo-sm{ width:150px; margin:8px auto 4px; display:block; }
+
+  .divider{ display:flex; align-items:center; gap:12px; color:var(--muted); font-size:12px; }
+  .divider::before,.divider::after{ content:""; flex:1; height:1px; background:var(--line); }
+  .google{ display:flex; align-items:center; justify-content:center; gap:10px; padding:13px; border:1.5px solid var(--line);
+    border-radius:14px; font-weight:600; font-size:14px; background:#fff; }
+  .g-mark{ font-weight:800; font-size:18px; background:conic-gradient(from -45deg,#EA4335,#FBBC05,#34A853,#4285F4);
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  .note{ display:flex; gap:9px; background:rgba(232,165,58,.12); border:1px solid rgba(232,165,58,.3);
+    border-radius:12px; padding:11px 12px; font-size:12px; color:#8A6516; align-items:flex-start; }
+  .note.green{ background:rgba(94,138,47,.10); border-color:rgba(94,138,47,.28); color:#2C6135; }
+  .note.blue{ background:rgba(47,111,176,.10); border-color:rgba(47,111,176,.28); color:#27557F; }
+
+  .check-big{ width:96px; height:96px; border-radius:50%; background:radial-gradient(circle,#5e8a2f,#1f4a2c);
+    display:flex; align-items:center; justify-content:center; color:#fff; margin:6px auto 0;
+    box-shadow:0 14px 30px rgba(37,101,54,.4); }
+  .center-col{ flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; padding-top:14px;}
+
+  .helper{ max-width:920px; margin:10px auto 60px; padding:22px 26px; background:#fff; border-radius:18px;
+    box-shadow:var(--shadow-sm); color:var(--ink-2); line-height:1.6; }
+  .helper h3{ color:var(--green-900); margin:0 0 10px;}
+  .helper code{ background:#EEF1EA; padding:2px 7px; border-radius:6px; font-size:13px; }
+  .helper ol{ margin:8px 0 0; padding-left:20px;}
+  @media print{ body{background:#fff;} .device{ box-shadow:none; page-break-inside:avoid; } .helper,.page-head,.flow-label{display:none;} }
+</style>
+</head>
+<body>
+
+<!-- ===================== SPRITE DE ÍCONOS ===================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="defs-stroke"></g>
+  </defs>
+  <symbol id="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="ic-chev-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></symbol>
+  <symbol id="ic-chev-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="ic-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.4"/></symbol>
+  <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="ic-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20c0-9 7-15 16-15 0 9-6 16-16 15z"/><path d="M9 15c2.5-3.5 5.5-5.5 9-6.5"/></symbol>
+  <symbol id="ic-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></symbol>
+  <symbol id="ic-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4.5 2 6 2 6H4s2-1.5 2-6z"/><path d="M10 19a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="ic-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
+  <symbol id="ic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></symbol>
+  <symbol id="ic-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="ic-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></symbol>
+  <symbol id="ic-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 4v4h-4"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 20v-4h4"/></symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V11M12 21V5M18 21v-7"/></symbol>
+  <symbol id="ic-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M8 17C9 13 11 9 16 7" stroke-dasharray="1.5 3"/></symbol>
+  <symbol id="ic-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="ic-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h12v9H2zM14 10h4l3 3v3h-7z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/></symbol>
+  <symbol id="ic-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="ic-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="ic-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2 2 0 0 0-3-3L5 17z"/><path d="M14 7l3 3"/></symbol>
+  <symbol id="ic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/></symbol>
+  <symbol id="ic-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 3.5 5 6 5 9.5a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 1.8 1 2.8 2 3 1-2-1-5 1-8.5z"/></symbol>
+  <symbol id="ic-ruler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14L14 4l6 6L10 20z"/><path d="M8 8l1.5 1.5M11 11l1.5 1.5M14 6l1.5 1.5"/></symbol>
+  <symbol id="ic-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 5h11l-2 4 2 4H5"/></symbol>
+  <symbol id="ic-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></symbol>
+  <symbol id="ic-wifi-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6c5-4 13-4 18 0M6 10c3.5-2.6 8.5-2.6 12 0M9 14c1.8-1.3 4.2-1.3 6 0M12 18h.01"/><path d="M3 3l18 18"/></symbol>
+</svg>
+
+<!-- helper: status bar icons (filled) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sb-signal" viewBox="0 0 20 14" fill="currentColor"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></symbol>
+  <symbol id="sb-wifi" viewBox="0 0 20 15" fill="currentColor"><path d="M10 15l2.4-3a3 3 0 0 0-4.8 0L10 15z"/><path d="M3.5 6.2A10 10 0 0 1 16.5 6.2l-1.9 2.3a7 7 0 0 0-9.2 0L3.5 6.2z" opacity=".95"/></symbol>
+  <symbol id="sb-batt" viewBox="0 0 28 14" fill="none"><rect x="1" y="1" width="23" height="12" rx="3" stroke="currentColor" stroke-width="1.4" opacity=".5"/><rect x="3" y="3" width="17" height="8" rx="1.5" fill="currentColor"/><rect x="25" y="4.5" width="2.4" height="5" rx="1.2" fill="currentColor" opacity=".5"/></symbol>
+</svg>
+
+<div class="page-head">
+  <div class="brand"><span class="g">Mink</span><span class="o">IA</span></div>
+  <p>Mockups de alta fidelidad · App Android · Reporte de basura y puntos críticos con IA · Chimbote</p>
+  <div class="legend">
+    <span class="chip"><span class="dot" style="background:#1b4228"></span>Verde bosque #1b4228</span>
+    <span class="chip"><span class="dot" style="background:#69802d"></span>Verde hoja #69802d</span>
+    <span class="chip"><span class="dot" style="background:#bd4c18"></span>Naranja IA #bd4c18</span>
+    <span class="chip"><span class="dot" style="background:#5e8a2f"></span>Severidad baja</span>
+    <span class="chip"><span class="dot" style="background:#E8A53A"></span>Severidad media</span>
+    <span class="chip"><span class="dot" style="background:#bd4c18"></span>Severidad alta</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     FLUJO CIUDADANO
+     ============================================================ -->
+<div class="flow-label"><span class="tag">Ciudadano</span><h2>Flujo del vecino · Ciudadano</h2><div class="rule"></div></div>
+<div class="gallery">
+
+  <!-- C01 · splash -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone auth"><div class="notch"></div>
+      <div class="statusbar on-light"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="splash">
+        <img src="logo_appMov%20-%20Editada.png" alt="MinkIA" />
+        <div class="tag">Tu ciudad limpia empieza con un reporte</div>
+        <div class="dots"><i></i><i></i><i></i></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">1</span>Splash / Bienvenida</div>
+  </div>
+
+  <!-- C02 · onboarding -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone auth"><div class="notch"></div>
+      <div class="statusbar on-light"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="body scroll" style="padding:16px 20px;">
+        <div class="row between"><span></span><span class="small" style="color:var(--muted);font-weight:600;">Saltar</span></div>
+        <div class="center-col" style="justify-content:center; gap:20px;">
+          <div style="width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(94,138,47,.18),rgba(94,138,47,.03));display:flex;align-items:center;justify-content:center;position:relative;">
+            <svg style="width:64px;height:64px;color:var(--green-700)"><use href="#ic-camera"/></svg>
+            <span style="position:absolute;top:30px;right:36px;color:var(--leaf)"><svg style="width:30px;height:30px"><use href="#ic-leaf"/></svg></span>
+          </div>
+          <div class="stack" style="text-align:center; gap:10px;">
+            <b style="font-size:22px;">Detectamos la basura por ti</b>
+            <p class="muted" style="max-width:270px;margin:0 auto;font-size:14px;line-height:1.5;">Apunta con la cámara y nuestra IA identifica el foco y calcula su gravedad al instante, incluso sin internet.</p>
+          </div>
+          <div class="dots"><i style="opacity:.4"></i><i style="background:var(--orange);opacity:1;width:22px;border-radius:4px;"></i><i style="opacity:.4"></i></div>
+        </div>
+        <button class="btn btn-primary">Siguiente</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">2</span>Onboarding / Guías</div>
+  </div>
+
+  <!-- C03 · login -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone auth"><div class="notch"></div>
+      <div class="statusbar on-light"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="body scroll" style="gap:13px; padding-top:18px;">
+        <img class="logo-sm" src="logo_appMov%20-%20Editada.png" alt="MinkIA" />
+        <div style="text-align:center; margin:-2px 0 6px;"><b style="font-size:20px; color:var(--ink)">Bienvenido de vuelta</b><p class="small muted" style="margin:3px 0 0">Ingresa para seguir cuidando Chimbote</p></div>
+        <div><p class="label">Correo electrónico</p>
+          <div class="field"><svg class="ic f-ic ic-18"><use href="#ic-mail"/></svg><span class="f-txt">vecino@chimbote.pe</span></div></div>
+        <div><p class="label">Contraseña</p>
+          <div class="field focus"><svg class="ic f-ic ic-18"><use href="#ic-lock"/></svg><span class="f-txt">••••••••</span><svg class="ic f-ic ic-18"><use href="#ic-eye"/></svg></div></div>
+        <div style="text-align:right;"><span class="small" style="color:var(--green-700); font-weight:600;">¿Olvidaste tu contraseña?</span></div>
+        <button class="btn btn-primary">Iniciar sesión</button>
+        <div class="divider">o continuá con</div>
+        <div class="google"><span class="g-mark">G</span>Google</div>
+        <p class="small muted" style="text-align:center; margin-top:4px;">¿No tienes cuenta? <b style="color:var(--orange-600)">Regístrate</b></p>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">3</span>Iniciar sesión</div>
+  </div>
+
+  <!-- C04 · registro -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Crear cuenta</span><div class="iconbtn ghost"></div></div>
+      </div>
+      <div class="body scroll" style="gap:12px;">
+        <p class="small muted" style="margin:0 2px;">Súmate a la <b style="color:var(--green-700)">minka digital</b>. Es gratis.</p>
+        <div><p class="label">Nombre completo</p><div class="field"><svg class="ic f-ic ic-18"><use href="#ic-user"/></svg><span class="f-txt">Fernando Cholán</span></div></div>
+        <div><p class="label">Correo electrónico</p><div class="field"><svg class="ic f-ic ic-18"><use href="#ic-mail"/></svg><span class="f-txt">fernando@correo.com</span></div></div>
+        <div><p class="label">DNI (opcional)</p><div class="field"><svg class="ic f-ic ic-18"><use href="#ic-user"/></svg><span class="f-txt ph">Para validar reportes</span></div></div>
+        <div><p class="label">Contraseña</p><div class="field"><svg class="ic f-ic ic-18"><use href="#ic-lock"/></svg><span class="f-txt">••••••••</span><svg class="ic f-ic ic-18"><use href="#ic-eye"/></svg></div></div>
+        <div class="row" style="gap:9px; margin:2px;"><div style="width:20px;height:20px;border-radius:6px;background:var(--green-700);display:flex;align-items:center;justify-content:center;"><svg class="ic-16" style="color:#fff"><use href="#ic-check"/></svg></div><span class="small muted">Acepto los términos y la política de datos</span></div>
+        <button class="btn btn-primary">Registrarme</button>
+        <p class="small muted" style="text-align:center;">¿Ya tienes cuenta? <b style="color:var(--green-700)">Inicia sesión</b></p>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">4</span>Crear cuenta</div>
+  </div>
+
+  <!-- C05 · recuperar-contrasena -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone auth"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;background:linear-gradient(160deg,var(--green-700),var(--green-900));">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Recuperar contraseña</span><div class="iconbtn ghost"></div></div>
+      </div>
+      <div class="body scroll" style="gap:16px;padding-top:24px;">
+        <div style="width:74px;height:74px;border-radius:20px;background:rgba(94,138,47,.12);display:flex;align-items:center;justify-content:center;color:var(--green-700);margin:6px auto 0;"><svg style="width:36px;height:36px"><use href="#ic-lock"/></svg></div>
+        <div class="stack" style="text-align:center;gap:8px;"><b style="font-size:19px;">¿Olvidaste tu contraseña?</b><p class="muted small" style="max-width:260px;margin:0 auto;">Ingresa tu correo y te enviaremos un enlace para crear una nueva.</p></div>
+        <div><p class="label">Correo electrónico</p><div class="field focus"><svg class="ic f-ic ic-18"><use href="#ic-mail"/></svg><span class="f-txt">vecino@chimbote.pe</span></div></div>
+        <button class="btn btn-primary"><svg class="ic"><use href="#ic-mail"/></svg>Enviar enlace</button>
+        <p class="small muted" style="text-align:center;">Volver a <b style="color:var(--green-700)">iniciar sesión</b></p>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">5</span>Recuperar contraseña</div>
+  </div>
+
+  <!-- C06 · permisos -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone auth"><div class="notch"></div>
+      <div class="statusbar on-light"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="body scroll" style="gap:15px;padding:22px 18px;">
+        <div class="stack" style="text-align:center;gap:8px;margin-bottom:4px;"><b style="font-size:20px;">Activá los permisos</b><p class="muted small" style="max-width:280px;margin:0 auto;">MinkIA necesita estos accesos para que puedas reportar. Solo se usan al crear un reporte.</p></div>
+        <div class="card row" style="gap:13px;"><div style="width:46px;height:46px;border-radius:13px;background:rgba(189,76,24,.12);color:var(--orange-600);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg class="ic"><use href="#ic-camera"/></svg></div><div style="flex:1"><b class="small">Cámara</b><p class="small muted" style="margin:2px 0 0">Para detectar la basura con IA</p></div><span class="badge b-low"><svg class="ic-16"><use href="#ic-check"/></svg>Permitido</span></div>
+        <div class="card row" style="gap:13px;"><div style="width:46px;height:46px;border-radius:13px;background:rgba(47,111,176,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg class="ic"><use href="#ic-pin"/></svg></div><div style="flex:1"><b class="small">Ubicación</b><p class="small muted" style="margin:2px 0 0">Para geolocalizar el foco con precisión</p></div><span class="badge b-mid">Permitir</span></div>
+        <div class="card row" style="gap:13px;"><div style="width:46px;height:46px;border-radius:13px;background:rgba(94,138,47,.12);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg class="ic"><use href="#ic-bell"/></svg></div><div style="flex:1"><b class="small">Notificaciones</b><p class="small muted" style="margin:2px 0 0">Para avisarte cuando se resuelva</p></div><span class="badge b-gray">Opcional</span></div>
+        <div class="note blue"><svg class="ic ic-18"><use href="#ic-shield"/></svg><span>Tus datos solo se comparten con la administración para gestionar el reporte.</span></div>
+        <button class="btn btn-primary" style="margin-top:auto;">Permitir y continuar</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">6</span>Permisos (cámara · ubicación)</div>
+  </div>
+
+  <!-- C07 · inicio-mapa-calor -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top">
+          <div><div class="wordmark"><span class="g">M<span class="leaf-i">ı<svg><use href="#ic-leaf"/></svg></span>nk</span><span class="o">IA</span></div>
+            <div class="loc"><svg class="ic-16"><use href="#ic-pin"/></svg>Chimbote, Áncash</div></div>
+          <div class="iconbtn"><svg class="ic"><use href="#ic-bell"/></svg></div>
+        </div>
+      </div>
+      <div class="body pad-tab" style="gap:13px;">
+        <div class="stats">
+          <div class="stat"><div class="n">62</div><div class="l">Puntos activos</div></div>
+          <div class="stat"><div class="n o">8</div><div class="l">Tus reportes</div></div>
+          <div class="stat"><div class="n">1.2k</div><div class="l">Resueltos</div></div>
+        </div>
+        <div class="section"><span class="s-ic"><svg class="ic-18"><use href="#ic-map"/></svg></span><h3>Mapa de calor</h3><svg class="ic chev"><use href="#ic-chev-r"/></svg></div>
+        <div class="card tight">
+          <div class="map" style="height:300px;">
+            <svg class="mapbg" viewBox="0 0 360 300" preserveAspectRatio="xMidYMid slice">
+              <rect width="360" height="300" fill="#E8EDE3"/>
+              <path d="M0 230 Q90 210 150 238 T360 250 L360 300 0 300z" fill="#CBE0E8"/>
+              <rect x="36" y="40" width="54" height="40" rx="7" fill="#DCE9CF"/>
+              <rect x="250" y="150" width="60" height="44" rx="7" fill="#DCE9CF"/>
+              <g stroke="#FCFCFB" stroke-width="8" stroke-linecap="round">
+                <path d="M-10 70H370"/><path d="M-10 130H370"/><path d="M-10 195H370"/>
+                <path d="M70 -10V310"/><path d="M160 -10V310"/><path d="M255 -10V310"/>
+              </g>
+              <g stroke="#F0F2EC" stroke-width="3.5"><path d="M-10 100H370"/><path d="M-10 165H370"/><path d="M115 -10V310"/><path d="M205 -10V310"/><path d="M305 -10V310"/></g>
+            </svg>
+            <div class="heat hi" style="left:120px; top:110px; width:120px; height:120px;"></div>
+            <div class="heat mid" style="left:250px; top:80px; width:90px; height:90px;"></div>
+            <div class="heat low" style="left:80px; top:210px; width:80px; height:80px;"></div>
+            <div class="pin hi" style="left:120px; top:118px;"></div>
+            <div class="pin hi" style="left:150px; top:95px;"></div>
+            <div class="pin mid" style="left:255px; top:90px;"></div>
+            <div class="pin low" style="left:82px; top:215px;"></div>
+            <div class="pin me" style="left:200px; top:175px;"></div>
+            <div class="map-tag"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--sev-high)"></span>5 focos cerca tuyo</div>
+            <div class="map-ctrl"><div class="mc"><svg class="ic-18"><use href="#ic-plus"/></svg></div><div class="mc"><svg class="ic-18"><use href="#ic-pin"/></svg></div></div>
+          </div>
+        </div>
+        <div class="section"><span class="s-ic" style="background:rgba(189,76,24,.12);color:var(--orange-600)"><svg class="ic-18"><use href="#ic-flame"/></svg></span><h3>Cerca tuyo</h3></div>
+        <div class="card row between"><div class="row"><span class="pin hi" style="position:static;transform:rotate(-45deg);margin:0 6px 0 2px;"></span><div><b class="small">Jr. Elías Aguirre 450</b><p class="small muted" style="margin:2px 0 0">A 220 m · 5 reportes</p></div></div><span class="badge b-high">ALTA</span></div>
+      </div>
+      <div class="tabbar">
+        <div class="tab active"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="tab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="fab"><svg class="ic-28"><use href="#ic-camera"/></svg></div>
+        <div class="tab"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="tab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">7</span>Inicio · Mapa de calor</div>
+  </div>
+
+  <!-- C08 · explorar-mapa -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:14px;">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><span style="font-weight:700">Explorar focos</span><div class="iconbtn"><svg class="ic"><use href="#ic-search"/></svg></div></div>
+        <div class="row" style="gap:7px;margin-top:11px;overflow:hidden;">
+          <span class="badge" style="background:#fff;color:var(--green-800);font-weight:700;">Todos</span>
+          <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;">Alta</span>
+          <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;">Media</span>
+          <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;">Baja</span>
+        </div>
+      </div>
+      <div class="body pad-tab" style="padding:0;position:relative;">
+        <div class="map" style="height:100%;border-radius:0;">
+          <svg class="mapbg" viewBox="0 0 360 560" preserveAspectRatio="xMidYMid slice">
+            <rect width="360" height="560" fill="#E8EDE3"/>
+            <path d="M0 470 Q90 450 150 480 T360 495 L360 560 0 560z" fill="#CBE0E8"/>
+            <rect x="40" y="60" width="60" height="44" rx="7" fill="#DCE9CF"/><rect x="250" y="280" width="64" height="48" rx="7" fill="#DCE9CF"/>
+            <g stroke="#FCFCFB" stroke-width="8" stroke-linecap="round"><path d="M-10 100H370"/><path d="M-10 200H370"/><path d="M-10 310H370"/><path d="M-10 410H370"/><path d="M80 -10V570"/><path d="M180 -10V570"/><path d="M275 -10V570"/></g>
+          </svg>
+          <div class="heat hi" style="left:130px;top:160px;width:120px;height:120px;"></div>
+          <div class="heat mid" style="left:255px;top:130px;width:90px;height:90px;"></div>
+          <div class="heat low" style="left:90px;top:360px;width:80px;height:80px;"></div>
+          <div class="pin hi" style="left:130px;top:166px;"></div>
+          <div class="pin mid" style="left:255px;top:138px;"></div>
+          <div class="pin low" style="left:92px;top:362px;"></div>
+          <div class="pin me" style="left:200px;top:250px;"></div>
+          <div class="map-ctrl"><div class="mc"><svg class="ic-18"><use href="#ic-plus"/></svg></div><div class="mc"><svg class="ic-18"><use href="#ic-pin"/></svg></div></div>
+          <div style="position:absolute;left:14px;right:14px;bottom:14px;" class="card row between"><div class="row"><span class="pin hi" style="position:static;transform:rotate(-45deg);margin:0 8px 0 2px;"></span><div><b class="small">Jr. Elías Aguirre 450</b><p class="small muted" style="margin:2px 0 0">5 reportes · 4.2 m²</p></div></div><span class="badge b-high">Ver</span></div>
+        </div>
+        <div class="fab float"><svg class="ic-28"><use href="#ic-camera"/></svg></div>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="tab active"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="fab"><svg class="ic-28"><use href="#ic-camera"/></svg></div>
+        <div class="tab"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="tab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">8</span>Explorar · Mapa fullscreen</div>
+  </div>
+
+  <!-- C09 · camara-captura -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="camera">
+        <div class="statusbar on-color" style="position:absolute;top:0;left:0;right:0;z-index:5;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#ic-wifi-off"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="cam-pile"></div>
+        <div class="cam-top" style="margin-top:42px;">
+          <div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div>
+          <div class="cam-badge"><svg class="ic-16"><use href="#ic-cpu"/></svg>YOLOv8 Nano · en el dispositivo</div>
+          <div class="iconbtn"><svg class="ic"><use href="#ic-eye"/></svg></div>
+        </div>
+        <div style="position:absolute;left:16%;top:30%;width:68%;height:36%;">
+          <span style="position:absolute;top:0;left:0;width:30px;height:30px;border-top:3px solid rgba(255,255,255,.92);border-left:3px solid rgba(255,255,255,.92);border-top-left-radius:10px;"></span>
+          <span style="position:absolute;top:0;right:0;width:30px;height:30px;border-top:3px solid rgba(255,255,255,.92);border-right:3px solid rgba(255,255,255,.92);border-top-right-radius:10px;"></span>
+          <span style="position:absolute;bottom:0;left:0;width:30px;height:30px;border-bottom:3px solid rgba(255,255,255,.92);border-left:3px solid rgba(255,255,255,.92);border-bottom-left-radius:10px;"></span>
+          <span style="position:absolute;bottom:0;right:0;width:30px;height:30px;border-bottom:3px solid rgba(255,255,255,.92);border-right:3px solid rgba(255,255,255,.92);border-bottom-right-radius:10px;"></span>
+        </div>
+        <div style="position:absolute;top:48%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,.6)"><svg style="width:26px;height:26px"><use href="#ic-leaf"/></svg></div>
+        <div style="position:absolute;top:70%;left:50%;transform:translateX(-50%);"><span class="cam-badge">Encuadra el foco de basura</span></div>
+        <div class="cam-panel">
+          <div class="row" style="gap:9px;align-items:flex-start;color:rgba(255,255,255,.85);font-size:12.5px;"><svg class="ic-18" style="flex:0 0 auto"><use href="#ic-cpu"/></svg><span>La IA analizará la foto <b>al capturar</b> — funciona sin internet.</span></div>
+          <div class="cam-actions">
+            <div class="cam-side"><svg class="ic"><use href="#ic-eye"/></svg></div>
+            <div class="shutter"></div>
+            <div class="cam-side"><svg class="ic"><use href="#ic-sync"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">9</span>Cámara · Captura</div>
+  </div>
+
+  <!-- C10 · analisis-ia -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="camera">
+        <div class="statusbar on-color" style="position:absolute;top:0;left:0;right:0;z-index:5;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#ic-wifi-off"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="cam-pile"></div>
+        <div class="cam-top" style="margin-top:42px;">
+          <div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div>
+          <div class="cam-badge"><span class="live"></span>Analizando…</div>
+          <div class="iconbtn ghost"></div>
+        </div>
+        <div style="position:absolute;left:18%;top:32%;width:64%;height:34%;border:2.5px dashed #6BE08A;border-radius:8px;">
+          <div style="position:absolute;left:0;right:0;top:50%;height:2px;background:linear-gradient(90deg,transparent,#6BE08A,transparent);box-shadow:0 0 12px #6BE08A;"></div>
+          <div class="tagb" style="position:absolute;top:-30px;left:-2px;background:#6BE08A;color:#0E2A14;font-weight:800;font-size:12px;padding:4px 10px;border-radius:8px;display:flex;align-items:center;gap:5px;">Basura · 86%</div>
+        </div>
+        <div class="cam-panel">
+          <div class="row" style="gap:10px;align-items:center;margin-bottom:6px;">
+            <svg class="ic" style="color:#6BE08A;flex:0 0 auto"><use href="#ic-cpu"/></svg>
+            <div style="flex:1"><b style="font-size:14px;">Analizando con IA</b><div class="small" style="color:rgba(255,255,255,.7);margin-top:1px;">YOLOv8 Nano · en el dispositivo</div></div>
+            <b style="color:#6BE08A">86%</b>
+          </div>
+          <div class="meter" style="background:rgba(255,255,255,.16)"><i style="width:86%;background:linear-gradient(90deg,#69802d,#6BE08A)"></i></div>
+          <div class="cam-stat" style="margin-top:12px;color:rgba(255,255,255,.7)"><span>Detectando residuos y midiendo el área…</span></div>
+          <div class="note" style="margin-top:12px;background:rgba(47,111,176,.18);border:1px solid rgba(47,111,176,.35);color:#bcd6ef;"><svg class="ic ic-18"><use href="#ic-wifi-off"/></svg><span>Procesa localmente — no se envía nada a la nube todavía.</span></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">10</span>Análisis con IA (YOLOv8)</div>
+  </div>
+
+  <!-- C11 · formulario-reporte -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#ic-wifi-off"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Nuevo reporte</span><div class="iconbtn ghost"></div></div>
+      </div>
+      <div class="body scroll" style="gap:13px;">
+        <div class="card row" style="gap:13px;">
+          <div class="thumb" style="width:72px;height:72px;"><div class="bbox"></div></div>
+          <div style="flex:1"><div class="row between"><b class="small">Foto analizada</b><span class="badge b-low"><svg class="ic-16"><use href="#ic-cpu"/></svg>IA 86%</span></div><p class="small muted" style="margin:5px 0 0">Basura doméstica detectada · 4.2 m²</p><span class="small" style="color:var(--green-700);font-weight:600;">↺ Reanalizar</span></div>
+        </div>
+        <div><p class="label">Severidad del foco</p>
+          <div class="seg"><span>Baja</span><span>Media</span><span class="on" style="color:var(--orange-600)">Alta</span></div></div>
+        <div><p class="label">Ubicación (GPS exacto)</p>
+          <div class="card tight" style="padding:0; overflow:hidden;">
+            <div class="map" style="height:120px; border-radius:0;">
+              <svg class="mapbg" viewBox="0 0 360 120" preserveAspectRatio="xMidYMid slice"><rect width="360" height="120" fill="#E8EDE3"/><g stroke="#FCFCFB" stroke-width="7"><path d="M-10 40H370"/><path d="M-10 88H370"/><path d="M120 -10V130"/><path d="M250 -10V130"/></g></svg>
+              <div class="pin me" style="left:180px; top:60px;"></div>
+            </div>
+            <div class="row" style="padding:11px 13px; gap:10px;"><svg class="ic ic-18" style="color:var(--orange-600)"><use href="#ic-pin"/></svg><div style="flex:1"><b class="small">Jr. Elías Aguirre 450</b><p class="small muted" style="margin:1px 0 0">−9.0745, −78.5936</p></div><span class="badge b-low">Preciso</span></div>
+          </div></div>
+        <div><p class="label">Tipo de residuo</p>
+          <div class="field"><svg class="ic f-ic ic-18"><use href="#ic-trash"/></svg><span class="f-txt">Residuo domiciliario</span><svg class="ic f-ic ic-18"><use href="#ic-chev-d"/></svg></div></div>
+        <div><p class="label">Descripción (opcional)</p>
+          <div class="field" style="align-items:flex-start; min-height:64px;"><svg class="ic f-ic ic-18"><use href="#ic-edit"/></svg><span class="f-txt ph">Acumulación en la esquina hace 3 días…</span></div></div>
+        <div class="note"><svg class="ic ic-18"><use href="#ic-wifi-off"/></svg><span>Sin conexión. Tu reporte se guardará y se enviará solo cuando vuelva el internet.</span></div>
+        <button class="btn btn-primary"><svg class="ic"><use href="#ic-flag"/></svg>Enviar reporte</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">11</span>Formulario de reporte</div>
+  </div>
+
+  <!-- C12 · confirmacion-sync -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="statusbar on-light"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="body scroll center-col">
+        <div class="check-big"><svg style="width:46px;height:46px;color:#fff"><use href="#ic-check"/></svg></div>
+        <b style="font-size:21px; margin-top:8px;">¡Reporte enviado!</b>
+        <p class="small muted" style="max-width:250px;">Tu alerta llegó al equipo de gestión de residuos. Gracias por cuidar tu barrio.</p>
+        <div class="card" style="width:100%; text-align:left; margin-top:10px;">
+          <div class="row between" style="margin-bottom:14px;"><div><span class="small muted">Ticket</span><div style="font-weight:800;color:var(--green-800);font-size:17px;">#MK-2041</div></div><span class="badge b-green b-low"><svg class="ic-16"><use href="#ic-sync"/></svg>Sincronizado</span></div>
+          <div class="tl">
+            <div class="step"><div class="dot-col"><div class="d done"><svg class="ic-16"><use href="#ic-check"/></svg></div><div class="ln done"></div></div><div class="txt"><b>Recibido</b><p>Hoy · 9:41 a. m.</p></div></div>
+            <div class="step"><div class="dot-col"><div class="d now"><svg class="ic-16"><use href="#ic-cpu"/></svg></div><div class="ln"></div></div><div class="txt"><b>Validando con IA</b><p>Agrupando con reportes cercanos</p></div></div>
+            <div class="step"><div class="dot-col"><div class="d next"><svg class="ic-16"><use href="#ic-truck"/></svg></div><div class="ln"></div></div><div class="txt"><b style="color:var(--muted)">En ruta</b><p>Cuadrilla asignada</p></div></div>
+            <div class="step"><div class="dot-col"><div class="d next"><svg class="ic-16"><use href="#ic-check"/></svg></div></div><div class="txt"><b style="color:var(--muted)">Resuelto</b></div></div>
+          </div>
+        </div>
+        <div class="row" style="width:100%; gap:10px; margin-top:6px;">
+          <button class="btn btn-ghost" style="flex:1"><svg class="ic-18"><use href="#ic-map"/></svg>Ver mapa</button>
+          <button class="btn btn-green" style="flex:1.4">Volver al inicio</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">12</span>Confirmación · Sync</div>
+  </div>
+
+  <!-- C13 · mis-reportes -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Mis reportes</span><div class="iconbtn"><svg class="ic"><use href="#ic-filter"/></svg></div></div>
+      </div>
+      <div class="body pad-tab scroll" style="gap:12px;">
+        <div class="seg"><span class="on">Todos</span><span>Pendientes</span><span>Resueltos</span></div>
+        <div class="card row" style="gap:12px;"><div class="thumb"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">Jr. Elías Aguirre 450</b><span class="badge b-mid">En proceso</span></div><p class="small muted" style="margin:4px 0 6px">Hoy · 9:41 · #MK-2041</p><span class="badge b-high">Severidad ALTA</span></div></div>
+        <div class="card row" style="gap:12px;"><div class="thumb"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">Av. Pardo 1280</b><span class="badge b-low"><svg class="ic-16"><use href="#ic-check"/></svg>Resuelto</span></div><p class="small muted" style="margin:4px 0 6px">26 may · #MK-1987</p><span class="badge b-mid">Severidad MEDIA</span></div></div>
+        <div class="card row" style="gap:12px;"><div class="thumb"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">Mz. H Lt. 4 · P. J. La Unión</b><span class="badge b-blue">Recibido</span></div><p class="small muted" style="margin:4px 0 6px">24 may · #MK-1955</p><span class="badge b-high">Severidad ALTA</span></div></div>
+        <div class="card row" style="gap:12px;"><div class="thumb"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">Calle Tacna 320</b><span class="badge b-gray">Duplicado</span></div><p class="small muted" style="margin:4px 0 6px">21 may · #MK-1902</p><span class="badge b-low">Severidad BAJA</span></div></div>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="tab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="fab"><svg class="ic-28"><use href="#ic-camera"/></svg></div>
+        <div class="tab active"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="tab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">13</span>Mis reportes (historial)</div>
+  </div>
+
+  <!-- C14 · estado-vacio -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Mis reportes</span><div class="iconbtn"><svg class="ic"><use href="#ic-filter"/></svg></div></div>
+      </div>
+      <div class="body pad-tab center-col" style="justify-content:center;gap:16px;">
+        <div style="width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(94,138,47,.14),transparent);display:flex;align-items:center;justify-content:center;color:var(--leaf);"><svg style="width:58px;height:58px"><use href="#ic-list"/></svg></div>
+        <div class="stack" style="text-align:center;gap:9px;"><b style="font-size:19px;">Todavía no hiciste reportes</b><p class="muted small" style="max-width:250px;margin:0 auto;line-height:1.5;">Cuando veas un foco de basura, toca la cámara y repórtalo. Tu barrio te lo agradece.</p></div>
+        <button class="btn btn-primary" style="width:auto;padding:14px 24px;"><svg class="ic"><use href="#ic-camera"/></svg>Hacer mi primer reporte</button>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="tab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="fab"><svg class="ic-28"><use href="#ic-camera"/></svg></div>
+        <div class="tab active"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="tab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">14</span>Estado vacío (sin reportes)</div>
+  </div>
+
+  <!-- C15 · detalle-seguimiento -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Mi reporte #MK-2041</span><div class="iconbtn"><svg class="ic"><use href="#ic-map"/></svg></div></div>
+      </div>
+      <div class="body scroll" style="gap:13px;">
+        <div class="card tight" style="padding:0;overflow:hidden;">
+          <div style="position:relative;height:150px;background:linear-gradient(135deg,#b9c4b6,#8a9b88);">
+            <div style="position:absolute;left:16%;top:26%;width:62%;height:48%;border:2.5px solid #6BE08A;border-radius:6px;"></div>
+            <div style="position:absolute;left:16%;top:calc(26% - 24px);background:#6BE08A;color:#0E2A14;font-weight:800;font-size:11px;padding:3px 9px;border-radius:7px;">IA: Basura · 86%</div>
+          </div>
+        </div>
+        <div class="row" style="gap:8px;flex-wrap:wrap;"><span class="badge b-high"><svg class="ic-16"><use href="#ic-flame"/></svg>ALTA</span><span class="badge b-blue"><svg class="ic-16"><use href="#ic-ruler"/></svg>4.2 m²</span><span class="badge b-mid"><svg class="ic-16"><use href="#ic-layers"/></svg>5 vecinos</span></div>
+        <div class="section"><span class="s-ic"><svg class="ic-18"><use href="#ic-clock"/></svg></span><h3>Seguimiento</h3></div>
+        <div class="card">
+          <div class="tl">
+            <div class="step"><div class="dot-col"><div class="d done"><svg class="ic-16"><use href="#ic-check"/></svg></div><div class="ln done"></div></div><div class="txt"><b>Recibido</b><p>Hoy · 9:41 a. m.</p></div></div>
+            <div class="step"><div class="dot-col"><div class="d done"><svg class="ic-16"><use href="#ic-shield"/></svg></div><div class="ln done"></div></div><div class="txt"><b>Validado</b><p>Hoy · 11:20 a. m.</p></div></div>
+            <div class="step"><div class="dot-col"><div class="d now"><svg class="ic-16"><use href="#ic-truck"/></svg></div><div class="ln"></div></div><div class="txt"><b>En ruta</b><p>Cuadrilla 2 asignada</p></div></div>
+            <div class="step"><div class="dot-col"><div class="d next"><svg class="ic-16"><use href="#ic-check"/></svg></div></div><div class="txt"><b style="color:var(--muted)">Resuelto</b></div></div>
+          </div>
+        </div>
+        <div class="note green"><svg class="ic ic-18"><use href="#ic-layers"/></svg><span>Tu reporte se unió al de <b>otros 4 vecinos</b> en el mismo punto.</span></div>
+        <button class="btn btn-ghost"><svg class="ic-18"><use href="#ic-map"/></svg>Ver en el mapa</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">15</span>Detalle / Seguimiento (ciudadano)</div>
+  </div>
+
+  <!-- C16 · notificaciones -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Notificaciones</span><div class="iconbtn"><svg class="ic"><use href="#ic-check"/></svg></div></div>
+      </div>
+      <div class="body scroll" style="gap:11px;">
+        <p class="label" style="margin:0 2px;">HOY</p>
+        <div class="card row" style="gap:12px;border-left:3px solid var(--green-700);"><div style="width:40px;height:40px;border-radius:11px;background:rgba(94,138,47,.14);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg class="ic-18"><use href="#ic-shield"/></svg></div><div style="flex:1"><p class="small" style="margin:0"><b>Tu reporte #MK-2041 fue validado</b> por la administración.</p><p class="small muted" style="margin:3px 0 0">Hace 2 horas</p></div></div>
+        <div class="card row" style="gap:12px;border-left:3px solid var(--orange-600);"><div style="width:40px;height:40px;border-radius:11px;background:rgba(189,76,24,.12);color:var(--orange-600);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg class="ic-18"><use href="#ic-leaf"/></svg></div><div style="flex:1"><p class="small" style="margin:0">Ganaste la insignia <b>"Reportero del mes"</b> 🏅</p><p class="small muted" style="margin:3px 0 0">Hace 5 horas</p></div></div>
+        <p class="label" style="margin:4px 2px 0;">ESTA SEMANA</p>
+        <div class="card row" style="gap:12px;"><div style="width:40px;height:40px;border-radius:11px;background:rgba(94,138,47,.12);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg class="ic-18"><use href="#ic-truck"/></svg></div><div style="flex:1"><p class="small" style="margin:0"><b>¡Resuelto!</b> El foco de Av. Pardo 1280 fue limpiado.</p><p class="small muted" style="margin:3px 0 0">Hace 1 día</p></div></div>
+        <div class="card row" style="gap:12px;"><div style="width:40px;height:40px;border-radius:11px;background:rgba(47,111,176,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg class="ic-18"><use href="#ic-layers"/></svg></div><div style="flex:1"><p class="small" style="margin:0">Tu reporte fue <b>unificado con otros 4 vecinos</b>.</p><p class="small muted" style="margin:3px 0 0">Hace 3 días</p></div></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">16</span>Notificaciones</div>
+  </div>
+
+  <!-- C17 · perfil-minka -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><span style="font-weight:700">Mi perfil</span><div class="iconbtn"><svg class="ic"><use href="#ic-edit"/></svg></div></div>
+        <div class="row" style="gap:13px;margin-top:10px;">
+          <div class="avatar" style="width:58px;height:58px;font-size:20px;border:2px solid rgba(255,255,255,.5);">FC</div>
+          <div><div style="font-weight:700;font-size:17px;">Fernando Cholán</div><div class="loc"><svg class="ic-16"><use href="#ic-shield"/></svg>Vecino fiscalizador · Nivel 3</div></div>
+        </div>
+      </div>
+      <div class="body pad-tab scroll" style="gap:13px;">
+        <div class="stats" style="margin-top:2px;">
+          <div class="stat"><div class="n">8</div><div class="l">Reportes</div></div>
+          <div class="stat"><div class="n">5</div><div class="l">Resueltos</div></div>
+          <div class="stat"><div class="n o">340</div><div class="l">Puntos minka</div></div>
+        </div>
+        <div class="section"><span class="s-ic" style="background:rgba(189,76,24,.12);color:var(--orange-600)"><svg class="ic-18"><use href="#ic-leaf"/></svg></span><h3>Minka digital</h3></div>
+        <div class="card">
+          <div class="row between" style="margin-bottom:9px;"><b class="small">Nivel 3 · Guardián del barrio</b><span class="small muted">340 / 500</span></div>
+          <div class="meter"><i style="width:68%;background:linear-gradient(90deg,var(--leaf),var(--green-700))"></i></div>
+          <p class="small muted" style="margin:9px 0 0">Te faltan <b style="color:var(--orange-600)">160 puntos</b> para ser Héroe del barrio.</p>
+        </div>
+        <div class="card row between" style="gap:6px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--leaf),var(--green-700));display:flex;align-items:center;justify-content:center;color:#fff;"><svg class="ic-18"><use href="#ic-flag"/></svg></div><span class="muted" style="font-size:9.5px;text-align:center;">Primer<br/>reporte</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--leaf),var(--green-700));display:flex;align-items:center;justify-content:center;color:#fff;"><svg class="ic-18"><use href="#ic-check"/></svg></div><span class="muted" style="font-size:9.5px;text-align:center;">10<br/>reportes</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--orange-soft),var(--orange-600));display:flex;align-items:center;justify-content:center;color:#fff;"><svg class="ic-18"><use href="#ic-shield"/></svg></div><span class="muted" style="font-size:9.5px;text-align:center;">Reportero<br/>del mes</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:50px;height:50px;border-radius:50%;background:#E6E9E4;display:flex;align-items:center;justify-content:center;color:#AEB6AC;"><svg class="ic-18"><use href="#ic-lock"/></svg></div><span class="muted" style="font-size:9.5px;text-align:center;">Héroe del<br/>barrio</span></div>
+        </div>
+        <div class="card tight" style="padding:4px 0;">
+          <div class="row between" style="padding:12px 14px;"><span class="row" style="gap:11px;"><svg class="ic" style="color:var(--muted)"><use href="#ic-list"/></svg><b class="small">Mis reportes</b></span><svg class="ic chev"><use href="#ic-chev-r"/></svg></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="row between" style="padding:12px 14px;"><span class="row" style="gap:11px;"><svg class="ic" style="color:var(--muted)"><use href="#ic-edit"/></svg><b class="small">Configuración</b></span><svg class="ic chev"><use href="#ic-chev-r"/></svg></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="row between" style="padding:12px 14px;"><span class="row" style="gap:11px;color:var(--orange-600)"><svg class="ic"><use href="#ic-x"/></svg><b class="small">Cerrar sesión</b></span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="tab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="fab"><svg class="ic-28"><use href="#ic-camera"/></svg></div>
+        <div class="tab"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="tab active"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">17</span>Perfil + Minka digital</div>
+  </div>
+
+  <!-- C18 · configuracion -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Configuración</span><div class="iconbtn ghost"></div></div>
+      </div>
+      <div class="body scroll" style="gap:13px;">
+        <p class="label" style="margin:0 2px;">NOTIFICACIONES</p>
+        <div class="card tight" style="padding:4px 0;">
+          <div class="row between" style="padding:12px 14px;"><b class="small">Estado de mis reportes</b><span style="width:44px;height:26px;border-radius:13px;background:var(--green-700);position:relative;display:inline-block;flex:0 0 auto;"><span style="position:absolute;top:3px;left:21px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);"></span></span></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="row between" style="padding:12px 14px;"><b class="small">Novedades y logros</b><span style="width:44px;height:26px;border-radius:13px;background:var(--green-700);position:relative;display:inline-block;flex:0 0 auto;"><span style="position:absolute;top:3px;left:21px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);"></span></span></div>
+        </div>
+        <p class="label" style="margin:4px 2px 0;">DATOS Y CONEXIÓN</p>
+        <div class="card tight" style="padding:4px 0;">
+          <div class="row between" style="padding:12px 14px;"><b class="small">Sincronizar solo con WiFi</b><span style="width:44px;height:26px;border-radius:13px;background:#D7DCD5;position:relative;display:inline-block;flex:0 0 auto;"><span style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);"></span></span></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="row between" style="padding:12px 14px;"><div><b class="small">Reportes sin enviar</b><p class="small muted" style="margin:2px 0 0">Pendientes de sincronizar</p></div><span class="badge b-mid">2</span></div>
+        </div>
+        <p class="label" style="margin:4px 2px 0;">GENERAL</p>
+        <div class="card tight" style="padding:4px 0;">
+          <div class="row between" style="padding:12px 14px;"><b class="small">Idioma</b><span class="small muted row" style="gap:4px;">Español <svg class="ic chev ic-18"><use href="#ic-chev-r"/></svg></span></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="row between" style="padding:12px 14px;"><b class="small">Acerca de MinkIA</b><svg class="ic chev"><use href="#ic-chev-r"/></svg></div>
+        </div>
+        <button class="btn btn-text" style="color:var(--orange-600)"><svg class="ic-18"><use href="#ic-x"/></svg>Cerrar sesión</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">18</span>Configuración</div>
+  </div>
+
+</div>
+
+<div class="flow-label"><span class="tag admin">Admin</span><h2>Flujo del administrador</h2><div class="rule" style="background:linear-gradient(90deg,var(--orange-soft),transparent)"></div></div>
+<div class="gallery">
+
+  <!-- A01 · panel-dashboard -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar admin">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top">
+          <div><div style="font-weight:800;font-size:18px;">Panel administrador</div><div class="loc"><svg class="ic-16"><use href="#ic-shield"/></svg>Gestión de residuos sólidos</div></div>
+          <div class="avatar">MS</div>
+        </div>
+      </div>
+      <div class="body pad-tab scroll" style="gap:13px;">
+        <div class="kpis">
+          <div class="kpi"><div class="k-ic" style="background:rgba(189,76,24,.12);color:var(--orange-600)"><svg class="ic-18"><use href="#ic-bell"/></svg></div><div class="k-n">47</div><div class="k-l">Reportes hoy</div><span class="k-up up">+12%</span></div>
+          <div class="kpi"><div class="k-ic" style="background:rgba(232,165,58,.16);color:#B9821F"><svg class="ic-18"><use href="#ic-flame"/></svg></div><div class="k-n">62</div><div class="k-l">Puntos críticos</div><span class="k-up down">+3</span></div>
+          <div class="kpi"><div class="k-ic" style="background:rgba(94,138,47,.14);color:var(--green-700)"><svg class="ic-18"><use href="#ic-check"/></svg></div><div class="k-n">38</div><div class="k-l">Resueltos (sem.)</div><span class="k-up up">+8%</span></div>
+          <div class="kpi"><div class="k-ic" style="background:rgba(47,111,176,.14);color:var(--blue)"><svg class="ic-18"><use href="#ic-chart"/></svg></div><div class="k-n">81%</div><div class="k-l">Tasa de atención</div></div>
+        </div>
+        <div class="section"><span class="s-ic"><svg class="ic-18"><use href="#ic-chart"/></svg></span><h3>Reportes por día</h3><span class="small muted">7 días</span></div>
+        <div class="card">
+          <div class="bars"><div class="bar" style="height:44%"></div><div class="bar" style="height:62%"></div><div class="bar" style="height:50%"></div><div class="bar" style="height:78%"></div><div class="bar o" style="height:96%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:58%"></div></div>
+          <div class="barlabels"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+        </div>
+        <div class="section"><span class="s-ic" style="background:rgba(189,76,24,.12);color:var(--orange-600)"><svg class="ic-18"><use href="#ic-flame"/></svg></span><h3>Zonas más afectadas</h3></div>
+        <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+          <div><div class="row between small"><b>P. J. La Unión</b><span class="muted">18 focos</span></div><div class="meter" style="margin-top:6px"><i style="width:90%;background:var(--sev-high)"></i></div></div>
+          <div><div class="row between small"><b>Centro histórico</b><span class="muted">12 focos</span></div><div class="meter" style="margin-top:6px"><i style="width:64%;background:var(--sev-mid)"></i></div></div>
+          <div><div class="row between small"><b>Miraflores Alto</b><span class="muted">7 focos</span></div><div class="meter" style="margin-top:6px"><i style="width:38%;background:var(--sev-low)"></i></div></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab active adm"><svg class="ic"><use href="#ic-chart"/></svg>Panel</div>
+        <div class="tab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="tab"><svg class="ic"><use href="#ic-route"/></svg>Rutas</div>
+        <div class="tab"><svg class="ic"><use href="#ic-bell"/></svg>Alertas</div>
+      </div>
+    </div></div>
+    <div class="frame-cap admin"><span class="num">1</span>Panel administrador (dashboard)</div>
+  </div>
+
+  <!-- A02 · bandeja-alertas -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar admin" style="padding-bottom:14px;">
+        <div class="statusbar on-color" style="padding-left:0;padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Reportes entrantes</span><div class="iconbtn"><svg class="ic"><use href="#ic-filter"/></svg></div></div>
+        <div class="row" style="gap:7px;margin-top:11px;">
+          <span class="badge" style="background:#fff;color:var(--green-900);font-weight:700;">Nuevos · 12</span>
+          <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;">Sin asignar</span>
+          <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;">Urgentes</span>
+        </div>
+      </div>
+      <div class="body pad-tab scroll" style="gap:11px;">
+        <div class="card row" style="gap:12px;border-left:3px solid var(--orange-600);"><div class="thumb" style="width:50px;height:50px;"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">P. J. La Unión – Mz H</b><span class="badge b-high">NUEVO</span></div><p class="small muted" style="margin:4px 0 6px">Hace 4 min · 5 reportes agrupados</p><div class="row" style="gap:6px;"><span class="badge b-high">ALTA</span><span class="badge b-blue"><svg class="ic-16"><use href="#ic-layers"/></svg>x5</span></div></div></div>
+        <div class="card row" style="gap:12px;border-left:3px solid var(--orange-600);"><div class="thumb" style="width:50px;height:50px;"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">Jr. Bolognesi 540</b><span class="badge b-high">NUEVO</span></div><p class="small muted" style="margin:4px 0 6px">Hace 18 min · 3 reportes agrupados</p><div class="row" style="gap:6px;"><span class="badge b-mid">MEDIA</span><span class="badge b-blue"><svg class="ic-16"><use href="#ic-layers"/></svg>x3</span></div></div></div>
+        <div class="card row" style="gap:12px;"><div class="thumb" style="width:50px;height:50px;"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">Av. Pardo 1280</b><span class="small muted">9:02</span></div><p class="small muted" style="margin:4px 0 6px">Hace 1 h · sin asignar</p><div class="row" style="gap:6px;"><span class="badge b-mid">MEDIA</span></div></div></div>
+        <div class="card row" style="gap:12px;"><div class="thumb" style="width:50px;height:50px;"><div class="bbox"></div></div><div style="flex:1"><div class="row between"><b class="small">Calle Tacna 320</b><span class="small muted">8:30</span></div><p class="small muted" style="margin:4px 0 6px">Hace 2 h · sin asignar</p><div class="row" style="gap:6px;"><span class="badge b-low">BAJA</span></div></div></div>
+      </div>
+      <div class="tabbar">
+        <div class="tab adm"><svg class="ic"><use href="#ic-chart"/></svg>Panel</div>
+        <div class="tab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="tab"><svg class="ic"><use href="#ic-route"/></svg>Rutas</div>
+        <div class="tab active adm"><svg class="ic"><use href="#ic-bell"/></svg>Alertas</div>
+      </div>
+    </div></div>
+    <div class="frame-cap admin"><span class="num">2</span>Bandeja de Alertas (admin)</div>
+  </div>
+
+  <!-- A03 · puntos-criticos-clustering -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar admin" style="padding-bottom:16px;">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Puntos críticos</span><div class="iconbtn"><svg class="ic"><use href="#ic-filter"/></svg></div></div>
+        <div class="field" style="margin-top:12px; padding:10px 13px;"><svg class="ic f-ic ic-18"><use href="#ic-search"/></svg><span class="f-txt ph">Buscar zona o dirección…</span></div>
+      </div>
+      <div class="body" style="padding:0; position:relative;">
+        <div class="map" style="height:100%; border-radius:0;">
+          <svg class="mapbg" viewBox="0 0 360 520" preserveAspectRatio="xMidYMid slice">
+            <rect width="360" height="520" fill="#E8EDE3"/>
+            <path d="M0 430 Q90 410 150 440 T360 455 L360 520 0 520z" fill="#CBE0E8"/>
+            <rect x="40" y="60" width="60" height="44" rx="7" fill="#DCE9CF"/><rect x="250" y="250" width="64" height="48" rx="7" fill="#DCE9CF"/>
+            <g stroke="#FCFCFB" stroke-width="8" stroke-linecap="round"><path d="M-10 90H370"/><path d="M-10 180H370"/><path d="M-10 280H370"/><path d="M-10 370H370"/><path d="M80 -10V530"/><path d="M180 -10V530"/><path d="M275 -10V530"/></g>
+            <g stroke="#F0F2EC" stroke-width="3.5"><path d="M-10 135H370"/><path d="M-10 230H370"/><path d="M-10 325H370"/><path d="M130 -10V530"/><path d="M225 -10V530"/></g>
+          </svg>
+          <!-- radio de agrupación: los reportes dentro del círculo se unen en 1 grupo -->
+          <div style="position:absolute;left:120px;top:200px;width:172px;height:172px;transform:translate(-50%,-50%);border:2px dashed rgba(189,76,24,.55);border-radius:50%;background:rgba(189,76,24,.07);"></div>
+          <div style="position:absolute;left:120px;top:116px;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--orange-600);background:rgba(255,255,255,.92);padding:2px 7px;border-radius:6px;white-space:nowrap;">zona agrupada</div>
+          <div class="cluster hi" style="left:120px; top:200px; width:58px; height:58px;">23</div>
+          <div class="cluster mid" style="left:255px; top:290px; width:46px; height:46px;">12</div>
+          <div class="cluster low" style="left:95px; top:322px; width:40px; height:40px;">8</div>
+          <div class="cluster mid" style="left:300px; top:205px; width:34px; height:34px;">5</div>
+          <div class="map-tag"><svg class="ic-16" style="color:var(--orange-600)"><use href="#ic-layers"/></svg>Agrupación espacial activa</div>
+          <div style="position:absolute;right:12px;top:52px;background:rgba(255,255,255,.96);border-radius:11px;padding:9px 11px;box-shadow:var(--shadow-sm);font-size:10.5px;line-height:1.5;color:var(--ink-2);">
+            <div style="font-weight:700;margin-bottom:5px;color:var(--ink);">Cómo leer el mapa</div>
+            <div class="row" style="gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--sev-high);flex:0 0 auto;"></span>Alta</div>
+            <div class="row" style="gap:6px;margin-top:3px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--sev-mid);flex:0 0 auto;"></span>Media</div>
+            <div class="row" style="gap:6px;margin-top:3px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--sev-low);flex:0 0 auto;"></span>Baja</div>
+            <div style="margin-top:6px;padding-top:5px;border-top:1px solid var(--line);color:var(--muted);">N° = reportes agrupados<br>más grande = más reportes</div>
+          </div>
+        </div>
+        <!-- bottom sheet -->
+        <div style="position:absolute; left:0; right:0; bottom:0; background:#fff; border-top-left-radius:22px; border-top-right-radius:22px; padding:8px 16px 18px; box-shadow:0 -8px 22px rgba(20,40,25,.14); max-height:46%;">
+          <div style="width:42px;height:5px;border-radius:3px;background:#DDE2DA;margin:4px auto 12px;"></div>
+          <div class="row between" style="margin-bottom:10px;"><b class="small">62 puntos · por severidad</b><span class="small" style="color:var(--orange-600);font-weight:700;">Ordenar</span></div>
+          <div class="card row between" style="margin-bottom:9px;box-shadow:none;border:1px solid var(--line);"><div class="row"><span class="pin hi" style="position:static;transform:rotate(-45deg);margin:0 8px 0 2px;"></span><div><b class="small">P. J. La Unión – Mz H</b><p class="small muted" style="margin:2px 0 0">23 reportes agrupados</p></div></div><svg class="ic chev"><use href="#ic-chev-r"/></svg></div>
+          <div class="card row between" style="box-shadow:none;border:1px solid var(--line);"><div class="row"><span class="pin mid" style="position:static;transform:rotate(-45deg);margin:0 8px 0 2px;"></span><div><b class="small">Centro – Jr. Bolognesi</b><p class="small muted" style="margin:2px 0 0">12 reportes agrupados</p></div></div><svg class="ic chev"><use href="#ic-chev-r"/></svg></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="frame-cap admin"><span class="num">3</span>Puntos críticos · Clustering</div>
+  </div>
+
+  <!-- A04 · detalle-validacion -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar admin" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Reporte #MK-2041</span><div class="iconbtn"><svg class="ic"><use href="#ic-eye"/></svg></div></div>
+      </div>
+      <div class="body scroll" style="gap:13px;">
+        <div class="card tight" style="padding:0; overflow:hidden;">
+          <div style="position:relative; height:170px; background:linear-gradient(135deg,#b9c4b6,#8a9b88);">
+            <div style="position:absolute; left:16%; top:26%; width:62%; height:48%; border:2.5px solid #6BE08A; border-radius:6px;"></div>
+            <div style="position:absolute; left:16%; top:calc(26% - 26px); background:#6BE08A; color:#0E2A14; font-weight:800; font-size:11.5px; padding:3px 9px; border-radius:7px;">IA: Basura · 86%</div>
+            <div class="cam-badge" style="position:absolute; right:12px; bottom:12px;"><svg class="ic-16"><use href="#ic-cpu"/></svg>YOLOv8</div>
+          </div>
+        </div>
+        <div class="row" style="gap:8px; flex-wrap:wrap;">
+          <span class="badge b-high"><svg class="ic-16"><use href="#ic-flame"/></svg>Severidad ALTA</span>
+          <span class="badge b-blue"><svg class="ic-16"><use href="#ic-ruler"/></svg>4.2 m²</span>
+          <span class="badge b-mid"><svg class="ic-16"><use href="#ic-layers"/></svg>5 reportes</span>
+        </div>
+        <div class="note green"><svg class="ic ic-18"><use href="#ic-layers"/></svg><span><b>5 reportes ciudadanos</b> fueron unificados automáticamente en este punto crítico.</span></div>
+        <div class="card" style="display:flex; flex-direction:column; gap:11px;">
+          <div class="row between small"><span class="muted"><svg class="ic-16" style="vertical-align:-3px"><use href="#ic-pin"/></svg> Ubicación</span><b>Jr. Elías Aguirre 450</b></div>
+          <div class="row between small"><span class="muted"><svg class="ic-16" style="vertical-align:-3px"><use href="#ic-calendar"/></svg> Primer reporte</span><b>Hoy · 9:41 a. m.</b></div>
+          <div class="row between small"><span class="muted"><svg class="ic-16" style="vertical-align:-3px"><use href="#ic-trash"/></svg> Tipo</span><b>Residuo domiciliario</b></div>
+          <div class="row between small"><span class="muted"><svg class="ic-16" style="vertical-align:-3px"><use href="#ic-user"/></svg> Reportado por</span><b>5 vecinos</b></div>
+        </div>
+        <button class="btn btn-green"><svg class="ic"><use href="#ic-shield"/></svg>Validar y asignar cuadrilla</button>
+        <div class="row" style="gap:10px;">
+          <button class="btn btn-ghost" style="flex:1"><svg class="ic-18"><use href="#ic-layers"/></svg>Duplicado</button>
+          <button class="btn btn-text" style="flex:1; color:var(--sev-high)"><svg class="ic-18"><use href="#ic-x"/></svg>Rechazar</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="frame-cap admin"><span class="num">4</span>Detalle · Validación IA</div>
+  </div>
+
+  <!-- A05 · planificacion-rutas -->
+  <div class="frame-wrap">
+    <div class="device"><div class="phone"><div class="notch"></div>
+      <div class="appbar admin" style="padding-bottom:18px;">
+        <div class="statusbar on-color" style="padding-left:0; padding-right:6px;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar-top"><div class="iconbtn"><svg class="ic"><use href="#ic-back"/></svg></div><span style="font-weight:700">Ruta de recolección</span><div class="iconbtn"><svg class="ic"><use href="#ic-sync"/></svg></div></div>
+      </div>
+      <div class="body scroll" style="gap:13px;">
+        <div class="card tight" style="padding:0; overflow:hidden;">
+          <div class="map" style="height:200px; border-radius:0;">
+            <svg class="mapbg" viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice">
+              <rect width="360" height="200" fill="#E8EDE3"/>
+              <g stroke="#FCFCFB" stroke-width="7"><path d="M-10 60H370"/><path d="M-10 130H370"/><path d="M90 -10V210"/><path d="M200 -10V210"/><path d="M290 -10V210"/></g>
+              <path d="M50 160 L90 130 L90 60 L200 60 L200 130 L290 130 L320 40" fill="none" stroke="#bd4c18" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 9"/>
+            </svg>
+            <div class="cluster low" style="left:50px; top:160px; width:30px; height:30px; font-size:13px;">1</div>
+            <div class="cluster mid" style="left:90px; top:60px; width:30px; height:30px; font-size:13px;">2</div>
+            <div class="cluster hi" style="left:200px; top:60px; width:30px; height:30px; font-size:13px;">3</div>
+            <div class="cluster hi" style="left:200px; top:130px; width:30px; height:30px; font-size:13px;">4</div>
+            <div class="cluster mid" style="left:320px; top:40px; width:30px; height:30px; font-size:13px;">5</div>
+          </div>
+        </div>
+        <div class="card row between"><div class="row" style="gap:14px;"><div><div style="font-weight:800;font-size:18px;color:var(--orange-600)">5</div><div class="small muted">paradas</div></div><div><div style="font-weight:800;font-size:18px;">8.4 km</div><div class="small muted">distancia</div></div><div><div style="font-weight:800;font-size:18px;">1h 20m</div><div class="small muted">estimado</div></div></div></div>
+        <div class="section"><span class="s-ic" style="background:rgba(189,76,24,.12);color:var(--orange-600)"><svg class="ic-18"><use href="#ic-route"/></svg></span><h3>Paradas (por prioridad)</h3></div>
+        <div class="card row" style="gap:11px;"><div class="cluster low" style="position:static;transform:none;width:26px;height:26px;font-size:12px;">1</div><div style="flex:1"><b class="small">P. J. La Unión – Mz H</b><p class="small muted" style="margin:1px 0 0">23 focos · 2.1 km</p></div><span class="badge b-high">ALTA</span></div>
+        <div class="card row" style="gap:11px;"><div class="cluster mid" style="position:static;transform:none;width:26px;height:26px;font-size:12px;">2</div><div style="flex:1"><b class="small">Jr. Bolognesi 540</b><p class="small muted" style="margin:1px 0 0">12 focos · 1.4 km</p></div><span class="badge b-mid">MEDIA</span></div>
+        <div class="card row between" style="background:rgba(94,138,47,.08);"><div class="row" style="gap:10px;"><svg class="ic" style="color:var(--green-700)"><use href="#ic-truck"/></svg><div><b class="small">Camión C-04</b><p class="small muted" style="margin:1px 0 0">Cuadrilla 2 · disponible</p></div></div><span class="badge b-low">Asignar</span></div>
+        <button class="btn btn-primary"><svg class="ic"><use href="#ic-truck"/></svg>Asignar y enviar ruta</button>
+      </div>
+    </div></div>
+    <div class="frame-cap admin"><span class="num">5</span>Planificación de rutas</div>
+  </div>
+
+</div>
+
+<div class="helper">
+  <h3>📐 Cómo exportar estos mockups a imagen (PNG) o PDF</h3>
+  <p>Este archivo es 100% autocontenido (salvo el logo, que vive en la misma carpeta). Ábrelo en <b>Google Chrome</b> y tienes dos caminos:</p>
+  <ol>
+    <li><b>PDF de todo el set:</b> <code>Ctrl + P</code> → Destino: <i>Guardar como PDF</i> → listo para anexar al informe.</li>
+    <li><b>PNG individual por pantalla:</b> clic derecho sobre un teléfono → <i>Inspeccionar</i> → en el panel, clic derecho sobre el nodo <code>&lt;div class="device"&gt;</code> → <i>Capture node screenshot</i>. Te baja el PNG de esa pantalla sola.</li>
+  </ol>
+  <p style="margin-bottom:0;">Tip: para presentaciones, una captura de pantalla normal de a 2–3 teléfonos también queda excelente. Los colores salen del logo MinkIA (verde bosque + naranja terracota).</p>
+</div>
+
+</body>
+</html>

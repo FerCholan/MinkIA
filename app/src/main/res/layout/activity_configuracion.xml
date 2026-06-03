@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/configRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/verde_bosque"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationContentDescription="@string/config_volver"
+        app:title="@string/config_titulo"
+        app:titleCentered="true"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView style="@style/GrupoConfig" android:text="@string/config_grupo_notif" />
+
+            <LinearLayout style="@style/CardConfig">
+
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:text="@string/config_notif_estado" />
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/swEstado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <View style="@style/SeparadorMenu" />
+
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:text="@string/config_notif_novedades" />
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/swNovedades"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView style="@style/GrupoConfig" android:text="@string/config_grupo_datos" />
+
+            <LinearLayout style="@style/CardConfig">
+
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:text="@string/config_wifi" />
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/swWifi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <View style="@style/SeparadorMenu" />
+
+                <LinearLayout style="@style/FilaConfig">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/config_sin_enviar"
+                            android:textColor="@color/texto_principal"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/config_sin_enviar_sub"
+                            android:textColor="@color/texto_secundario"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_chip_permitir"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="5dp"
+                        android:text="2"
+                        android:textColor="@color/naranja_terracota"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView style="@style/GrupoConfig" android:text="@string/config_grupo_general" />
+
+            <LinearLayout style="@style/CardConfig">
+
+                <LinearLayout
+                    android:id="@+id/filaIdioma"
+                    style="@style/FilaConfig"
+                    android:background="?attr/selectableItemBackground">
+                    <TextView style="@style/FilaConfigTexto" android:text="@string/config_idioma" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/config_idioma_valor"
+                        android:textColor="@color/texto_secundario"
+                        android:textSize="14sp" />
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginStart="6dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+
+                <View style="@style/SeparadorMenu" />
+
+                <LinearLayout
+                    android:id="@+id/filaAcerca"
+                    style="@style/FilaConfig"
+                    android:background="?attr/selectableItemBackground">
+                    <TextView style="@style/FilaConfigTexto" android:text="@string/config_acerca" />
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btnCerrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="28dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="8dp"
+                android:padding="12dp"
+                android:text="@string/config_cerrar"
+                android:textColor="@color/naranja_terracota"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_logout" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

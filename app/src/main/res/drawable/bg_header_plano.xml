@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Header andino sin esquinas: mismo degradé verde de marca que bg_header_inicio,
+     pero recto abajo. Para pantallas donde el contenido sigue pegado al header
+     (las tabs de Reportes, el mapa de Mapa): redondear dejaría un escalón feo. La
+     textura andina se monta aparte como ImageView tenue en el layout. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="@color/verde_bosque"
+        android:endColor="@color/verde_bosque_osc"
+        android:type="linear" />
+</shape>

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MinkIA · Wireframes de baja fidelidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ===========================================================
+     MinkIA — Wireframes (baja fidelidad · escala de grises)
+     Mismo layout que los mockups, sin color ni branding.
+     =========================================================== */
+  :root{
+    --ink:#3C4043;        /* texto / líneas principales */
+    --muted:#8A8F94;      /* texto secundario */
+    --line:#C8CCD1;       /* bordes */
+    --line-d:#A9AEB4;     /* bordes marcados */
+    --fill:#ECEDEF;       /* relleno claro */
+    --fill-2:#DFE1E4;     /* relleno medio (headers, placeholders) */
+    --fill-3:#D2D5D9;
+    --bar:#D2D5D9;        /* barra de texto placeholder */
+    --bar-d:#C2C6CB;
+    --btn:#5F6368;        /* botón primario (jerarquía) */
+    --screen:#FAFAFB;
+    --paper:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ font-family:'Inter','Segoe UI',system-ui,sans-serif; color:var(--ink);
+    background:#EBECEE; min-height:100vh; }
+
+  .page-head{ text-align:center; padding:40px 20px 6px; }
+  .page-head h1{ margin:0; font-size:26px; font-weight:700; color:var(--ink); letter-spacing:.5px;}
+  .page-head .badge-lo{ display:inline-block; margin-top:10px; border:1.5px dashed var(--line-d); color:var(--muted);
+    padding:5px 14px; border-radius:6px; font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase;}
+  .page-head p{ color:var(--muted); margin:10px 0 0; font-size:13.5px; }
+
+  .flow-label{ display:flex; align-items:center; gap:14px; max-width:1320px; margin:42px auto 6px; padding:0 32px;}
+  .flow-label h2{ font-size:18px; font-weight:700; color:var(--ink); margin:0; white-space:nowrap;}
+  .flow-label .tag{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--ink);
+    border:1.5px solid var(--line-d); padding:4px 10px; border-radius:6px;}
+  .flow-label .rule{ flex:1; height:1px; background:var(--line-d); }
+
+  .gallery{ display:flex; flex-wrap:wrap; gap:46px 40px; justify-content:center; padding:24px 30px 30px; }
+  .frame-wrap{ display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .frame-cap{ display:flex; align-items:center; gap:8px; font-weight:600; color:var(--ink); font-size:13.5px;}
+  .frame-cap .num{ background:var(--ink); color:#fff; width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;}
+
+  /* ---------- Marco del teléfono (simple) ---------- */
+  .wdevice{ width:390px; height:844px; background:#fff; border:2.5px solid var(--ink); border-radius:46px; padding:9px;
+    box-shadow:0 12px 26px rgba(60,64,67,.13); position:relative; }
+  .wphone{ width:100%; height:100%; background:var(--screen); border-radius:38px; overflow:hidden;
+    display:flex; flex-direction:column; }
+  .wnotch{ position:absolute; top:9px; left:50%; transform:translateX(-50%); width:118px; height:24px;
+    background:#fff; border:2px solid var(--ink); border-top:none; border-bottom-left-radius:14px;
+    border-bottom-right-radius:14px; z-index:40; }
+
+  /* ---------- Barra de estado ---------- */
+  .wstatus{ height:42px; flex:0 0 42px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 22px; font-size:13px; font-weight:600; color:var(--muted); }
+  .wstatus .right{ display:flex; align-items:center; gap:6px; }
+
+  /* ---------- Header ---------- */
+  .whead{ background:var(--fill-2); border-bottom:1.5px solid var(--line); padding:0 16px 16px;
+    border-bottom-left-radius:24px; border-bottom-right-radius:24px; }
+  .whead .bar{ display:flex; align-items:center; justify-content:space-between; height:40px; gap:10px; }
+  .wbtn-ic{ width:36px; height:36px; border:1.5px solid var(--line-d); border-radius:10px; display:flex;
+    align-items:center; justify-content:center; color:var(--ink); background:#fff; }
+  .wtitle{ font-weight:700; font-size:16px; color:var(--ink); }
+  .wpill{ display:inline-block; background:#fff; border:1.5px solid var(--line-d); border-radius:12px;
+    padding:9px 20px; font-weight:700; font-size:15px; color:var(--ink); }
+  .wpill-wrap{ text-align:center; margin-top:6px; }
+
+  /* ---------- Cuerpo ---------- */
+  .wbody{ flex:1; overflow:hidden; padding:15px; display:flex; flex-direction:column; gap:13px; }
+  .wbody.scroll{ overflow-y:auto; }
+  .wbody.pad-tab{ padding-bottom:84px; }
+
+  .wsection{ display:flex; align-items:center; gap:8px; margin:2px 2px -2px;}
+  .wsection .s-ic{ width:28px; height:28px; border:1.5px solid var(--line-d); border-radius:8px;
+    display:flex; align-items:center; justify-content:center; color:var(--muted); background:#fff;}
+  .wsection h3{ margin:0; font-size:14px; font-weight:700; color:var(--ink); flex:1;}
+
+  .wcard{ background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:14px; }
+  .wcard.tight{ padding:11px; }
+
+  .wrow{ display:flex; align-items:center; gap:12px; }
+  .between{ justify-content:space-between; }
+  .small{ font-size:12px; } .muted{ color:var(--muted); }
+  .b{ font-weight:700; }
+
+  /* barras de texto placeholder */
+  .bar{ height:9px; border-radius:5px; background:var(--bar); }
+  .bar.dk{ background:var(--bar-d); }
+  .bar.h7{ height:7px; } .bar.h12{ height:12px; }
+  .w90{ width:90%;} .w80{ width:80%;} .w70{ width:70%;} .w60{ width:60%;} .w50{ width:50%;} .w40{ width:40%;} .w30{ width:30%;} .w25{ width:25%;}
+  .stack{ display:flex; flex-direction:column; gap:7px; }
+
+  /* placeholder de imagen con X */
+  .ximg{ position:relative; border:1.5px solid var(--line-d); border-radius:12px; background:
+      linear-gradient(to top right, transparent calc(50% - 1px), var(--line-d) calc(50% - 1px), var(--line-d) calc(50% + 1px), transparent calc(50% + 1px)),
+      linear-gradient(to bottom right, transparent calc(50% - 1px), var(--line-d) calc(50% - 1px), var(--line-d) calc(50% + 1px), transparent calc(50% + 1px)),
+      var(--fill);
+    display:flex; align-items:flex-end; justify-content:center; overflow:hidden; }
+  .ximg .lbl{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(250,250,251,.85);
+    color:var(--muted); font-size:11px; font-weight:600; padding:2px 8px; border-radius:5px; white-space:nowrap;}
+
+  /* placeholder cuadrado (thumb / icono) */
+  .wthumb{ flex:0 0 auto; border:1.5px solid var(--line-d); border-radius:12px; background:
+      linear-gradient(to top right, transparent calc(50% - 1px), var(--line-d) calc(50% - 1px), var(--line-d) calc(50% + 1px), transparent calc(50% + 1px)),
+      linear-gradient(to bottom right, transparent calc(50% - 1px), var(--line-d) calc(50% - 1px), var(--line-d) calc(50% + 1px), transparent calc(50% + 1px)),
+      var(--fill); }
+  .wavatar{ width:38px; height:38px; border-radius:50%; border:1.5px solid var(--line-d); background:var(--fill); flex:0 0 auto;}
+
+  /* pills / badges en gris */
+  .wpill-sm{ font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; border:1.5px solid var(--line-d);
+    color:var(--ink); background:#fff; display:inline-flex; align-items:center; gap:5px; }
+  .wpill-sm.fill{ background:var(--fill-2); }
+  .wpill-sm.solid{ background:var(--btn); color:#fff; border-color:var(--btn); }
+
+  /* botones */
+  .wbtn{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px;
+    border-radius:13px; font-weight:700; font-size:14.5px; border:1.5px solid var(--line-d); background:#fff; color:var(--ink); }
+  .wbtn.primary{ background:var(--btn); color:#fff; border-color:var(--btn); }
+
+  /* campos */
+  .wfield{ background:#fff; border:1.5px solid var(--line-d); border-radius:13px; padding:12px 13px;
+    display:flex; align-items:center; gap:10px; color:var(--muted); }
+  .wfield .ftxt{ flex:1; } .wlabel{ font-size:12px; font-weight:600; color:var(--ink); margin:0 0 6px 3px;}
+
+  /* tab bar */
+  .wtab-bar{ position:absolute; left:0; right:0; bottom:0; height:74px; background:#fff; border-top:1.5px solid var(--line);
+    display:flex; align-items:flex-start; justify-content:space-around; padding:10px 8px 0; z-index:20; }
+  .wtab{ display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--muted); font-size:10px; font-weight:600; flex:1;}
+  .wtab.active{ color:var(--ink); }
+  .wfab{ width:56px; height:56px; border-radius:50%; border:2px solid var(--ink); background:var(--fill-2);
+    display:flex; align-items:center; justify-content:center; color:var(--ink); margin-top:-22px; }
+  .wfab.float{ position:absolute; right:18px; bottom:92px; margin:0; z-index:25; background:#fff;}
+
+  /* iconos */
+  .ic{ width:21px; height:21px; flex:0 0 auto; color:var(--muted); }
+  .ic-18{width:18px;height:18px;} .ic-16{width:16px;height:16px;} .ic-26{width:26px;height:26px;} .ic-28{width:28px;height:28px;}
+  .ink{ color:var(--ink); }
+
+  /* mapa wireframe */
+  .wmap{ position:relative; width:100%; border:1.5px solid var(--line-d); border-radius:14px; overflow:hidden; background:#fff;}
+  .wmap > svg{ display:block; width:100%; height:100%; }
+  .wmap .lbl{ position:absolute; top:10px; left:10px; background:#fff; border:1.5px solid var(--line-d);
+    color:var(--muted); font-size:11px; font-weight:600; padding:4px 9px; border-radius:8px;}
+  .wpin{ position:absolute; width:18px; height:18px; border:2px solid var(--ink); border-radius:50% 50% 50% 0;
+    transform:translate(-50%,-100%) rotate(-45deg); background:#fff; }
+  .wpin.fill{ background:var(--fill-3); }
+  .wcircle{ position:absolute; transform:translate(-50%,-50%); border:2px dashed var(--line-d); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:700; font-size:11px; background:rgba(236,237,239,.5);}
+  .wclus{ position:absolute; transform:translate(-50%,-50%); border:2px solid var(--ink); border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--ink); font-weight:700;
+    font-size:14px; line-height:1; background:#fff; }
+  .wclus small{ font-size:8px; font-weight:600; color:var(--muted);}
+
+  /* meter / bars */
+  .wmeter{ height:8px; border-radius:5px; background:var(--fill-2); border:1px solid var(--line); overflow:hidden;}
+  .wmeter > i{ display:block; height:100%; background:var(--fill-3); }
+  .wbars{ display:flex; align-items:flex-end; gap:8px; height:80px;}
+  .wbars .bk{ flex:1; background:var(--fill-2); border:1.5px solid var(--line-d); border-radius:5px 5px 0 0;}
+  .wbarlabels{ display:flex; gap:8px; margin-top:5px;} .wbarlabels span{ flex:1; text-align:center; font-size:10px; color:var(--muted);}
+
+  /* kpi */
+  .wkpis{ display:grid; grid-template-columns:1fr 1fr; gap:11px;}
+  .wkpi{ background:#fff; border:1.5px solid var(--line); border-radius:14px; padding:13px;}
+  .wkpi .kic{ width:30px;height:30px;border:1.5px solid var(--line-d);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;color:var(--muted);}
+  .wkpi .kn{ font-size:22px; font-weight:700; color:var(--ink);}
+
+  /* segmented */
+  .wseg{ display:flex; border:1.5px solid var(--line-d); border-radius:12px; overflow:hidden;}
+  .wseg span{ flex:1; text-align:center; font-size:12px; font-weight:600; color:var(--muted); padding:9px; border-right:1.5px solid var(--line);}
+  .wseg span:last-child{ border-right:none;} .wseg span.on{ background:var(--fill-2); color:var(--ink);}
+
+  /* timeline */
+  .wtl{ display:flex; flex-direction:column;}
+  .wtl .st{ display:flex; gap:11px;}
+  .wtl .col{ display:flex; flex-direction:column; align-items:center;}
+  .wtl .d{ width:22px;height:22px;border-radius:50%;border:2px solid var(--line-d);display:flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--muted);background:#fff;}
+  .wtl .d.on{ border-color:var(--ink); color:var(--ink);}
+  .wtl .ln{ width:2px; flex:1; background:var(--line); min-height:16px;}
+  .wtl .tx{ padding-bottom:12px;} .wtl .tx b{ font-size:13px;} .wtl .tx p{ margin:1px 0 0; font-size:11px; color:var(--muted);}
+
+  /* splash logo placeholder */
+  .wlogo{ width:150px; height:150px; border:2px dashed var(--line-d); border-radius:24px; display:flex;
+    align-items:center; justify-content:center; color:var(--muted); font-weight:700; font-size:14px; background:#fff;
+    text-align:center; }
+  .wlogo.sm{ width:96px; height:96px; font-size:12px; border-radius:18px;}
+  .center-col{ flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; gap:7px;}
+
+  .wnote{ display:flex; gap:9px; border:1.5px dashed var(--line-d); border-radius:11px; padding:10px 12px;
+    font-size:11.5px; color:var(--muted); align-items:flex-start; background:var(--fill); }
+  .divider{ display:flex; align-items:center; gap:12px; color:var(--muted); font-size:11.5px;}
+  .divider::before,.divider::after{ content:""; flex:1; height:1px; background:var(--line);}
+
+  .helper{ max-width:920px; margin:14px auto 60px; padding:22px 26px; background:#fff; border:1.5px solid var(--line);
+    border-radius:16px; color:var(--ink); line-height:1.6; font-size:14px;}
+  .helper h3{ margin:0 0 8px;} .helper code{ background:var(--fill); padding:2px 7px; border-radius:6px; font-size:13px;}
+  .helper ol{ margin:8px 0 0; padding-left:20px;}
+  @media print{ body{background:#fff;} .wdevice{box-shadow:none; page-break-inside:avoid;} .helper,.page-head,.flow-label{display:none;} }
+</style>
+</head>
+<body>
+
+<!-- ÍCONOS (line, en gris por currentColor) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="ic-chev-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></symbol>
+  <symbol id="ic-chev-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="ic-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.4"/></symbol>
+  <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="ic-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></symbol>
+  <symbol id="ic-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4.5 2 6 2 6H4s2-1.5 2-6z"/><path d="M10 19a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="ic-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
+  <symbol id="ic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></symbol>
+  <symbol id="ic-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="ic-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></symbol>
+  <symbol id="ic-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 4v4h-4"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 20v-4h4"/></symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V11M12 21V5M18 21v-7"/></symbol>
+  <symbol id="ic-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M8 17C9 13 11 9 16 7" stroke-dasharray="1.5 3"/></symbol>
+  <symbol id="ic-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="ic-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h12v9H2zM14 10h4l3 3v3h-7z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/></symbol>
+  <symbol id="ic-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="ic-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="ic-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2 2 0 0 0-3-3L5 17z"/><path d="M14 7l3 3"/></symbol>
+  <symbol id="ic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/></symbol>
+  <symbol id="ic-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 3.5 5 6 5 9.5a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 1.8 1 2.8 2 3 1-2-1-5 1-8.5z"/></symbol>
+  <symbol id="ic-ruler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14L14 4l6 6L10 20z"/><path d="M8 8l1.5 1.5M11 11l1.5 1.5M14 6l1.5 1.5"/></symbol>
+  <symbol id="ic-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 5h11l-2 4 2 4H5"/></symbol>
+  <symbol id="ic-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></symbol>
+  <symbol id="ic-wifi-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6c5-4 13-4 18 0M6 10c3.5-2.6 8.5-2.6 12 0M9 14c1.8-1.3 4.2-1.3 6 0M12 18h.01"/><path d="M3 3l18 18"/></symbol>
+  <symbol id="sb-signal" viewBox="0 0 20 14" fill="currentColor"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></symbol>
+  <symbol id="sb-wifi" viewBox="0 0 20 15" fill="currentColor"><path d="M10 15l2.4-3a3 3 0 0 0-4.8 0L10 15z"/><path d="M3.5 6.2A10 10 0 0 1 16.5 6.2l-1.9 2.3a7 7 0 0 0-9.2 0z"/></symbol>
+  <symbol id="sb-batt" viewBox="0 0 28 14" fill="none"><rect x="1" y="1" width="23" height="12" rx="3" stroke="currentColor" stroke-width="1.4"/><rect x="3" y="3" width="13" height="8" rx="1.5" fill="currentColor"/><rect x="25" y="4.5" width="2.4" height="5" rx="1.2" fill="currentColor"/></symbol>
+</svg>
+
+<div class="page-head">
+  <h1>MINKIA · WIREFRAMES</h1>
+  <div class="badge-lo">Baja fidelidad · Escala de grises · Estructura</div>
+  <p>Esqueleto de las 12 pantallas (sin color ni branding). Etapa previa a los mockups de alta fidelidad.</p>
+</div>
+
+<!-- ===================== FLUJO CIUDADANO ===================== -->
+<div class="flow-label"><span class="tag">Ciudadano</span><h2>Flujo del vecino · Ciudadano</h2><div class="rule"></div></div>
+<div class="gallery">
+
+  <!-- C01 · splash -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="wstatus"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="wbody center-col" style="justify-content:center; gap:16px;">
+        <div class="wlogo">[ LOGO<br/>MinkIA ]</div>
+        <div class="stack" style="align-items:center; width:70%;"><div class="bar w90"></div><div class="bar w60"></div></div>
+        <div class="wrow" style="gap:7px; margin-top:6px;"><span class="wavatar" style="width:9px;height:9px;"></span><span class="wavatar" style="width:9px;height:9px;"></span><span class="wavatar" style="width:9px;height:9px;background:var(--ink);"></span></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">1</span>Splash / Bienvenida</div>
+  </div>
+
+  <!-- C02 · onboarding -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="wstatus"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="wbody" style="padding:16px 20px;">
+        <div class="wrow between"><span></span><span class="bar w25" style="height:8px;width:50px;"></span></div>
+        <div class="center-col" style="justify-content:center;gap:20px;flex:1;">
+          <div style="width:150px;height:150px;border-radius:50%;border:2px dashed var(--line-d);display:flex;align-items:center;justify-content:center;color:var(--muted);background:#fff;"><svg style="width:56px;height:56px"><use href="#ic-camera"/></svg></div>
+          <div class="stack" style="text-align:center;gap:10px;align-items:center;"><div class="bar h12 w80" style="width:200px;"></div><div class="bar h7 w90" style="width:230px;"></div><div class="bar h7 w70" style="width:170px;"></div></div>
+          <div class="wrow" style="gap:7px;"><span class="wavatar" style="width:8px;height:8px;"></span><span style="width:22px;height:8px;border-radius:4px;background:var(--ink);"></span><span class="wavatar" style="width:8px;height:8px;"></span></div>
+        </div>
+        <button class="wbtn primary">Siguiente</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">2</span>Onboarding / Guías</div>
+  </div>
+
+  <!-- C03 · login -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="wstatus"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="wbody scroll" style="gap:13px; padding-top:18px;">
+        <div class="wlogo sm" style="margin:4px auto 2px;">[ LOGO ]</div>
+        <div class="stack" style="align-items:center;"><div class="bar h12 w60"></div><div class="bar h7 w80"></div></div>
+        <div><p class="wlabel">Correo electrónico</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-mail"/></svg><span class="ftxt"><span class="bar w70" style="display:block;"></span></span></div></div>
+        <div><p class="wlabel">Contraseña</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-lock"/></svg><span class="ftxt"><span class="bar w50" style="display:block;"></span></span><svg class="ic ic-18"><use href="#ic-eye"/></svg></div></div>
+        <div style="text-align:right;"><span class="bar w40" style="display:inline-block;height:8px;"></span></div>
+        <button class="wbtn primary">Iniciar sesión</button>
+        <div class="divider">o continuá con</div>
+        <button class="wbtn">[G] Google</button>
+        <div style="text-align:center;"><span class="bar w60" style="display:inline-block;height:8px;"></span></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">3</span>Iniciar sesión</div>
+  </div>
+
+  <!-- C04 · registro -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Crear cuenta</span><div style="width:36px;"></div></div></div>
+      <div class="wbody scroll" style="gap:12px;">
+        <div><p class="wlabel">Nombre completo</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-user"/></svg><span class="ftxt"><span class="bar w70" style="display:block;"></span></span></div></div>
+        <div><p class="wlabel">Correo electrónico</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-mail"/></svg><span class="ftxt"><span class="bar w80" style="display:block;"></span></span></div></div>
+        <div><p class="wlabel">DNI (opcional)</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-user"/></svg><span class="ftxt"><span class="bar w50" style="display:block;"></span></span></div></div>
+        <div><p class="wlabel">Contraseña</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-lock"/></svg><span class="ftxt"><span class="bar w50" style="display:block;"></span></span><svg class="ic ic-18"><use href="#ic-eye"/></svg></div></div>
+        <div class="wrow" style="gap:9px; margin:2px;"><span style="width:20px;height:20px;border:1.5px solid var(--ink);border-radius:5px;"></span><span class="bar w70" style="height:8px;"></span></div>
+        <button class="wbtn primary">Registrarme</button>
+        <div style="text-align:center;"><span class="bar w60" style="display:inline-block;height:8px;"></span></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">4</span>Crear cuenta</div>
+  </div>
+
+  <!-- C05 · recuperar-contrasena -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Recuperar contraseña</span><div style="width:36px;"></div></div></div>
+      <div class="wbody scroll" style="gap:15px;padding-top:24px;">
+        <div style="width:70px;height:70px;border-radius:18px;border:1.5px solid var(--line-d);display:flex;align-items:center;justify-content:center;color:var(--muted);margin:4px auto 0;"><svg style="width:32px;height:32px"><use href="#ic-lock"/></svg></div>
+        <div class="stack" style="text-align:center;gap:8px;align-items:center;"><div class="bar h12 w60" style="width:180px;"></div><div class="bar h7 w80" style="width:220px;"></div></div>
+        <div><p class="wlabel">Correo electrónico</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-mail"/></svg><span class="ftxt"><span class="bar w70" style="display:block;"></span></span></div></div>
+        <button class="wbtn primary">Enviar enlace</button>
+        <div style="text-align:center;"><span class="bar w50" style="display:inline-block;height:8px;"></span></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">5</span>Recuperar contraseña</div>
+  </div>
+
+  <!-- C06 · permisos -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="wstatus"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="wbody scroll" style="gap:13px;padding:20px 16px;">
+        <div class="stack" style="text-align:center;gap:8px;align-items:center;margin-bottom:4px;"><div class="bar h12 w60" style="width:170px;"></div><div class="bar h7 w90" style="width:240px;"></div></div>
+        <div class="wcard wrow" style="gap:12px;"><div class="wthumb" style="width:44px;height:44px;border-radius:12px;"></div><div style="flex:1" class="stack"><span class="b small">Cámara</span><span class="bar w80" style="height:7px;"></span></div><span class="wpill-sm fill">Permitido</span></div>
+        <div class="wcard wrow" style="gap:12px;"><div class="wthumb" style="width:44px;height:44px;border-radius:12px;"></div><div style="flex:1" class="stack"><span class="b small">Ubicación</span><span class="bar w80" style="height:7px;"></span></div><span class="wpill-sm">Permitir</span></div>
+        <div class="wcard wrow" style="gap:12px;"><div class="wthumb" style="width:44px;height:44px;border-radius:12px;"></div><div style="flex:1" class="stack"><span class="b small">Notificaciones</span><span class="bar w70" style="height:7px;"></span></div><span class="wpill-sm">Opcional</span></div>
+        <div class="wnote"><svg class="ic ic-18"><use href="#ic-shield"/></svg><span>Tus datos solo se comparten con la administración.</span></div>
+        <button class="wbtn primary" style="margin-top:auto;">Permitir y continuar</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">6</span>Permisos (cámara · ubicación)</div>
+  </div>
+
+  <!-- C07 · inicio-mapa-calor -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div><span class="wtitle">[ Logo ]</span><div class="wrow" style="gap:5px;margin-top:4px;"><svg class="ic ic-16"><use href="#ic-pin"/></svg><span class="bar w90" style="width:90px;height:7px;"></span></div></div><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-bell"/></svg></div></div></div>
+      <div class="wbody pad-tab" style="gap:13px;">
+        <div class="wrow" style="gap:10px;">
+          <div class="wcard tight" style="flex:1;text-align:center;"><div class="b" style="font-size:20px;">62</div><span class="bar w80" style="height:7px;margin:5px auto 0;"></span></div>
+          <div class="wcard tight" style="flex:1;text-align:center;"><div class="b" style="font-size:20px;">8</div><span class="bar w70" style="height:7px;margin:5px auto 0;"></span></div>
+          <div class="wcard tight" style="flex:1;text-align:center;"><div class="b" style="font-size:20px;">1.2k</div><span class="bar w70" style="height:7px;margin:5px auto 0;"></span></div>
+        </div>
+        <div class="wsection"><span class="s-ic"><svg class="ic ic-18"><use href="#ic-map"/></svg></span><h3>Mapa de calor</h3><svg class="ic"><use href="#ic-chev-r"/></svg></div>
+        <div class="wmap" style="height:290px;">
+          <svg viewBox="0 0 360 290" preserveAspectRatio="none"><rect width="360" height="290" fill="#fff"/>
+            <g stroke="#DCDFE3" stroke-width="2"><path d="M0 70H360"/><path d="M0 130H360"/><path d="M0 195H360"/><path d="M0 245H360"/><path d="M70 0V290"/><path d="M160 0V290"/><path d="M255 0V290"/></g></svg>
+          <div class="lbl">Mapa de calor (placeholder)</div>
+          <div class="wcircle" style="left:130px;top:115px;width:100px;height:100px;"></div>
+          <div class="wcircle" style="left:255px;top:85px;width:70px;height:70px;"></div>
+          <div class="wpin fill" style="left:130px;top:120px;"></div>
+          <div class="wpin" style="left:160px;top:95px;"></div>
+          <div class="wpin fill" style="left:255px;top:92px;"></div>
+          <div class="wpin" style="left:90px;top:215px;"></div>
+          <div class="wpin" style="left:200px;top:175px;border-color:var(--ink);border-width:2.5px;"></div>
+        </div>
+        <div class="wsection"><span class="s-ic"><svg class="ic ic-18"><use href="#ic-flame"/></svg></span><h3>Cerca tuyo</h3></div>
+        <div class="wcard wrow between"><div class="wrow"><svg class="ic ink"><use href="#ic-pin"/></svg><div class="stack"><span class="bar w90" style="width:120px;"></span><span class="bar w60" style="width:80px;height:7px;"></span></div></div><span class="wpill-sm fill">ALTA</span></div>
+      </div>
+      <div class="wtab-bar">
+        <div class="wtab active"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="wfab"><svg class="ic-26 ink"><use href="#ic-camera"/></svg></div>
+        <div class="wtab"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">7</span>Inicio · Mapa de calor</div>
+  </div>
+
+  <!-- C08 · explorar-mapa -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><span class="wtitle">Explorar focos</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-search"/></svg></div></div>
+        <div class="wrow" style="gap:7px;margin-top:11px;"><span class="wpill-sm fill">Todos</span><span class="wpill-sm">Alta</span><span class="wpill-sm">Media</span><span class="wpill-sm">Baja</span></div></div>
+      <div class="wbody pad-tab" style="padding:0;position:relative;">
+        <div class="wmap" style="height:100%;border:none;border-radius:0;">
+          <svg viewBox="0 0 360 560" preserveAspectRatio="none"><rect width="360" height="560" fill="#fff"/><g stroke="#DCDFE3" stroke-width="2"><path d="M0 100H360"/><path d="M0 200H360"/><path d="M0 310H360"/><path d="M0 410H360"/><path d="M80 0V560"/><path d="M180 0V560"/><path d="M275 0V560"/></g></svg>
+          <div class="lbl">Mapa de focos</div>
+          <div class="wcircle" style="left:130px;top:160px;width:100px;height:100px;"></div>
+          <div class="wpin fill" style="left:130px;top:166px;"></div>
+          <div class="wpin" style="left:255px;top:138px;"></div>
+          <div class="wpin" style="left:92px;top:362px;"></div>
+          <div class="wpin" style="left:200px;top:250px;border-width:2.5px;"></div>
+          <div style="position:absolute;left:14px;right:14px;bottom:14px;" class="wcard wrow between"><div class="wrow"><span class="wpin fill" style="position:static;transform:rotate(-45deg);margin:0 8px 0 2px;"></span><div class="stack"><span class="bar" style="width:130px;"></span><span class="bar" style="width:80px;height:7px;"></span></div></div><span class="wpill-sm fill">Ver</span></div>
+        </div>
+        <div class="wfab float"><svg class="ic-26 ink"><use href="#ic-camera"/></svg></div>
+      </div>
+      <div class="wtab-bar">
+        <div class="wtab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="wtab active"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="wfab"><svg class="ic-26 ink"><use href="#ic-camera"/></svg></div>
+        <div class="wtab"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">8</span>Explorar · Mapa fullscreen</div>
+  </div>
+
+  <!-- C09 · camara-captura -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="wstatus"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#ic-wifi-off"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="wbody" style="gap:12px;">
+        <div class="wrow between"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wpill-sm"><svg class="ic-16"><use href="#ic-cpu"/></svg>YOLOv8 · en dispositivo</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-eye"/></svg></div></div>
+        <div style="flex:1;border:1.5px dashed var(--line-d);border-radius:12px;background:var(--fill);position:relative;">
+          <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--muted);font-size:11px;font-weight:600;">Vista de cámara</span>
+          <span style="position:absolute;top:22px;left:22px;width:28px;height:28px;border-top:3px solid var(--ink);border-left:3px solid var(--ink);border-top-left-radius:8px;"></span>
+          <span style="position:absolute;top:22px;right:22px;width:28px;height:28px;border-top:3px solid var(--ink);border-right:3px solid var(--ink);border-top-right-radius:8px;"></span>
+          <span style="position:absolute;bottom:22px;left:22px;width:28px;height:28px;border-bottom:3px solid var(--ink);border-left:3px solid var(--ink);border-bottom-left-radius:8px;"></span>
+          <span style="position:absolute;bottom:22px;right:22px;width:28px;height:28px;border-bottom:3px solid var(--ink);border-right:3px solid var(--ink);border-bottom-right-radius:8px;"></span>
+        </div>
+        <div class="wnote"><svg class="ic ic-18"><use href="#ic-cpu"/></svg><span>La IA analizará la foto <b>al capturar</b> (funciona sin internet).</span></div>
+        <div class="wcard">
+          <div class="wrow between">
+            <span class="wavatar" style="border-radius:11px;"></span>
+            <span style="width:60px;height:60px;border-radius:50%;border:3px solid var(--ink);background:var(--fill-2);"></span>
+            <span class="wavatar" style="border-radius:11px;"></span>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">9</span>Cámara · Captura</div>
+  </div>
+
+  <!-- C10 · analisis-ia -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="wstatus"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#ic-wifi-off"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="wbody" style="gap:12px;">
+        <div class="wrow between"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wpill-sm"><svg class="ic-16"><use href="#ic-cpu"/></svg>Analizando…</span><div style="width:36px"></div></div>
+        <div style="flex:1;border:1.5px dashed var(--line-d);border-radius:12px;background:var(--fill);position:relative;">
+          <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--muted);font-size:11px;font-weight:600;">Foto capturada</span>
+          <div style="position:absolute;left:16%;top:28%;width:68%;height:40%;border:2.5px dashed var(--ink);border-radius:6px;">
+            <div style="position:absolute;left:0;right:0;top:50%;height:2px;background:var(--ink);opacity:.45;"></div>
+            <span style="position:absolute;top:-24px;left:-2px;border:1.5px solid var(--ink);background:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;">Basura · 86%</span>
+          </div>
+        </div>
+        <div class="wcard">
+          <div class="wrow between" style="margin-bottom:8px;"><span class="wrow" style="gap:8px;"><svg class="ic ink ic-18"><use href="#ic-cpu"/></svg><span class="b small">Analizando con IA · YOLOv8</span></span><span class="b small">86%</span></div>
+          <div class="wmeter"><i style="width:86%;background:var(--ink);"></i></div>
+          <div class="bar w70" style="height:7px;margin-top:10px;"></div>
+        </div>
+        <div class="wnote"><svg class="ic ic-18"><use href="#ic-wifi-off"/></svg><span>Procesa localmente — no se envía nada a la nube todavía.</span></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">10</span>Análisis con IA (YOLOv8)</div>
+  </div>
+
+  <!-- C11 · formulario-reporte -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#ic-wifi-off"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Nuevo reporte</span><div style="width:36px;"></div></div></div>
+      <div class="wbody scroll" style="gap:12px;">
+        <div class="wcard wrow" style="gap:12px;"><div class="wthumb" style="width:64px;height:64px;"></div><div style="flex:1;" class="stack"><div class="wrow between"><span class="b small">Foto analizada</span><span class="wpill-sm">IA 86%</span></div><span class="bar w80" style="height:7px;"></span><span class="bar w40" style="height:7px;"></span></div></div>
+        <div><p class="wlabel">Severidad del foco</p><div class="wseg"><span>Baja</span><span>Media</span><span class="on">Alta</span></div></div>
+        <div><p class="wlabel">Ubicación (GPS)</p>
+          <div class="wcard tight" style="padding:0;overflow:hidden;">
+            <div class="wmap" style="height:96px;border:none;border-radius:0;border-bottom:1.5px solid var(--line);"><svg viewBox="0 0 360 96" preserveAspectRatio="none"><rect width="360" height="96" fill="#fff"/><g stroke="#DCDFE3" stroke-width="2"><path d="M0 40H360"/><path d="M120 0V96"/><path d="M250 0V96"/></g></svg><div class="wpin" style="left:180px;top:55px;border-color:var(--ink);border-width:2.5px;"></div></div>
+            <div class="wrow" style="padding:10px 12px;gap:9px;"><svg class="ic ink ic-18"><use href="#ic-pin"/></svg><div style="flex:1" class="stack"><span class="bar w70" style="width:140px;"></span><span class="bar w40" style="height:7px;width:90px;"></span></div><span class="wpill-sm">Preciso</span></div>
+          </div></div>
+        <div><p class="wlabel">Tipo de residuo</p><div class="wfield"><svg class="ic ic-18"><use href="#ic-trash"/></svg><span class="ftxt b" style="color:var(--ink)">Residuo domiciliario</span><svg class="ic ic-18"><use href="#ic-chev-d"/></svg></div></div>
+        <div><p class="wlabel">Descripción</p><div class="wfield" style="align-items:flex-start;min-height:56px;"><svg class="ic ic-18"><use href="#ic-edit"/></svg><span class="ftxt stack" style="gap:6px;width:100%;"><span class="bar w90"></span><span class="bar w60"></span></span></div></div>
+        <div class="wnote"><svg class="ic ic-18"><use href="#ic-wifi-off"/></svg><span>Sin conexión — el reporte se guardará y se enviará al recuperar internet.</span></div>
+        <button class="wbtn primary"><svg class="ic-18" style="color:#fff"><use href="#ic-flag"/></svg>Enviar reporte</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">11</span>Formulario de reporte</div>
+  </div>
+
+  <!-- C12 · confirmacion-sync -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="wstatus"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+      <div class="wbody scroll center-col" style="padding-top:16px;">
+        <div style="width:84px;height:84px;border-radius:50%;border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;"><svg style="width:40px;height:40px" class="ink"><use href="#ic-check"/></svg></div>
+        <div class="stack" style="align-items:center;margin-top:6px;"><div class="bar h12 w50" style="width:160px;"></div><div class="bar h7 w80" style="width:220px;"></div></div>
+        <div class="wcard" style="width:100%;text-align:left;margin-top:10px;">
+          <div class="wrow between" style="margin-bottom:14px;"><div class="stack"><span class="bar w40" style="height:7px;width:50px;"></span><span class="b" style="font-size:16px;">#MK-2041</span></div><span class="wpill-sm"><svg class="ic-16"><use href="#ic-sync"/></svg>Sincronizado</span></div>
+          <div class="wtl">
+            <div class="st"><div class="col"><div class="d on"><svg class="ic-16"><use href="#ic-check"/></svg></div><div class="ln"></div></div><div class="tx"><b>Recibido</b><p>Hoy · 9:41 a. m.</p></div></div>
+            <div class="st"><div class="col"><div class="d on"><svg class="ic-16"><use href="#ic-cpu"/></svg></div><div class="ln"></div></div><div class="tx"><b>Validando con IA</b><p>Agrupando reportes cercanos</p></div></div>
+            <div class="st"><div class="col"><div class="d"><svg class="ic-16"><use href="#ic-truck"/></svg></div><div class="ln"></div></div><div class="tx"><b class="muted">En ruta</b><p>Cuadrilla asignada</p></div></div>
+            <div class="st"><div class="col"><div class="d"><svg class="ic-16"><use href="#ic-check"/></svg></div></div><div class="tx"><b class="muted">Resuelto</b></div></div>
+          </div>
+        </div>
+        <div class="wrow" style="width:100%;gap:10px;margin-top:6px;"><button class="wbtn" style="flex:1"><svg class="ic-18"><use href="#ic-map"/></svg>Ver mapa</button><button class="wbtn primary" style="flex:1.4">Volver al inicio</button></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">12</span>Confirmación · Sync</div>
+  </div>
+
+  <!-- C13 · mis-reportes -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Mis reportes</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-filter"/></svg></div></div></div>
+      <div class="wbody pad-tab scroll" style="gap:11px;">
+        <div class="wseg"><span class="on">Todos</span><span>Pendientes</span><span>Resueltos</span></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wthumb" style="width:52px;height:52px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:130px;"></span><span class="wpill-sm">En proceso</span></div><span class="bar w50" style="height:7px;width:110px;"></span><span class="wpill-sm fill" style="align-self:flex-start;">Sev. ALTA</span></div></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wthumb" style="width:52px;height:52px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:110px;"></span><span class="wpill-sm">Resuelto</span></div><span class="bar w50" style="height:7px;width:120px;"></span><span class="wpill-sm fill" style="align-self:flex-start;">Sev. MEDIA</span></div></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wthumb" style="width:52px;height:52px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:140px;"></span><span class="wpill-sm">Recibido</span></div><span class="bar w50" style="height:7px;width:100px;"></span><span class="wpill-sm fill" style="align-self:flex-start;">Sev. ALTA</span></div></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wthumb" style="width:52px;height:52px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:120px;"></span><span class="wpill-sm">Duplicado</span></div><span class="bar w50" style="height:7px;width:110px;"></span><span class="wpill-sm fill" style="align-self:flex-start;">Sev. BAJA</span></div></div>
+      </div>
+      <div class="wtab-bar">
+        <div class="wtab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="wfab"><svg class="ic-26 ink"><use href="#ic-camera"/></svg></div>
+        <div class="wtab active"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">13</span>Mis reportes (historial)</div>
+  </div>
+
+  <!-- C14 · estado-vacio -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Mis reportes</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-filter"/></svg></div></div></div>
+      <div class="wbody pad-tab center-col" style="justify-content:center;gap:16px;">
+        <div style="width:120px;height:120px;border-radius:50%;border:2px dashed var(--line-d);display:flex;align-items:center;justify-content:center;color:var(--muted);"><svg style="width:52px;height:52px"><use href="#ic-list"/></svg></div>
+        <div class="stack" style="text-align:center;gap:9px;align-items:center;"><div class="bar h12 w60" style="width:180px;"></div><div class="bar h7 w90" style="width:220px;"></div><div class="bar h7 w70" style="width:160px;"></div></div>
+        <button class="wbtn primary" style="width:auto;padding:13px 22px;"><svg class="ic-18" style="color:#fff"><use href="#ic-camera"/></svg>Hacer mi primer reporte</button>
+      </div>
+      <div class="wtab-bar">
+        <div class="wtab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="wfab"><svg class="ic-26 ink"><use href="#ic-camera"/></svg></div>
+        <div class="wtab active"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">14</span>Estado vacío (sin reportes)</div>
+  </div>
+
+  <!-- C15 · detalle-seguimiento -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Mi reporte #MK-2041</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-map"/></svg></div></div></div>
+      <div class="wbody scroll" style="gap:12px;">
+        <div class="ximg" style="height:150px;"><span class="lbl">Foto del reporte</span><div style="position:absolute;left:16%;top:26%;width:62%;height:48%;border:2.5px dashed var(--ink);border-radius:6px;"><span style="position:absolute;left:0;top:-24px;border:1.5px solid var(--ink);background:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;">IA: Basura · 86%</span></div></div>
+        <div class="wrow" style="gap:8px;flex-wrap:wrap;"><span class="wpill-sm fill"><svg class="ic-16"><use href="#ic-flame"/></svg>ALTA</span><span class="wpill-sm"><svg class="ic-16"><use href="#ic-ruler"/></svg>4.2 m²</span><span class="wpill-sm"><svg class="ic-16"><use href="#ic-layers"/></svg>5 vecinos</span></div>
+        <div class="wsection"><span class="s-ic"><svg class="ic ic-18"><use href="#ic-clock"/></svg></span><h3>Seguimiento</h3></div>
+        <div class="wcard"><div class="wtl">
+          <div class="st"><div class="col"><div class="d on"><svg class="ic-16"><use href="#ic-check"/></svg></div><div class="ln"></div></div><div class="tx"><b>Recibido</b><p>Hoy · 9:41 a. m.</p></div></div>
+          <div class="st"><div class="col"><div class="d on"><svg class="ic-16"><use href="#ic-shield"/></svg></div><div class="ln"></div></div><div class="tx"><b>Validado</b><p>Hoy · 11:20 a. m.</p></div></div>
+          <div class="st"><div class="col"><div class="d on"><svg class="ic-16"><use href="#ic-truck"/></svg></div><div class="ln"></div></div><div class="tx"><b>En ruta</b><p>Cuadrilla 2 asignada</p></div></div>
+          <div class="st"><div class="col"><div class="d"><svg class="ic-16"><use href="#ic-check"/></svg></div></div><div class="tx"><b class="muted">Resuelto</b></div></div>
+        </div></div>
+        <div class="wnote"><svg class="ic ic-18"><use href="#ic-layers"/></svg><span>Tu reporte se unió al de <b>otros 4 vecinos</b> en el mismo punto.</span></div>
+        <button class="wbtn"><svg class="ic-18"><use href="#ic-map"/></svg>Ver en el mapa</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">15</span>Detalle / Seguimiento (ciudadano)</div>
+  </div>
+
+  <!-- C16 · notificaciones -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Notificaciones</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-check"/></svg></div></div></div>
+      <div class="wbody scroll" style="gap:11px;">
+        <p class="wlabel" style="margin:0 2px;">HOY</p>
+        <div class="wcard wrow" style="gap:12px;border-left:3px solid var(--ink);"><span class="wthumb" style="width:38px;height:38px;border-radius:10px;"></span><div style="flex:1" class="stack"><span class="bar w90"></span><span class="bar w60" style="height:7px;"></span></div></div>
+        <div class="wcard wrow" style="gap:12px;border-left:3px solid var(--ink);"><span class="wthumb" style="width:38px;height:38px;border-radius:10px;"></span><div style="flex:1" class="stack"><span class="bar w80"></span><span class="bar w50" style="height:7px;"></span></div></div>
+        <p class="wlabel" style="margin:4px 2px 0;">ESTA SEMANA</p>
+        <div class="wcard wrow" style="gap:12px;"><span class="wthumb" style="width:38px;height:38px;border-radius:10px;"></span><div style="flex:1" class="stack"><span class="bar w90"></span><span class="bar w50" style="height:7px;"></span></div></div>
+        <div class="wcard wrow" style="gap:12px;"><span class="wthumb" style="width:38px;height:38px;border-radius:10px;"></span><div style="flex:1" class="stack"><span class="bar w80"></span><span class="bar w60" style="height:7px;"></span></div></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">16</span>Notificaciones</div>
+  </div>
+
+  <!-- C17 · perfil-minka -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><span class="wtitle">Mi perfil</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-edit"/></svg></div></div>
+        <div class="wrow" style="gap:12px;margin-top:8px;"><span class="wavatar" style="width:54px;height:54px;"></span><div class="stack"><span class="bar h12" style="width:130px;"></span><span class="bar h7" style="width:100px;"></span></div></div></div>
+      <div class="wbody pad-tab scroll" style="gap:12px;">
+        <div class="wrow" style="gap:10px;">
+          <div class="wcard tight" style="flex:1;text-align:center;"><div class="b" style="font-size:19px;">8</div><span class="bar w70" style="height:7px;margin:5px auto 0;"></span></div>
+          <div class="wcard tight" style="flex:1;text-align:center;"><div class="b" style="font-size:19px;">5</div><span class="bar w70" style="height:7px;margin:5px auto 0;"></span></div>
+          <div class="wcard tight" style="flex:1;text-align:center;"><div class="b" style="font-size:19px;">340</div><span class="bar w80" style="height:7px;margin:5px auto 0;"></span></div>
+        </div>
+        <div class="wsection"><span class="s-ic"><svg class="ic ic-18"><use href="#ic-leaf"/></svg></span><h3>Minka digital</h3></div>
+        <div class="wcard"><div class="wrow between" style="margin-bottom:8px;"><span class="b small">Nivel 3 · Guardián del barrio</span><span class="muted small">340/500</span></div><div class="wmeter"><i style="width:68%;background:var(--ink);"></i></div><span class="bar w70" style="height:7px;margin-top:9px;"></span></div>
+        <div class="wcard wrow between" style="gap:6px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:46px;height:46px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;color:var(--ink);"><svg class="ic-18"><use href="#ic-flag"/></svg></div><span class="bar" style="width:40px;height:6px;"></span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:46px;height:46px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;color:var(--ink);"><svg class="ic-18"><use href="#ic-check"/></svg></div><span class="bar" style="width:40px;height:6px;"></span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:46px;height:46px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;color:var(--ink);"><svg class="ic-18"><use href="#ic-shield"/></svg></div><span class="bar" style="width:40px;height:6px;"></span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><div style="width:46px;height:46px;border-radius:50%;border:2px dashed var(--line-d);display:flex;align-items:center;justify-content:center;color:var(--muted);background:var(--fill);"><svg class="ic-18"><use href="#ic-lock"/></svg></div><span class="bar" style="width:40px;height:6px;"></span></div>
+        </div>
+        <div class="wcard tight" style="padding:4px 0;">
+          <div class="wrow between" style="padding:11px 14px;"><span class="wrow" style="gap:10px;"><svg class="ic"><use href="#ic-list"/></svg><span class="b small">Mis reportes</span></span><svg class="ic"><use href="#ic-chev-r"/></svg></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="wrow between" style="padding:11px 14px;"><span class="wrow" style="gap:10px;"><svg class="ic"><use href="#ic-edit"/></svg><span class="b small">Configuración</span></span><svg class="ic"><use href="#ic-chev-r"/></svg></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="wrow between" style="padding:11px 14px;"><span class="wrow" style="gap:10px;"><svg class="ic ink"><use href="#ic-x"/></svg><span class="b small">Cerrar sesión</span></span></div>
+        </div>
+      </div>
+      <div class="wtab-bar">
+        <div class="wtab"><svg class="ic"><use href="#ic-home"/></svg>Inicio</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="wfab"><svg class="ic-26 ink"><use href="#ic-camera"/></svg></div>
+        <div class="wtab"><svg class="ic"><use href="#ic-list"/></svg>Reportes</div>
+        <div class="wtab active"><svg class="ic"><use href="#ic-user"/></svg>Perfil</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">17</span>Perfil + Minka digital</div>
+  </div>
+
+  <!-- C18 · configuracion -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Configuración</span><div style="width:36px;"></div></div></div>
+      <div class="wbody scroll" style="gap:12px;">
+        <p class="wlabel" style="margin:0 2px;">NOTIFICACIONES</p>
+        <div class="wcard tight" style="padding:4px 0;">
+          <div class="wrow between" style="padding:11px 14px;"><span class="b small">Estado de mis reportes</span><span style="width:42px;height:24px;border-radius:12px;background:var(--ink);position:relative;display:inline-block;flex:0 0 auto;"><span style="position:absolute;top:3px;left:21px;width:18px;height:18px;border-radius:50%;background:#fff;"></span></span></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="wrow between" style="padding:11px 14px;"><span class="b small">Novedades y logros</span><span style="width:42px;height:24px;border-radius:12px;background:var(--ink);position:relative;display:inline-block;flex:0 0 auto;"><span style="position:absolute;top:3px;left:21px;width:18px;height:18px;border-radius:50%;background:#fff;"></span></span></div>
+        </div>
+        <p class="wlabel" style="margin:4px 2px 0;">DATOS Y CONEXIÓN</p>
+        <div class="wcard tight" style="padding:4px 0;">
+          <div class="wrow between" style="padding:11px 14px;"><span class="b small">Sincronizar solo con WiFi</span><span style="width:42px;height:24px;border-radius:12px;border:1.5px solid var(--line-d);background:var(--fill-2);position:relative;display:inline-block;flex:0 0 auto;"><span style="position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--line);"></span></span></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="wrow between" style="padding:11px 14px;"><div class="stack"><span class="b small">Reportes sin enviar</span><span class="bar" style="width:120px;height:7px;"></span></div><span class="wpill-sm fill">2</span></div>
+        </div>
+        <p class="wlabel" style="margin:4px 2px 0;">GENERAL</p>
+        <div class="wcard tight" style="padding:4px 0;">
+          <div class="wrow between" style="padding:11px 14px;"><span class="b small">Idioma</span><span class="muted small">Español ›</span></div>
+          <div style="height:1px;background:var(--line);margin:0 14px;"></div>
+          <div class="wrow between" style="padding:11px 14px;"><span class="b small">Acerca de MinkIA</span><svg class="ic"><use href="#ic-chev-r"/></svg></div>
+        </div>
+        <button class="wbtn"><svg class="ic-18 ink"><use href="#ic-x"/></svg>Cerrar sesión</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">18</span>Configuración</div>
+  </div>
+
+</div>
+
+<div class="flow-label"><span class="tag">Admin</span><h2>Flujo del administrador</h2><div class="rule"></div></div>
+<div class="gallery">
+
+  <!-- A01 · panel-dashboard -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div><span class="wtitle">Panel administrador</span><div class="wrow" style="gap:5px;margin-top:4px;"><svg class="ic ic-16"><use href="#ic-shield"/></svg><span class="bar" style="width:130px;height:7px;"></span></div></div><span class="wavatar"></span></div></div>
+      <div class="wbody pad-tab scroll" style="gap:12px;">
+        <div class="wkpis">
+          <div class="wkpi"><div class="kic"><svg class="ic-18"><use href="#ic-bell"/></svg></div><div class="kn">47</div><span class="bar w70" style="height:7px;margin-top:5px;"></span></div>
+          <div class="wkpi"><div class="kic"><svg class="ic-18"><use href="#ic-flame"/></svg></div><div class="kn">62</div><span class="bar w70" style="height:7px;margin-top:5px;"></span></div>
+          <div class="wkpi"><div class="kic"><svg class="ic-18"><use href="#ic-check"/></svg></div><div class="kn">38</div><span class="bar w70" style="height:7px;margin-top:5px;"></span></div>
+          <div class="wkpi"><div class="kic"><svg class="ic-18"><use href="#ic-chart"/></svg></div><div class="kn">81%</div><span class="bar w70" style="height:7px;margin-top:5px;"></span></div>
+        </div>
+        <div class="wsection"><span class="s-ic"><svg class="ic ic-18"><use href="#ic-chart"/></svg></span><h3>Reportes por día</h3></div>
+        <div class="wcard">
+          <div class="wbars"><div class="bk" style="height:44%"></div><div class="bk" style="height:62%"></div><div class="bk" style="height:50%"></div><div class="bk" style="height:78%"></div><div class="bk" style="height:96%;background:var(--fill-3);border-color:var(--ink);"></div><div class="bk" style="height:70%"></div><div class="bk" style="height:58%"></div></div>
+          <div class="wbarlabels"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+        </div>
+        <div class="wsection"><span class="s-ic"><svg class="ic ic-18"><use href="#ic-flame"/></svg></span><h3>Zonas más afectadas</h3></div>
+        <div class="wcard stack" style="gap:12px;">
+          <div><div class="wrow between small"><span class="b">P. J. La Unión</span><span class="muted">18 focos</span></div><div class="wmeter" style="margin-top:6px"><i style="width:90%;background:var(--ink);"></i></div></div>
+          <div><div class="wrow between small"><span class="b">Centro histórico</span><span class="muted">12 focos</span></div><div class="wmeter" style="margin-top:6px"><i style="width:64%;background:var(--fill-3);"></i></div></div>
+          <div><div class="wrow between small"><span class="b">Miraflores Alto</span><span class="muted">7 focos</span></div><div class="wmeter" style="margin-top:6px"><i style="width:38%;"></i></div></div>
+        </div>
+      </div>
+      <div class="wtab-bar">
+        <div class="wtab active"><svg class="ic"><use href="#ic-chart"/></svg>Panel</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-route"/></svg>Rutas</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-bell"/></svg>Alertas</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">1</span>Panel administrador (dashboard)</div>
+  </div>
+
+  <!-- A02 · bandeja-alertas -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Reportes entrantes</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-filter"/></svg></div></div>
+        <div class="wrow" style="gap:7px;margin-top:11px;"><span class="wpill-sm fill">Nuevos · 12</span><span class="wpill-sm">Sin asignar</span><span class="wpill-sm">Urgentes</span></div></div>
+      <div class="wbody pad-tab scroll" style="gap:11px;">
+        <div class="wcard wrow" style="gap:11px;border-left:3px solid var(--ink);"><div class="wthumb" style="width:48px;height:48px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:140px;"></span><span class="wpill-sm fill">NUEVO</span></div><span class="bar w50" style="height:7px;width:130px;"></span><div class="wrow" style="gap:6px;"><span class="wpill-sm fill">ALTA</span><span class="wpill-sm"><svg class="ic-16"><use href="#ic-layers"/></svg>x5</span></div></div></div>
+        <div class="wcard wrow" style="gap:11px;border-left:3px solid var(--ink);"><div class="wthumb" style="width:48px;height:48px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:120px;"></span><span class="wpill-sm fill">NUEVO</span></div><span class="bar w50" style="height:7px;width:120px;"></span><div class="wrow" style="gap:6px;"><span class="wpill-sm">MEDIA</span><span class="wpill-sm"><svg class="ic-16"><use href="#ic-layers"/></svg>x3</span></div></div></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wthumb" style="width:48px;height:48px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:110px;"></span><span class="bar w25" style="height:7px;width:40px;"></span></div><span class="bar w50" style="height:7px;width:110px;"></span><div class="wrow" style="gap:6px;"><span class="wpill-sm">MEDIA</span></div></div></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wthumb" style="width:48px;height:48px;"></div><div style="flex:1" class="stack"><div class="wrow between"><span class="bar w70" style="width:120px;"></span><span class="bar w25" style="height:7px;width:40px;"></span></div><span class="bar w50" style="height:7px;width:100px;"></span><div class="wrow" style="gap:6px;"><span class="wpill-sm">BAJA</span></div></div></div>
+      </div>
+      <div class="wtab-bar">
+        <div class="wtab"><svg class="ic"><use href="#ic-chart"/></svg>Panel</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-map"/></svg>Mapa</div>
+        <div class="wtab"><svg class="ic"><use href="#ic-route"/></svg>Rutas</div>
+        <div class="wtab active"><svg class="ic"><use href="#ic-bell"/></svg>Alertas</div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">2</span>Bandeja de Alertas (admin)</div>
+  </div>
+
+  <!-- A03 · puntos-criticos-clustering -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Puntos críticos</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-filter"/></svg></div></div>
+        <div class="wfield" style="margin-top:11px;padding:10px 12px;"><svg class="ic ic-18"><use href="#ic-search"/></svg><span class="ftxt"><span class="bar w60" style="display:block;"></span></span></div></div>
+      <div class="wbody" style="padding:0;position:relative;">
+        <div class="wmap" style="height:100%;border:none;border-radius:0;">
+          <svg viewBox="0 0 360 520" preserveAspectRatio="none"><rect width="360" height="520" fill="#fff"/><g stroke="#DCDFE3" stroke-width="2"><path d="M0 90H360"/><path d="M0 180H360"/><path d="M0 280H360"/><path d="M0 370H360"/><path d="M80 0V520"/><path d="M180 0V520"/><path d="M275 0V520"/></g></svg>
+          <div class="lbl"><svg class="ic-16" style="vertical-align:-3px"><use href="#ic-layers"/></svg> Agrupación espacial</div>
+          <div style="position:absolute;left:120px;top:200px;width:172px;height:172px;transform:translate(-50%,-50%);border:2px dashed var(--ink);border-radius:50%;background:rgba(60,64,67,.05);"></div>
+          <div style="position:absolute;left:120px;top:116px;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line-d);padding:2px 7px;border-radius:6px;white-space:nowrap;">zona agrupada</div>
+          <div class="wclus" style="left:120px;top:200px;width:56px;height:56px;">23</div>
+          <div class="wclus" style="left:255px;top:290px;width:44px;height:44px;">12</div>
+          <div class="wclus" style="left:95px;top:322px;width:38px;height:38px;">8</div>
+          <div class="wclus" style="left:300px;top:205px;width:34px;height:34px;">5</div>
+          <div style="position:absolute;right:12px;top:50px;background:#fff;border:1.5px solid var(--line-d);border-radius:11px;padding:9px 11px;font-size:10px;line-height:1.5;color:var(--ink);">
+            <div style="font-weight:700;margin-bottom:4px;">Cómo leer</div>
+            <div style="color:var(--muted);">N° = reportes<br>agrupados<br>más grande =<br>más reportes</div>
+            <div style="margin-top:5px;padding-top:5px;border-top:1px solid var(--line);">Toca un grupo<br>para abrirlo</div>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1.5px solid var(--line);border-top-left-radius:20px;border-top-right-radius:20px;padding:8px 15px 16px;max-height:45%;">
+          <div style="width:40px;height:5px;border-radius:3px;background:var(--line-d);margin:4px auto 12px;"></div>
+          <div class="wrow between" style="margin-bottom:10px;"><span class="b small">62 puntos · por severidad</span><span class="bar w25" style="height:8px;width:60px;"></span></div>
+          <div class="wcard wrow between" style="margin-bottom:9px;"><div class="wrow"><span class="wpin fill" style="position:static;transform:rotate(-45deg);margin:0 8px 0 2px;"></span><div class="stack"><span class="bar w70" style="width:150px;"></span><span class="bar w50" style="height:7px;width:120px;"></span></div></div><svg class="ic"><use href="#ic-chev-r"/></svg></div>
+          <div class="wcard wrow between"><div class="wrow"><span class="wpin" style="position:static;transform:rotate(-45deg);margin:0 8px 0 2px;"></span><div class="stack"><span class="bar w70" style="width:140px;"></span><span class="bar w50" style="height:7px;width:110px;"></span></div></div><svg class="ic"><use href="#ic-chev-r"/></svg></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">3</span>Puntos críticos · Clustering</div>
+  </div>
+
+  <!-- A04 · detalle-validacion -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Reporte #MK-2041</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-eye"/></svg></div></div></div>
+      <div class="wbody scroll" style="gap:12px;">
+        <div class="ximg" style="height:160px;">
+          <span class="lbl">Foto del reporte</span>
+          <div style="position:absolute;left:16%;top:26%;width:62%;height:48%;border:2.5px dashed var(--ink);border-radius:6px;"><span style="position:absolute;left:0;top:-24px;border:1.5px solid var(--ink);background:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;">IA: Basura · 86%</span></div>
+        </div>
+        <div class="wrow" style="gap:8px;flex-wrap:wrap;"><span class="wpill-sm fill"><svg class="ic-16"><use href="#ic-flame"/></svg>Severidad ALTA</span><span class="wpill-sm"><svg class="ic-16"><use href="#ic-ruler"/></svg>4.2 m²</span><span class="wpill-sm"><svg class="ic-16"><use href="#ic-layers"/></svg>5 reportes</span></div>
+        <div class="wnote"><svg class="ic ic-18"><use href="#ic-layers"/></svg><span><b>5 reportes ciudadanos</b> unificados automáticamente en este punto crítico.</span></div>
+        <div class="wcard stack" style="gap:11px;">
+          <div class="wrow between small"><span class="muted">Ubicación</span><span class="b">Jr. Elías Aguirre 450</span></div>
+          <div class="wrow between small"><span class="muted">Primer reporte</span><span class="b">Hoy · 9:41 a. m.</span></div>
+          <div class="wrow between small"><span class="muted">Tipo</span><span class="b">Residuo domiciliario</span></div>
+          <div class="wrow between small"><span class="muted">Reportado por</span><span class="b">5 vecinos</span></div>
+        </div>
+        <button class="wbtn primary"><svg class="ic-18" style="color:#fff"><use href="#ic-shield"/></svg>Validar y asignar cuadrilla</button>
+        <div class="wrow" style="gap:10px;"><button class="wbtn" style="flex:1"><svg class="ic-18"><use href="#ic-layers"/></svg>Duplicado</button><button class="wbtn" style="flex:1"><svg class="ic-18"><use href="#ic-x"/></svg>Rechazar</button></div>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">4</span>Detalle · Validación IA</div>
+  </div>
+
+  <!-- A05 · planificacion-rutas -->
+  <div class="frame-wrap">
+    <div class="wdevice"><div class="wnotch"></div><div class="wphone">
+      <div class="whead"><div class="wstatus" style="padding:0 6px 0 0;"><span>9:41</span><span class="right"><svg class="ic-18"><use href="#sb-signal"/></svg><svg class="ic-18"><use href="#sb-wifi"/></svg><svg width="26" height="13"><use href="#sb-batt"/></svg></span></div>
+        <div class="bar"><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-back"/></svg></div><span class="wtitle">Ruta de recolección</span><div class="wbtn-ic"><svg class="ic ink"><use href="#ic-sync"/></svg></div></div></div>
+      <div class="wbody scroll" style="gap:12px;">
+        <div class="wmap" style="height:190px;">
+          <svg viewBox="0 0 360 190" preserveAspectRatio="none"><rect width="360" height="190" fill="#fff"/><g stroke="#DCDFE3" stroke-width="2"><path d="M0 60H360"/><path d="M0 130H360"/><path d="M90 0V190"/><path d="M200 0V190"/><path d="M290 0V190"/></g>
+            <path d="M50 160 L90 130 L90 60 L200 60 L200 130 L290 130 L320 40" fill="none" stroke="#5F6368" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 7"/></svg>
+          <div class="lbl">Ruta optimizada</div>
+          <div class="wclus" style="left:50px;top:160px;width:26px;height:26px;font-size:12px;">1</div>
+          <div class="wclus" style="left:90px;top:60px;width:26px;height:26px;font-size:12px;">2</div>
+          <div class="wclus" style="left:200px;top:60px;width:26px;height:26px;font-size:12px;">3</div>
+          <div class="wclus" style="left:200px;top:130px;width:26px;height:26px;font-size:12px;">4</div>
+          <div class="wclus" style="left:320px;top:40px;width:26px;height:26px;font-size:12px;">5</div>
+        </div>
+        <div class="wcard wrow" style="gap:18px;justify-content:space-around;"><div style="text-align:center;"><div class="b" style="font-size:17px;">5</div><span class="bar" style="width:46px;height:7px;margin-top:4px;"></span></div><div style="text-align:center;"><div class="b" style="font-size:17px;">8.4 km</div><span class="bar" style="width:46px;height:7px;margin-top:4px;"></span></div><div style="text-align:center;"><div class="b" style="font-size:17px;">1h 20m</div><span class="bar" style="width:46px;height:7px;margin-top:4px;"></span></div></div>
+        <div class="wsection"><span class="s-ic"><svg class="ic ic-18"><use href="#ic-route"/></svg></span><h3>Paradas (por prioridad)</h3></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wclus" style="position:static;transform:none;width:26px;height:26px;font-size:12px;">1</div><div style="flex:1" class="stack"><span class="bar w70" style="width:150px;"></span><span class="bar w50" style="height:7px;width:100px;"></span></div><span class="wpill-sm fill">ALTA</span></div>
+        <div class="wcard wrow" style="gap:11px;"><div class="wclus" style="position:static;transform:none;width:26px;height:26px;font-size:12px;">2</div><div style="flex:1" class="stack"><span class="bar w70" style="width:130px;"></span><span class="bar w50" style="height:7px;width:90px;"></span></div><span class="wpill-sm">MEDIA</span></div>
+        <div class="wcard wrow between"><div class="wrow" style="gap:10px;"><svg class="ic ink"><use href="#ic-truck"/></svg><div class="stack"><span class="bar w70" style="width:90px;"></span><span class="bar w50" style="height:7px;width:120px;"></span></div></div><span class="wpill-sm">Asignar</span></div>
+        <button class="wbtn primary"><svg class="ic-18" style="color:#fff"><use href="#ic-truck"/></svg>Asignar y enviar ruta</button>
+      </div>
+    </div></div>
+    <div class="frame-cap"><span class="num">5</span>Planificación de rutas</div>
+  </div>
+
+</div>
+
+<div class="helper">
+  <h3>📐 Sobre estos wireframes</h3>
+  <p>Versión de <b>baja fidelidad</b> de las mismas 12 pantallas: escala de grises, cajas, placeholders con X para imágenes y barras grises para textos. <b>Sin color ni branding a propósito</b> — el foco está en la ESTRUCTURA y la jerarquía, no en la estética. Es la etapa previa a los mockups de alta fidelidad.</p>
+  <p style="margin-bottom:0;">Exportación a PNG/PDF: ábrelo en <b>Chrome</b> → <code>Ctrl + P</code> → <i>Guardar como PDF</i>; o clic derecho sobre un teléfono → <i>Inspeccionar</i> → sobre <code>&lt;div class="wdevice"&gt;</code> → <i>Capture node screenshot</i>.</p>
+</div>
+
+</body>
+</html>

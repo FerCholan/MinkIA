@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipos_residuo">
+        <item>Residuo domiciliario</item>
+        <item>Escombros / desmonte</item>
+        <item>Residuo orgánico</item>
+        <item>Plásticos y reciclables</item>
+        <item>Residuo peligroso</item>
+        <item>Mezcla / otros</item>
+    </string-array>
+</resources>

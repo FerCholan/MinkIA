@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bloque base de los skeletons: rectángulo redondeado en gris suave. El shimmer
+     (Facebook Shimmer) anima un brillo por encima para el efecto de carga. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#E2E6DF" />
+    <corners android:radius="8dp" />
+</shape>

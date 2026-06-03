@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo con contenido arriba (permisos): patrón que sube desde el pie y deja
+     limpia la zona de tarjetas. Mismo motivo, composición invertida. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/crema" />
+    <item android:drawable="@drawable/bg_patron_andino" />
+    <item android:drawable="@drawable/bg_glow_inferior" />
+</layer-list>

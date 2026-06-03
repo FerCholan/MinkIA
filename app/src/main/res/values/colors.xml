@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta de marca MinkIA -->
+    <color name="verde_bosque">#1B4228</color>
+    <color name="verde_bosque_osc">#0F2616</color>
+    <color name="verde_hoja">#69802D</color>
+    <color name="verde_hoja_claro">#8AA54A</color>
+    <color name="naranja_terracota">#BD4C18</color>
+    <color name="naranja_terracota_osc">#A23F10</color>
+    <color name="naranja_claro">#DF7A48</color>
+
+    <!-- Neutros -->
+    <color name="crema">#F4EFE4</color>
+    <color name="fondo">#F5F7F2</color>
+    <color name="superficie">#FFFFFF</color>
+    <color name="texto_principal">#243027</color>
+    <color name="texto_secundario">#5C655D</color>
+    <color name="linea">#E3E7DF</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- Tonos suaves para fondos de íconos y chips (pantalla de permisos) -->
+    <color name="terracota_suave">#F6DDD0</color>
+    <color name="azul_suave">#DCE7F3</color>
+    <color name="verde_suave">#E3EAD4</color>
+    <color name="gris_suave">#E6E6E0</color>
+    <color name="azul">#3B6FA0</color>
+    <color name="chip_permitido_bg">#DDEAC8</color>
+    <color name="chip_permitir_bg">#F6E0CF</color>
+
+    <!-- Severidad -->
+    <color name="sev_alta">#BD4C18</color>
+    <color name="sev_media">#B3812F</color>
+    <color name="sev_baja">#69802D</color>
+</resources>

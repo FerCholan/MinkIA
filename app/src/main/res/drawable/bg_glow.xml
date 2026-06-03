@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Resplandor radial crema centrado un poco arriba (donde va el logo). Aclara el
+  patrón en el centro para que el logotipo y el eslogan se lean nítidos, y deja
+  que el patrón respire hacia los bordes.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:type="radial"
+        android:centerX="0.5"
+        android:centerY="0.42"
+        android:gradientRadius="300dp"
+        android:startColor="#F2F4EFE4"
+        android:centerColor="#88F4EFE4"
+        android:endColor="#00F4EFE4" />
+</shape>

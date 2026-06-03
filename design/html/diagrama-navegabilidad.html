@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --bosque:#1b4228; --naranja:#bd4c18; --line:#cfd6cb; --tinta:#2b3631; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:#fff; font-family:'Inter',system-ui,sans-serif; color:var(--tinta); padding:26px; }
+  .diagram{ position:relative; background:#fff; padding:24px 30px; }
+
+  svg.links{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:visible; }
+
+  /* acceso */
+  .acceso{ display:flex; align-items:flex-start; gap:6px; margin-bottom:30px; position:relative; z-index:1; }
+  .acceso .seqlbl{ writing-mode:initial; font-weight:700; font-size:12px; color:var(--bosque); letter-spacing:1px; align-self:center; margin-right:8px; text-transform:uppercase; }
+  .arrowr{ align-self:center; color:var(--naranja); font-size:20px; font-weight:700; margin-top:-18px; }
+
+  .thumb{ border:1px solid var(--line); border-radius:8px; overflow:hidden; background:#fafbf9; }
+  .thumb img{ display:block; width:100%; height:auto; }
+  .lbl{ font-size:10.5px; font-weight:500; color:#5c655d; text-align:center; margin-top:4px; line-height:1.25; }
+  .acceso .step{ width:86px; }
+  .acceso .step .lbl{ font-size:9.5px; }
+
+  /* main: hub + branches */
+  .main{ display:flex; align-items:center; gap:150px; position:relative; z-index:1; }
+
+  .hubwrap{ display:flex; flex-direction:column; align-items:center; flex:none; }
+  .hub-icon{ color:var(--bosque); margin-bottom:4px; }
+  .hub-name{ font-weight:700; font-size:14px; color:var(--bosque); margin-bottom:8px; letter-spacing:.3px; }
+  .hub .thumb{ width:118px; border:2px solid var(--bosque); border-radius:12px; box-shadow:0 6px 16px rgba(20,40,25,.12); }
+
+  .branches{ display:flex; flex-direction:column; gap:26px; }
+  .branch{ display:flex; align-items:center; gap:16px; }
+  .branchhead{ width:118px; flex:none; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .branchhead .ic{ color:var(--bosque); }
+  .branchhead .nm{ font-weight:700; font-size:12.5px; color:var(--bosque); margin-top:3px; line-height:1.2; }
+  .screens{ display:flex; gap:8px; }
+  .screens .step{ width:84px; }
+  .screens .step .lbl{ font-size:9px; }
+</style>
+</head>
+<body>
+
+  <div class="diagram" id="nav-ciudadano"></div>
+  <div class="diagram" id="nav-admin" style="margin-top:46px"></div>
+
+<script>
+  const BASE = 'file:///C:/dev/MinkIA/design/png/wireframes/';
+
+  // íconos (line, 24x24)
+  const IC = {
+    home:'<path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9.5h13V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    map:'<path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2"/>',
+    plus:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.5v9M7.5 12h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    list:'<rect x="4" y="5" width="16" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7.5 9.5h9M7.5 13h9M7.5 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    bell:'<path d="M6 10a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 20a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2"/>',
+    user:'<circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    gauge:'<rect x="3.5" y="4.5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 16v-3M12 16v-6M17 16v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    pin:'<path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/>',
+    check:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12.5l2.5 2.5L16 9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    truck:'<path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/>',
+  };
+  function icon(name, size){ return '<svg class="ic" width="'+size+'" height="'+size+'" viewBox="0 0 24 24">'+IC[name]+'</svg>'; }
+
+  function thumb(role, code, slug, title, cls){
+    return '<div class="step '+(cls||'')+'"><div class="thumb"><img src="'+BASE+role+'/'+code+'-'+slug+'.png"></div><div class="lbl">'+title+'</div></div>';
+  }
+
+  function build(diagId, role, acceso, hub, branches){
+    const dia = document.getElementById(diagId);
+    let html = '<svg class="links"></svg>';
+
+    // acceso
+    if (acceso.length){
+      html += '<div class="acceso"><span class="seqlbl">Acceso</span>';
+      acceso.forEach((s,i) => {
+        html += thumb(role, s[0], s[2], s[1]);
+        if (i < acceso.length-1) html += '<span class="arrowr">&#8594;</span>';
+      });
+      html += '</div>';
+    }
+
+    // main
+    html += '<div class="main"><div class="hubwrap" id="'+diagId+'-hub">'
+          + '<span class="hub-icon">'+icon(hub.icon,30)+'</span>'
+          + '<span class="hub-name">'+hub.name+'</span>'
+          + '<div class="hub">'+ '<div class="thumb" style="width:118px"><img src="'+BASE+role+'/'+hub.code+'-'+hub.slug+'.png"></div>' +'</div>'
+          + '</div><div class="branches">';
+    branches.forEach((b,bi) => {
+      html += '<div class="branch"><div class="branchhead" id="'+diagId+'-b'+bi+'">'+icon(b.icon,26)+'<span class="nm">'+b.label+'</span></div><div class="screens">';
+      b.screens.forEach(s => { html += thumb(role, s[0], s[2], s[1]); });
+      html += '</div></div>';
+    });
+    html += '</div></div>';
+    dia.innerHTML = html;
+    dia._meta = { branches: branches.length, hasAcceso: acceso.length>0 };
+  }
+
+  function drawLinks(diagId){
+    const dia = document.getElementById(diagId);
+    const svg = dia.querySelector('svg.links');
+    const cr = dia.getBoundingClientRect();
+    const hub = document.getElementById(diagId+'-hub').getBoundingClientRect();
+    const sx = hub.right - cr.left, sy = hub.top + hub.height/2 - cr.top;
+    let paths = '<defs><marker id="ah-'+diagId+'" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#bd4c18"/></marker></defs>';
+    const n = dia._meta.branches;
+    for (let i=0;i<n;i++){
+      const r = document.getElementById(diagId+'-b'+i).getBoundingClientRect();
+      const ex = r.left - cr.left - 6, ey = r.top + r.height/2 - cr.top;
+      const mx = sx + (ex-sx)*0.5;
+      const d = 'M '+sx+' '+sy+' C '+mx+' '+sy+', '+mx+' '+ey+', '+ex+' '+ey;
+      paths += '<path d="'+d+'" fill="none" stroke="#bd4c18" stroke-width="2.4" marker-end="url(#ah-'+diagId+')"/>';
+    }
+    svg.innerHTML = paths;
+  }
+
+  // datos ciudadano
+  const CIU_ACCESO = [["C01","Splash","splash"],["C02","Onboarding","onboarding"],["C03","Login","login"],["C04","Registro","registro"],["C05","Recuperar","recuperar-contrasena"],["C06","Permisos","permisos"]];
+  const CIU_HUB = {code:"C07", slug:"inicio-mapa-calor", name:"Inicio", icon:"home"};
+  const CIU_BR = [
+    {icon:"map", label:"Mapa", screens:[["C08","Explorar","explorar-mapa"]]},
+    {icon:"plus", label:"Reportar", screens:[["C09","Cámara","camara-captura"],["C10","Análisis IA","analisis-ia"],["C11","Formulario","formulario-reporte"],["C12","Confirmación","confirmacion-sync"]]},
+    {icon:"list", label:"Mis reportes", screens:[["C13","Historial","mis-reportes"],["C14","Vacío","estado-vacio"],["C15","Detalle","detalle-seguimiento"]]},
+    {icon:"bell", label:"Notificaciones", screens:[["C16","Avisos","notificaciones"]]},
+    {icon:"user", label:"Perfil", screens:[["C17","Minka digital","perfil-minka"],["C18","Configuración","configuracion"]]},
+  ];
+
+  // datos admin
+  const ADM_HUB = {code:"A01", slug:"panel-dashboard", name:"Panel", icon:"gauge"};
+  const ADM_BR = [
+    {icon:"bell", label:"Alertas", screens:[["A02","Bandeja","bandeja-alertas"]]},
+    {icon:"pin", label:"Puntos críticos", screens:[["A03","Agrupación","puntos-criticos-clustering"]]},
+    {icon:"check", label:"Validación", screens:[["A04","Detalle y validación","detalle-validacion"]]},
+    {icon:"truck", label:"Rutas", screens:[["A05","Planificación","planificacion-rutas"]]},
+  ];
+
+  build('nav-ciudadano','ciudadano', CIU_ACCESO, CIU_HUB, CIU_BR);
+  build('nav-admin','admin', [], ADM_HUB, ADM_BR);
+
+  window.addEventListener('load', () => {
+    setTimeout(() => { drawLinks('nav-ciudadano'); drawLinks('nav-admin'); document.body.setAttribute('data-ready','1'); }, 300);
+  });
+</script>
+</body>
+</html>

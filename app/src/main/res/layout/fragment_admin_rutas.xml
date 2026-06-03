@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
+
+    <!-- Header andino: degradé verde + textura textil tenue, esquinas inferiores
+         redondeadas (las recorta RutasFragment con clipToOutline). La textura es un
+         ImageView a 0dp sobre los 4 lados: cubre sin inflar el alto. -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerRutas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_header_inicio">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.55"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_patron_andino"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/headerRutasContenido"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingVertical="18dp"
+            android:text="@string/admin_rutas_titulo"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Mapa de ruta -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/bg_mapa_placeholder">
+
+                <TextView style="@style/ParadaCirculo" android:backgroundTint="@color/sev_baja" android:layout_gravity="center" android:layout_marginStart="-110dp" android:layout_marginTop="60dp" android:text="1" />
+                <TextView style="@style/ParadaCirculo" android:backgroundTint="@color/sev_media" android:layout_gravity="center" android:layout_marginStart="-40dp" android:layout_marginTop="-30dp" android:text="2" />
+                <TextView style="@style/ParadaCirculo" android:backgroundTint="@color/sev_alta" android:layout_gravity="center" android:layout_marginStart="50dp" android:layout_marginTop="-40dp" android:text="3" />
+                <TextView style="@style/ParadaCirculo" android:backgroundTint="@color/sev_alta" android:layout_gravity="center" android:layout_marginStart="40dp" android:layout_marginTop="50dp" android:text="4" />
+                <TextView style="@style/ParadaCirculo" android:backgroundTint="@color/sev_media" android:layout_gravity="center" android:layout_marginStart="120dp" android:layout_marginTop="-60dp" android:text="5" />
+            </FrameLayout>
+
+            <!-- Resumen -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/bg_card_stat"
+                android:orientation="horizontal"
+                android:padding="18dp"
+                android:baselineAligned="false">
+
+                <LinearLayout style="@style/ResumenCol">
+                    <TextView style="@style/ResumenNum" android:textColor="@color/naranja_terracota" android:text="5" />
+                    <TextView style="@style/ResumenLbl" android:text="@string/admin_rutas_paradas" />
+                </LinearLayout>
+                <LinearLayout style="@style/ResumenCol">
+                    <TextView style="@style/ResumenNum" android:text="8.4 km" />
+                    <TextView style="@style/ResumenLbl" android:text="@string/admin_rutas_distancia" />
+                </LinearLayout>
+                <LinearLayout style="@style/ResumenCol">
+                    <TextView style="@style/ResumenNum" android:text="1h 20m" />
+                    <TextView style="@style/ResumenLbl" android:text="@string/admin_rutas_estimado" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/admin_rutas_lista"
+                android:textColor="@color/texto_principal"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Parada 1 -->
+            <LinearLayout style="@style/CardParada">
+                <TextView style="@style/ParadaCirculo" android:backgroundTint="@color/sev_baja" android:text="1" />
+                <LinearLayout style="@style/ParadaTexto">
+                    <TextView style="@style/ZonaNombre" android:text="P. J. La Unión - Mz H" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="23 focos · 2.1 km" android:textColor="@color/texto_secundario" android:textSize="13sp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_permitir" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="ALTA" android:textColor="@color/sev_alta" android:textStyle="bold" android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Parada 2 -->
+            <LinearLayout style="@style/CardParada">
+                <TextView style="@style/ParadaCirculo" android:backgroundTint="@color/sev_media" android:text="2" />
+                <LinearLayout style="@style/ParadaTexto">
+                    <TextView style="@style/ZonaNombre" android:text="Jr. Bolognesi 540" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="12 focos · 1.4 km" android:textColor="@color/texto_secundario" android:textSize="13sp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_opcional" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="MEDIA" android:textColor="@color/sev_media" android:textStyle="bold" android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Camión -->
+            <LinearLayout style="@style/CardParada">
+                <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_rutas" app:tint="@color/verde_bosque" android:contentDescription="@null" />
+                <LinearLayout style="@style/ParadaTexto">
+                    <TextView style="@style/ZonaNombre" android:text="@string/admin_rutas_camion" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/admin_rutas_camion_sub" android:textColor="@color/texto_secundario" android:textSize="13sp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_permitido" android:paddingHorizontal="12dp" android:paddingVertical="5dp" android:text="@string/admin_rutas_asignar" android:textColor="@color/verde_hoja" android:textStyle="bold" android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnviarRuta"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/naranja_terracota"
+                android:text="@string/admin_rutas_enviar"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_rutas"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

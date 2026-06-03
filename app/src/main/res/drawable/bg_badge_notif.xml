@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Punto de aviso sobre la campana. El borde del color del header lo hace
+     "flotar" por encima del botón. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/naranja_terracota" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/verde_bosque" />
+</shape>

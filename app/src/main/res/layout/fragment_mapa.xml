@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
+
+    <!-- Header andino: degradé verde + textura textil tenue (misma identidad que
+         el inicio). Recto abajo porque el mapa va pegado. La textura es un ImageView
+         a 0dp sobre los 4 lados: cubre el header sin inflar su altura. -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerMapa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_header_plano">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.55"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_patron_andino"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/headerMapaContenido"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mapa_titulo"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <TextView style="@style/ChipMapa" android:background="@drawable/bg_chip_mapa_sel" android:text="@string/mapa_filtro_todos" android:textColor="@color/verde_bosque" />
+                <TextView style="@style/ChipMapa" android:text="@string/mapa_filtro_alta" />
+                <TextView style="@style/ChipMapa" android:text="@string/mapa_filtro_media" />
+                <TextView style="@style/ChipMapa" android:text="@string/mapa_filtro_baja" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Mapa (vista previa) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#DDE5D5">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="-60dp"
+            android:layout_marginTop="-120dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_nav_mapa"
+            app:tint="@color/sev_alta" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="-180dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_nav_mapa"
+            app:tint="@color/sev_media" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="-10dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_nav_mapa"
+            app:tint="@color/azul" />
+
+        <ImageView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="-90dp"
+            android:layout_marginTop="120dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_nav_mapa"
+            app:tint="@color/sev_baja" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_chip_ia"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="8dp"
+            android:text="@string/mapa_nota"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </FrameLayout>
+</LinearLayout>

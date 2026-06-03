@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo">
+
+    <ScrollView
+        android:id="@+id/scrollPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/contenidoPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header andino: degradé verde + textura textil tenue y esquinas inferiores
+             redondeadas (las recorta PerfilFragment con clipToOutline, porque la
+             textura es un ImageView que llenaría la silueta). Misma identidad que el
+             inicio. La textura va a 0dp sobre los 4 lados: cubre sin inflar el alto. -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/headerPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_header_inicio">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0.55"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_patron_andino"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/headerPerfilContenido"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/perfil_titulo"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/btnEditar"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_boton_camara"
+                        android:contentDescription="@string/perfil_editar"
+                        android:padding="9dp"
+                        android:src="@drawable/ic_chevron_down"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvIniciales"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/bg_avatar"
+                        android:gravity="center"
+                        android:text="@string/perfil_iniciales"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvNombre"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/perfil_nombre"
+                            android:textColor="@color/white"
+                            android:textSize="19sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvRol"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/perfil_rol"
+                            android:textColor="@color/crema"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Stats -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="-16dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout style="@style/StatCard">
+                <TextView android:id="@+id/tvReportes" style="@style/StatNumber" android:text="8" />
+                <TextView style="@style/StatLabel" android:text="@string/perfil_stat_reportes" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/StatCard" android:layout_marginHorizontal="10dp">
+                <TextView android:id="@+id/tvResueltos" style="@style/StatNumber" android:text="5" />
+                <TextView style="@style/StatLabel" android:text="@string/perfil_stat_resueltos" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/StatCard">
+                <TextView android:id="@+id/tvPuntosMinka" style="@style/StatNumber" android:textColor="@color/naranja_terracota" android:text="340" />
+                <TextView style="@style/StatLabel" android:text="@string/perfil_stat_puntos" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Minka digital -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="22dp"
+            android:text="@string/perfil_minka"
+            android:textColor="@color/texto_principal"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_card_stat"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvNivel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/perfil_nivel"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvProgreso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/perfil_progreso"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressMinka"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_marginTop="10dp"
+                android:max="500"
+                android:progress="340"
+                android:progressTint="@color/verde_hoja" />
+
+            <TextView
+                android:id="@+id/tvFaltan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/perfil_faltan"
+                android:textColor="@color/texto_secundario"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout style="@style/BadgeCol">
+                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_on" android:src="@drawable/ic_camara" app:tint="@color/white" />
+                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_primero" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/BadgeCol">
+                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_on" android:src="@drawable/ic_check" app:tint="@color/white" />
+                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_diez" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/BadgeCol">
+                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_terracota" android:src="@drawable/ic_shield" app:tint="@color/white" />
+                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_mes" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/BadgeCol">
+                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_off" android:src="@drawable/ic_lock" app:tint="@color/texto_secundario" />
+                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_heroe" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Menú -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_card_stat"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/btnMisReportes"
+                style="@style/MenuPerfil"
+                android:text="@string/perfil_mis_reportes"
+                app:drawableStartCompat="@drawable/ic_lista"
+                app:drawableEndCompat="@drawable/ic_chevron_right" />
+
+            <View style="@style/SeparadorMenu" />
+
+            <TextView
+                android:id="@+id/btnConfig"
+                style="@style/MenuPerfil"
+                android:text="@string/perfil_config"
+                app:drawableStartCompat="@drawable/ic_chevron_down"
+                app:drawableEndCompat="@drawable/ic_chevron_right" />
+
+            <View style="@style/SeparadorMenu" />
+
+            <TextView
+                android:id="@+id/btnCerrar"
+                style="@style/MenuPerfil"
+                android:text="@string/perfil_cerrar"
+                android:textColor="@color/naranja_terracota"
+                app:drawableStartCompat="@drawable/ic_logout"
+                app:drawableTint="@color/naranja_terracota" />
+        </LinearLayout>
+
+    </LinearLayout>
+    </ScrollView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/skeletonPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:shimmer_duration="1150"
+        app:shimmer_tilt="18"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header verde: nombre + avatar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/verde_bosque"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="22dp"
+                android:paddingBottom="26dp">
+
+                <View
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_skeleton_claro_circulo" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="160dp"
+                        android:layout_height="18dp"
+                        android:background="@drawable/bg_skeleton_claro" />
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="12dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_skeleton_claro" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 3 stat cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="-16dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout style="@style/StatCard">
+                    <View android:layout_width="36dp" android:layout_height="22dp" android:background="@drawable/bg_skeleton" />
+                    <View android:layout_width="54dp" android:layout_height="10dp" android:layout_marginTop="8dp" android:background="@drawable/bg_skeleton" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/StatCard" android:layout_marginHorizontal="10dp">
+                    <View android:layout_width="36dp" android:layout_height="22dp" android:background="@drawable/bg_skeleton" />
+                    <View android:layout_width="54dp" android:layout_height="10dp" android:layout_marginTop="8dp" android:background="@drawable/bg_skeleton" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/StatCard">
+                    <View android:layout_width="36dp" android:layout_height="22dp" android:background="@drawable/bg_skeleton" />
+                    <View android:layout_width="54dp" android:layout_height="10dp" android:layout_marginTop="8dp" android:background="@drawable/bg_skeleton" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Título Minka -->
+            <View
+                android:layout_width="140dp"
+                android:layout_height="16dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_skeleton" />
+
+            <!-- Card Minka -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_card_stat"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <View android:layout_width="match_parent" android:layout_height="14dp" android:background="@drawable/bg_skeleton" />
+                <View android:layout_width="match_parent" android:layout_height="10dp" android:layout_marginTop="14dp" android:background="@drawable/bg_skeleton" />
+                <View android:layout_width="200dp" android:layout_height="12dp" android:layout_marginTop="14dp" android:background="@drawable/bg_skeleton" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</FrameLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de formularios con logo arriba (login): patrón como banda superior que
+     se desvanece a crema limpio hacia los campos. Mismo motivo, otra composición. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/crema" />
+    <item android:drawable="@drawable/bg_patron_andino" />
+    <item android:drawable="@drawable/bg_glow_superior" />
+</layer-list>

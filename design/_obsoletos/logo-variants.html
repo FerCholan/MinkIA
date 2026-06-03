@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bosque:#1b4228; --hoja:#69802d; --naranja:#bd4c18; --ocre:#b3812f;
+    --hoja-claro:#8aa54a; --naranja-claro:#df7a48; --crema:#f4efe4; --verde-osc:#0f2616; --line:#e3e7df;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:#e9ece6; font-family:'Inter',system-ui,sans-serif; }
+  .board{ width:1080px; background:#f3f5f0; padding:34px 40px 42px; }
+  .title{ font-weight:700; font-size:16px; color:var(--bosque); margin-bottom:4px; }
+  .sub{ font-size:12.5px; color:#8a928a; margin-bottom:24px; }
+  .row{ display:flex; gap:24px; align-items:stretch; margin-bottom:26px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:0 6px 16px rgba(20,40,25,.06); padding:18px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .cap{ font-size:12.5px; font-weight:600; color:#5c655d; text-align:center; }
+  .cap b{ color:var(--bosque); } .cap span{ color:#aab2aa; font-weight:400; }
+  .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
+
+  /* wordmark */
+  .wm{ font-family:'Fredoka',sans-serif; font-weight:600; font-size:64px; line-height:1; display:inline-flex; align-items:center; letter-spacing:-1px; }
+  .wm .mink{ color:var(--bosque); } .wm .ia{ color:var(--naranja); }
+  .wm .li{ position:relative; display:inline-block; }
+  .wm .li > svg{ position:absolute; top:-.50em; left:50%; transform:translateX(-26%) rotate(24deg); width:.56em; height:.56em; }
+  .wm .li > svg .lf-body{ fill:var(--hoja); }
+  .wm .li > svg .lf-vein{ fill:none; stroke:#fff; stroke-width:6; stroke-linecap:round; opacity:.45; }
+
+  .icon{ width:188px; height:188px; border-radius:42px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 26px rgba(15,38,22,.22), inset 0 1px 0 rgba(255,255,255,.10); overflow:hidden; }
+  .icon.crema{ background:var(--crema); }
+  .icon.verde{ background:linear-gradient(155deg,#234f30,var(--verde-osc)); }
+  .icon svg{ width:100%; height:100%; display:block; }
+  .bandwrap{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+</style>
+</head>
+<body>
+  <div class="board">
+    <div class="title">MinkIA · Exploración de identidad de marca</div>
+    <div class="sub">Logotipo con la hoja reubicada · motivo textil andino · 4 conceptos de isotipo / ícono de app</div>
+
+    <!-- símbolos reutilizables -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="leaf" viewBox="0 0 100 100"><path class="lf-body" d="M86 14 C44 10 14 40 16 86 C62 90 90 58 86 14 Z"/><path class="lf-vein" d="M30 80 C50 60 68 44 82 30" fill="none" stroke-width="6" stroke-linecap="round"/></symbol>
+      <symbol id="fig" viewBox="0 0 120 120">
+        <circle cx="60" cy="22" r="15"/>
+        <path d="M60 40 C45 40 35 51 35 67 L35 106 C35 110 38 112 42 112 L78 112 C82 112 85 110 85 106 L85 67 C85 51 75 40 60 40 Z"/>
+        <path d="M40 66 C29 53 19 37 17 25 C16 18 23 15 28 20 C39 30 49 46 53 62 Z"/>
+        <path d="M80 66 C91 53 101 37 103 25 C104 18 97 15 92 20 C81 30 71 46 67 62 Z"/>
+      </symbol>
+      <symbol id="pin" viewBox="0 0 100 132"><path d="M50 3 C24 3 4 23 4 49 C4 84 50 128 50 128 C50 128 96 84 96 49 C96 23 76 3 50 3 Z"/></symbol>
+      <!-- banda textil andina -->
+      <symbol id="band" viewBox="0 0 360 52" preserveAspectRatio="none">
+        <path d="M0 7 L20 17 L40 7 L60 17 L80 7 L100 17 L120 7 L140 17 L160 7 L180 17 L200 7 L220 17 L240 7 L260 17 L280 7 L300 17 L320 7 L340 17 L360 7" fill="none" stroke="#bd4c18" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M0 45 L20 35 L40 45 L60 35 L80 45 L100 35 L120 45 L140 35 L160 45 L180 35 L200 45 L220 35 L240 45 L260 35 L280 45 L300 35 L320 45 L340 35 L360 45" fill="none" stroke="#b3812f" stroke-width="4" stroke-linejoin="round"/>
+        <g>
+          <path d="M30 13 L43 26 L30 39 L17 26 Z" fill="#1b4228"/><path d="M30 20 L36 26 L30 32 L24 26 Z" fill="#f4efe4"/>
+          <path d="M90 13 L103 26 L90 39 L77 26 Z" fill="#bd4c18"/><path d="M90 20 L96 26 L90 32 L84 26 Z" fill="#f4efe4"/>
+          <path d="M150 13 L163 26 L150 39 L137 26 Z" fill="#69802d"/><path d="M150 20 L156 26 L150 32 L144 26 Z" fill="#f4efe4"/>
+          <path d="M210 13 L223 26 L210 39 L197 26 Z" fill="#b3812f"/><path d="M210 20 L216 26 L210 32 L204 26 Z" fill="#f4efe4"/>
+          <path d="M270 13 L283 26 L270 39 L257 26 Z" fill="#1b4228"/><path d="M270 20 L276 26 L270 32 L264 26 Z" fill="#f4efe4"/>
+          <path d="M330 13 L343 26 L330 39 L317 26 Z" fill="#bd4c18"/><path d="M330 20 L336 26 L330 32 L324 26 Z" fill="#f4efe4"/>
+        </g>
+      </symbol>
+    </svg>
+
+    <!-- fila 1: wordmark + banda -->
+    <div class="row">
+      <div class="card" style="flex:1.3; justify-content:center;">
+        <span class="wm"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span>
+        <div class="cap"><b>Logotipo</b> <span>· hoja reubicada sobre la “i”</span></div>
+      </div>
+      <div class="card" style="flex:1; justify-content:center;">
+        <div class="bandwrap"><svg width="300" height="44" viewBox="0 0 360 52" preserveAspectRatio="none"><use href="#band"/></svg></div>
+        <div class="cap"><b>Motivo textil andino</b> <span>· elemento de identidad reutilizable</span></div>
+      </div>
+    </div>
+
+    <!-- fila 2: 4 conceptos de ícono -->
+    <div class="grid">
+
+      <!-- A — Comunidad (minka) -->
+      <div class="card">
+        <div class="icon crema">
+          <svg viewBox="0 0 200 200">
+            <use href="#fig" x="58" y="58" width="84" height="84" fill="#1b4228"/>
+            <use href="#fig" x="22" y="80" width="62" height="62" fill="#b3812f"/>
+            <use href="#fig" x="116" y="80" width="62" height="62" fill="#bd4c18"/>
+            <use href="#band" x="18" y="150" width="164" height="26"/>
+            <use href="#pin" x="80" y="18" width="40" height="53" fill="#1b4228"/>
+            <use href="#leaf" x="88" y="27" width="24" height="24" fill="#8aa54a"/>
+          </svg>
+        </div>
+        <div class="cap"><b>A · Comunidad</b><br><span>3 figuras + textil + pin con hoja</span></div>
+      </div>
+
+      <!-- B — Pin andino -->
+      <div class="card">
+        <div class="icon crema">
+          <svg viewBox="0 0 200 200">
+            <g stroke="#69802d" stroke-width="6" stroke-linecap="round"><path d="M100 14 L100 30"/><path d="M78 20 L86 33"/><path d="M122 20 L114 33"/></g>
+            <use href="#pin" x="48" y="34" width="104" height="137" fill="#1b4228"/>
+            <use href="#leaf" x="74" y="58" width="52" height="52" fill="#8aa54a"/>
+            <use href="#band" x="36" y="120" width="128" height="22"/>
+          </svg>
+        </div>
+        <div class="cap"><b>B · Pin andino</b><br><span>ubicación + hoja + greca + “destello” IA</span></div>
+      </div>
+
+      <!-- C — Hoja + greca -->
+      <div class="card">
+        <div class="icon crema">
+          <svg viewBox="0 0 200 200">
+            <use href="#leaf" x="56" y="32" width="88" height="88" fill="#69802d"/>
+            <use href="#band" x="34" y="138" width="132" height="26"/>
+          </svg>
+        </div>
+        <div class="cap"><b>C · Hoja + greca</b><br><span>minimalista, elegante</span></div>
+      </div>
+
+      <!-- D — Tres hojas (comunidad abstracta) -->
+      <div class="card">
+        <div class="icon verde">
+          <svg viewBox="0 0 200 200">
+            <use href="#leaf" x="74" y="34" width="56" height="56" fill="#8aa54a"/>
+            <use href="#leaf" x="40" y="58" width="48" height="48" fill="#df7a48" transform="rotate(-26 64 82)"/>
+            <use href="#leaf" x="112" y="58" width="48" height="48" fill="#e9b24a" transform="rotate(26 136 82)"/>
+            <use href="#band" x="34" y="142" width="132" height="24"/>
+          </svg>
+        </div>
+        <div class="cap"><b>D · Tres hojas</b><br><span>comunidad abstracta, sobre fondo oscuro</span></div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Controlador de animación de layout: aplica item_entrada a cada fila con un
+     pequeño desfase, generando la cascada. -->
+<layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
+    android:animation="@anim/item_entrada"
+    android:animationOrder="normal"
+    android:delay="12%" />

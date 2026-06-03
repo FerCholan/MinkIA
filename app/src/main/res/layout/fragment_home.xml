@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo">
+
+    <!-- CONTENIDO -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/contenido"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header andino: degradé verde + textura textil tenue. Avatar con
+                 inicial, saludo jerarquizado (Hola, / vecino / ubicación) y campana
+                 con punto de aviso. El recorte de las esquinas inferiores lo hace
+                 HomeFragment (clipToOutline) para que la textura no las desborde. -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headerInicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_header_inicio">
+
+                <!-- Textura: 0dp constreñido a los 4 lados cubre el header sin
+                     inflar su altura (el contenido es quien la define). -->
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:alpha="0.55"
+                    android:importantForAccessibility="no"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_patron_andino"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/headerContenido"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvAvatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_avatar_inicial"
+                        android:contentDescription="@null"
+                        android:gravity="center"
+                        android:text="@string/inicio_avatar_inicial"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="14dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inicio_saludo_hola"
+                            android:textColor="@color/verde_hoja_claro"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-2dp"
+                            android:text="@string/inicio_saludo_nombre"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_nav_mapa"
+                                app:tint="@color/crema" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="@string/inicio_ubicacion"
+                                android:textColor="@color/crema"
+                                android:textSize="12.5sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/btnNotificaciones"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/bg_boton_header"
+                            android:contentDescription="@string/notif_titulo"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_bell"
+                            app:tint="@color/white" />
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:background="@drawable/bg_badge_notif" />
+                    </FrameLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Fila de 3 stats -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="-16dp"
+                android:baselineAligned="false">
+
+                <LinearLayout style="@style/StatCard">
+                    <TextView android:id="@+id/tvPuntosActivos" style="@style/StatNumber" tools:text="62" />
+                    <TextView style="@style/StatLabel" android:text="@string/label_puntos_activos" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/StatCard" android:layout_marginHorizontal="10dp">
+                    <TextView android:id="@+id/tvTusReportes" style="@style/StatNumber" tools:text="8" />
+                    <TextView style="@style/StatLabel" android:text="@string/label_tus_reportes" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/StatCard">
+                    <TextView android:id="@+id/tvResueltos" style="@style/StatNumber" tools:text="1.2k" />
+                    <TextView style="@style/StatLabel" android:text="@string/label_resueltos" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Mapa de calor (placeholder) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="22dp"
+                android:text="@string/titulo_mapa_calor"
+                android:textColor="@color/texto_principal"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvFocosCerca"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_card_stat"
+                android:gravity="center"
+                android:textColor="@color/naranja_terracota"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="3 focos cerca tuyo" />
+
+            <!-- Cerca tuyo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="22dp"
+                android:text="@string/titulo_cerca_tuyo"
+                android:textColor="@color/texto_principal"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPuntosCercanos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layoutAnimation="@anim/layout_animation_lista"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_punto_critico"
+                tools:itemCount="3" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- CARGA: skeleton con shimmer que calca la estructura real -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/skeleton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:shimmer_duration="1150"
+        app:shimmer_tilt="18"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header: avatar + líneas de saludo + campana -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/verde_bosque"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="22dp"
+                android:paddingBottom="30dp">
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_skeleton_claro_circulo" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="13dp"
+                        android:background="@drawable/bg_skeleton_claro" />
+
+                    <View
+                        android:layout_width="120dp"
+                        android:layout_height="22dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_skeleton_claro" />
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="12dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_skeleton_claro" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_skeleton_claro_circulo" />
+            </LinearLayout>
+
+            <!-- 3 stat cards blancas con número + etiqueta -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="-16dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout style="@style/StatCard">
+                    <View android:layout_width="40dp" android:layout_height="22dp" android:background="@drawable/bg_skeleton" />
+                    <View android:layout_width="56dp" android:layout_height="10dp" android:layout_marginTop="8dp" android:background="@drawable/bg_skeleton" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/StatCard" android:layout_marginHorizontal="10dp">
+                    <View android:layout_width="40dp" android:layout_height="22dp" android:background="@drawable/bg_skeleton" />
+                    <View android:layout_width="56dp" android:layout_height="10dp" android:layout_marginTop="8dp" android:background="@drawable/bg_skeleton" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/StatCard">
+                    <View android:layout_width="40dp" android:layout_height="22dp" android:background="@drawable/bg_skeleton" />
+                    <View android:layout_width="56dp" android:layout_height="10dp" android:layout_marginTop="8dp" android:background="@drawable/bg_skeleton" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Título -->
+            <View
+                android:layout_width="140dp"
+                android:layout_height="16dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_skeleton" />
+
+            <!-- Mapa de calor: card con pins -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_card_stat">
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="-80dp"
+                    android:layout_marginTop="-34dp"
+                    android:background="@drawable/bg_skeleton_circulo" />
+
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="64dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_skeleton_circulo" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="-16dp"
+                    android:layout_marginTop="44dp"
+                    android:background="@drawable/bg_skeleton_circulo" />
+            </FrameLayout>
+
+            <!-- Título lista -->
+            <View
+                android:layout_width="120dp"
+                android:layout_height="16dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_skeleton" />
+
+            <!-- 3 filas -->
+            <include layout="@layout/item_skeleton_fila" />
+
+            <include layout="@layout/item_skeleton_fila" />
+
+            <include layout="@layout/item_skeleton_fila" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <!-- ERROR -->
+    <LinearLayout
+        android:id="@+id/grupoError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/texto_secundario"
+            android:textSize="15sp"
+            tools:text="@string/error_generico" />
+
+        <Button
+            android:id="@+id/btnReintentar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/naranja_terracota"
+            android:text="@string/btn_reintentar"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Movimiento direccional entre pantallas: entrar desliza adelante, volver
+         atrás. Aplicado por tema a TODA la app y maneja el "atrás" solo. El flujo
+         de entrada sobrescribe esto con un fundido (comparten el fondo andino). -->
+    <style name="MinkIA.Animation.Activity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+
+    <!-- Tipografía de marca (Poppins) aplicada a toda la escala de Material 3.
+         Vive en un tema intermedio para que día y noche la hereden sin duplicar. -->
+    <style name="Theme.MinkIA.Tipografia" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/MinkIA.Animation.Activity</item>
+        <!-- Habilita transiciones de Activity (necesario para el container transform). -->
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="fontFamily">@font/poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.MinkIA.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.MinkIA.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.MinkIA.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.MinkIA.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.MinkIA.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.MinkIA.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.MinkIA.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.MinkIA.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.MinkIA.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.MinkIA.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.MinkIA.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.MinkIA.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.MinkIA.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.MinkIA.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.MinkIA.LabelSmall</item>
+    </style>
+
+    <!-- Tema base de MinkIA, sobre la tipografía de marca -->
+    <style name="Base.Theme.MinkIA" parent="Theme.MinkIA.Tipografia">
+        <item name="colorPrimary">@color/verde_bosque</item>
+        <item name="colorPrimaryDark">@color/verde_bosque_osc</item>
+        <item name="colorSecondary">@color/verde_hoja</item>
+        <item name="colorAccent">@color/naranja_terracota</item>
+        <item name="android:statusBarColor">@color/verde_bosque</item>
+        <item name="android:windowBackground">@color/fondo</item>
+    </style>
+
+    <style name="Theme.MinkIA" parent="Base.Theme.MinkIA" />
+
+    <!-- Splash de arranque del sistema (Android 12+ y backport con core-splashscreen):
+         fondo crema + hoja MinkIA, luego entrega el control a Theme.MinkIA. -->
+    <style name="Theme.MinkIA.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/crema</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_leaf</item>
+        <item name="postSplashScreenTheme">@style/Theme.MinkIA</item>
+    </style>
+</resources>

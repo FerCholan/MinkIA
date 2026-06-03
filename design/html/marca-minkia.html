@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bosque:#1b4228; --verde-osc:#0f2616; --hoja:#69802d; --hoja-claro:#8aa54a;
+    --naranja:#bd4c18; --naranja-claro:#df7a48; --ocre:#b3812f;
+    --crema:#f4efe4; --papel:#ffffff; --line:#e3e7df; --tinta:#243027;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:#e9ece6; font-family:'Inter',system-ui,sans-serif; color:var(--tinta); }
+  .board{ width:1120px; background:#f5f7f2; padding:40px 44px 46px; }
+
+  /* header */
+  .head{ display:flex; align-items:flex-end; justify-content:space-between; border-bottom:2px solid var(--bosque); padding-bottom:16px; margin-bottom:26px; }
+  .head h1{ font-family:'Poppins'; font-weight:700; font-size:26px; color:var(--bosque); letter-spacing:-.4px; }
+  .head h1 span{ color:var(--naranja); }
+  .head .meta{ text-align:right; font-size:12px; color:#8a928a; line-height:1.5; }
+
+  .section-label{ font-family:'Poppins'; font-weight:600; font-size:12px; letter-spacing:1.4px; text-transform:uppercase; color:var(--naranja); margin-bottom:12px; }
+
+  /* concept row */
+  .concept{ display:flex; gap:30px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:20px; padding:26px 30px; margin-bottom:30px; box-shadow:0 8px 22px rgba(20,40,25,.05); }
+  .concept .iso-big{ width:172px; height:172px; flex:none; }
+  .concept .txt h2{ font-family:'Poppins'; font-weight:600; font-size:20px; color:var(--bosque); margin-bottom:8px; }
+  .concept .txt p{ font-size:14px; line-height:1.6; color:#46514a; max-width:640px; }
+  .concept .txt b.g{ color:var(--hoja); } .concept .txt b.o{ color:var(--naranja); }
+  .legend{ display:flex; gap:22px; margin-top:14px; }
+  .legend div{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:#5c655d; }
+  .dot{ width:13px; height:13px; border-radius:50%; }
+
+  /* variants grid */
+  .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-bottom:30px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow:0 6px 16px rgba(20,40,25,.06); display:flex; flex-direction:column; }
+  .stage{ height:170px; display:flex; align-items:center; justify-content:center; padding:18px; }
+  .stage.claro{ background:var(--crema); }
+  .stage.blanco{ background:#fff; border-bottom:1px solid var(--line); }
+  .stage.oscuro{ background:radial-gradient(120% 120% at 30% 20%, #234f30, var(--verde-osc)); }
+  .meta-card{ padding:13px 16px 16px; border-top:1px solid var(--line); }
+  .meta-card .n{ font-family:'Poppins'; font-weight:600; font-size:10.5px; letter-spacing:1px; color:var(--naranja); }
+  .meta-card .t{ font-family:'Poppins'; font-weight:600; font-size:14px; color:var(--bosque); margin:2px 0 4px; }
+  .meta-card .d{ font-size:11.5px; line-height:1.45; color:#7a837b; }
+
+  /* app tile */
+  .tile{ width:128px; height:128px; border-radius:30px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 26px rgba(15,38,22,.28), inset 0 1px 0 rgba(255,255,255,.12); }
+  .tile-bg{ background:radial-gradient(125% 125% at 30% 22%, #2a5a37, var(--bosque)); }
+
+  /* wordmark */
+  .wm{ font-family:'Poppins'; font-weight:600; font-size:46px; line-height:1; display:inline-flex; align-items:flex-start; letter-spacing:-1.5px; }
+  .wm.sm{ font-size:40px; }
+  .wm .li{ position:relative; display:inline-block; }
+  .wm .li > svg{ position:absolute; left:50%; width:.40em; height:.40em; }
+  .wm.principal .mink{ color:var(--bosque); } .wm.principal .ia{ color:var(--naranja); }
+  .wm.mono .mink, .wm.mono .ia{ color:var(--bosque); }
+  .wm.dark .mink{ color:#fff; } .wm.dark .ia{ color:var(--naranja-claro); }
+
+  /* bottom row */
+  .bottom{ display:grid; grid-template-columns:1.25fr 1fr; gap:22px; }
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px 24px; box-shadow:0 6px 16px rgba(20,40,25,.06); }
+  .panel h3{ font-family:'Poppins'; font-weight:600; font-size:13px; color:var(--bosque); margin-bottom:14px; }
+
+  /* construction */
+  .constr{ display:flex; align-items:center; gap:18px; }
+  .constr svg{ width:150px; height:150px; }
+
+  /* palette */
+  .sw-row{ display:flex; gap:10px; }
+  .sw{ flex:1; }
+  .sw .chip{ height:54px; border-radius:10px; border:1px solid rgba(0,0,0,.05); }
+  .sw .nm{ font-size:10.5px; font-weight:600; color:var(--bosque); margin-top:6px; }
+  .sw .hx{ font-size:10px; color:#9aa29a; font-family:'Inter'; }
+
+  /* greca */
+  .greca-note{ font-size:11.5px; color:#7a837b; line-height:1.5; margin-top:12px; }
+</style>
+</head>
+<body>
+  <div class="board">
+
+    <!-- defs -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <!-- hoja-circuito (isotipo) -->
+      <symbol id="leafc" viewBox="0 0 120 120">
+        <path class="lf-body" style="fill:var(--body,#69802d)" d="M60 8 C30 30 26 70 60 112 C94 70 90 30 60 8 Z"/>
+        <g style="fill:none;stroke:var(--vein,#f4efe4);stroke-width:3.4;stroke-linecap:round">
+          <path d="M60 104 C60 80 60 48 60 20"/>
+          <path d="M60 88 Q46 88 38.5 80.5"/>
+          <path d="M60 88 Q74 88 81.5 80.5"/>
+          <path d="M60 68 Q44 66 33.5 58.5"/>
+          <path d="M60 68 Q76 66 86.5 58.5"/>
+          <path d="M60 48 Q48 46 40.5 40.5"/>
+          <path d="M60 48 Q72 46 79.5 40.5"/>
+        </g>
+        <g style="fill:var(--node,#bd4c18)">
+          <circle cx="60" cy="20" r="4.6"/>
+          <circle cx="38.5" cy="80.5" r="4.2"/><circle cx="81.5" cy="80.5" r="4.2"/>
+          <circle cx="33.5" cy="58.5" r="4.2"/><circle cx="86.5" cy="58.5" r="4.2"/>
+          <circle cx="40.5" cy="40.5" r="4.2"/><circle cx="79.5" cy="40.5" r="4.2"/>
+        </g>
+      </symbol>
+      <!-- hoja simple (punto de la i) -->
+      <symbol id="leaf" viewBox="0 0 100 100">
+        <path style="fill:var(--body,#69802d)" d="M50 6 C24 26 20 64 50 96 C80 64 76 26 50 6 Z"/>
+        <path style="fill:none;stroke:var(--vein,#f4efe4);stroke-width:6;stroke-linecap:round" d="M50 90 C50 64 50 36 50 16"/>
+      </symbol>
+    </svg>
+
+    <!-- header -->
+    <div class="head">
+      <h1>Mink<span>IA</span> · Sistema de identidad de marca</h1>
+      <div class="meta">Manual de marca — versión 1.0<br>Logotipo · Isotipo · Paleta · Construcción</div>
+    </div>
+
+    <!-- concepto -->
+    <div class="section-label">El concepto · la hoja-circuito</div>
+    <div class="concept">
+      <svg class="iso-big" viewBox="0 0 120 120" style="--body:#69802d;--vein:#f4efe4;--node:#bd4c18"><use href="#leafc"/></svg>
+      <div class="txt">
+        <h2>Una hoja que también es un circuito</h2>
+        <p>El símbolo fusiona los dos mundos que dan origen a la marca. La <b class="g">hoja</b> representa la <i>minka</i>: la vida, la naturaleza y el fruto del trabajo comunitario. Sus <b class="g">nervaduras</b> no son decorativas: trazan un <b class="o">circuito</b> cuyos <b class="o">nodos</b> encarnan la inteligencia artificial. Naturaleza y tecnología conviven en un solo trazo —el ser humano dirige, la IA asiste—. Esa es la lectura del isotipo: <b>tecnología al servicio de lo comunitario</b>.</p>
+        <div class="legend">
+          <div><span class="dot" style="background:#69802d"></span> Hoja — la minka, lo natural</div>
+          <div><span class="dot" style="background:#bd4c18"></span> Nodos — la inteligencia artificial</div>
+          <div><span class="dot" style="background:#f4efe4;border:1px solid #d8ddd2"></span> Nervaduras — el vínculo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 versiones -->
+    <div class="section-label">Las cuatro versiones oficiales</div>
+    <div class="grid">
+
+      <!-- principal -->
+      <div class="card">
+        <div class="stage claro">
+          <span class="wm principal"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100" style="--body:#69802d;--vein:#f4efe4;top:-.16em;transform:translateX(-50%) rotate(16deg)"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span>
+        </div>
+        <div class="meta-card">
+          <div class="n">VERSIÓN 01</div>
+          <div class="t">Principal, a color</div>
+          <div class="d">Uso preferente sobre fondo claro. “Mink” en verde bosque, hoja sobre la i, “IA” en naranja.</div>
+        </div>
+      </div>
+
+      <!-- isotipo / app -->
+      <div class="card">
+        <div class="stage blanco">
+          <div class="tile tile-bg">
+            <svg width="86" height="86" viewBox="0 0 120 120" style="--body:#f4efe4;--vein:#1b4228;--node:#df7a48"><use href="#leafc"/></svg>
+          </div>
+        </div>
+        <div class="meta-card">
+          <div class="n">VERSIÓN 02</div>
+          <div class="t">Isotipo — ícono de app</div>
+          <div class="d">La hoja-circuito aislada. Ícono de la aplicación, <i>favicon</i> y espacios reducidos.</div>
+        </div>
+      </div>
+
+      <!-- monocromática -->
+      <div class="card">
+        <div class="stage blanco">
+          <span class="wm mono sm"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100" style="--body:#1b4228;--vein:#ffffff;top:-.16em;transform:translateX(-50%) rotate(16deg)"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span>
+        </div>
+        <div class="meta-card">
+          <div class="n">VERSIÓN 03</div>
+          <div class="t">Monocromática, una tinta</div>
+          <div class="d">Impresiones a una tinta o documentos en escala de grises. Trazos en verde bosque.</div>
+        </div>
+      </div>
+
+      <!-- fondo oscuro -->
+      <div class="card">
+        <div class="stage oscuro">
+          <span class="wm dark sm"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100" style="--body:#8aa54a;--vein:#0f2616;top:-.16em;transform:translateX(-50%) rotate(16deg)"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span>
+        </div>
+        <div class="meta-card">
+          <div class="n">VERSIÓN 04</div>
+          <div class="t">Sobre fondo oscuro</div>
+          <div class="d">Texto en blanco, hoja en verde claro y acento naranja para conservar el contraste.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- bottom: construcción / greca / paleta -->
+    <div class="bottom">
+      <div class="panel">
+        <h3>Construcción y área de protección</h3>
+        <div class="constr">
+          <svg viewBox="0 0 160 160">
+            <defs>
+              <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M20 0 L0 0 0 20" fill="none" stroke="#eef1ea" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect x="10" y="10" width="140" height="140" fill="url(#g)"/>
+            <rect x="10" y="10" width="140" height="140" fill="none" stroke="#d8ddd2" stroke-width="1" stroke-dasharray="3 3"/>
+            <rect x="30" y="30" width="100" height="100" fill="none" stroke="#bd4c18" stroke-width="1.4" stroke-dasharray="5 4"/>
+            <svg x="42" y="36" width="76" height="76" viewBox="0 0 120 120" style="--body:#69802d;--vein:#f4efe4;--node:#bd4c18"><use href="#leafc"/></svg>
+            <text x="80" y="24" font-size="9" fill="#9aa29a" text-anchor="middle" font-family="Inter">margen = 1×</text>
+          </svg>
+          <div style="font-size:11.5px;line-height:1.6;color:#5c655d">
+            El isotipo se inscribe en una retícula modular. El <b style="color:#bd4c18">área de protección</b> equivale a una unidad “x” (la altura de un nodo) por cada lado: ningún elemento gráfico debe invadirla.
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Paleta cromática</h3>
+        <div class="sw-row">
+          <div class="sw"><div class="chip" style="background:#1b4228"></div><div class="nm">Verde bosque</div><div class="hx">#1B4228</div></div>
+          <div class="sw"><div class="chip" style="background:#69802d"></div><div class="nm">Verde hoja</div><div class="hx">#69802D</div></div>
+          <div class="sw"><div class="chip" style="background:#bd4c18"></div><div class="nm">Naranja terracota</div><div class="hx">#BD4C18</div></div>
+          <div class="sw"><div class="chip" style="background:#f4efe4;border:1px solid #e3e7df"></div><div class="nm">Crema / neutro</div><div class="hx">#F4EFE4</div></div>
+        </div>
+        <div class="greca-note">El verde estructura la interfaz y lo ambiental; el naranja se reserva para las acciones principales y para señalar la IA.</div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

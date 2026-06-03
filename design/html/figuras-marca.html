@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bosque:#1b4228; --verde-osc:#0f2616; --hoja:#69802d; --hoja-claro:#8aa54a;
+    --naranja:#bd4c18; --naranja-claro:#df7a48; --crema:#f4efe4; --line:#e3e7df; --tinta:#243027;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:#fff; font-family:'Inter',system-ui,sans-serif; color:var(--tinta); padding:30px; }
+  .fig{ background:#fff; margin-bottom:50px; }
+
+  /* wordmark */
+  .wm{ font-family:'Poppins'; font-weight:600; line-height:1; display:inline-flex; align-items:flex-start; letter-spacing:-1.5px; }
+  .wm .li{ position:relative; display:inline-block; }
+  .wm .li > svg{ position:absolute; left:50%; top:-.16em; width:.40em; height:.40em; transform:translateX(-50%) rotate(16deg); }
+  .wm.principal .mink{ color:var(--bosque); } .wm.principal .ia{ color:var(--naranja); }
+  .wm.mono .mink, .wm.mono .ia{ color:var(--bosque); }
+  .wm.dark .mink{ color:#fff; } .wm.dark .ia{ color:var(--naranja-claro); }
+
+  /* fig-principal */
+  #fig-principal{ width:660px; padding:54px; display:flex; align-items:center; justify-content:center; }
+  #fig-principal .wm{ font-size:80px; }
+
+  /* fig-isotipo */
+  #fig-isotipo{ width:660px; padding:34px 40px; display:flex; align-items:center; gap:34px; }
+  #fig-isotipo .iso{ width:150px; height:150px; flex:none; }
+  #fig-isotipo .leg div{ display:flex; align-items:center; gap:11px; font-size:15px; color:#3c463f; margin:10px 0; }
+  #fig-isotipo .leg b{ color:var(--bosque); font-family:'Poppins'; font-weight:600; }
+  .dot{ width:15px; height:15px; border-radius:50%; flex:none; }
+
+  /* fig-versiones */
+  #fig-versiones{ width:1040px; display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .card{ border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .stage{ height:150px; display:flex; align-items:center; justify-content:center; padding:16px; }
+  .stage.claro{ background:var(--crema); }
+  .stage.blanco{ background:#fff; border-bottom:1px solid var(--line); }
+  .stage.oscuro{ background:radial-gradient(120% 120% at 30% 20%, #234f30, var(--verde-osc)); }
+  .card .meta{ padding:12px 15px 15px; border-top:1px solid var(--line); }
+  .card .n{ font-family:'Poppins'; font-weight:600; font-size:10px; letter-spacing:1px; color:var(--naranja); }
+  .card .t{ font-family:'Poppins'; font-weight:600; font-size:13.5px; color:var(--bosque); margin:3px 0 0; }
+  .wm.cardwm{ font-size:38px; }
+  .tile{ width:118px; height:118px; border-radius:28px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 22px rgba(15,38,22,.28), inset 0 1px 0 rgba(255,255,255,.12);
+    background:radial-gradient(125% 125% at 30% 22%, #2a5a37, var(--bosque)); }
+
+  /* fig-construccion */
+  #fig-construccion{ width:720px; display:flex; align-items:center; gap:26px; padding:20px 24px; border:1px solid var(--line); border-radius:16px; }
+  #fig-construccion svg.grid{ width:190px; height:190px; flex:none; }
+  #fig-construccion .txt{ font-size:14.5px; line-height:1.65; color:#3c463f; }
+  #fig-construccion .txt b{ color:var(--naranja); }
+</style>
+</head>
+<body>
+
+  <!-- defs -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="leafc" viewBox="0 0 120 120">
+      <path style="fill:var(--body,#69802d)" d="M60 8 C30 30 26 70 60 112 C94 70 90 30 60 8 Z"/>
+      <g style="fill:none;stroke:var(--vein,#f4efe4);stroke-width:3.4;stroke-linecap:round">
+        <path d="M60 104 C60 80 60 48 60 20"/>
+        <path d="M60 88 Q46 88 38.5 80.5"/><path d="M60 88 Q74 88 81.5 80.5"/>
+        <path d="M60 68 Q44 66 33.5 58.5"/><path d="M60 68 Q76 66 86.5 58.5"/>
+        <path d="M60 48 Q48 46 40.5 40.5"/><path d="M60 48 Q72 46 79.5 40.5"/>
+      </g>
+      <g style="fill:var(--node,#bd4c18)">
+        <circle cx="60" cy="20" r="4.6"/>
+        <circle cx="38.5" cy="80.5" r="4.2"/><circle cx="81.5" cy="80.5" r="4.2"/>
+        <circle cx="33.5" cy="58.5" r="4.2"/><circle cx="86.5" cy="58.5" r="4.2"/>
+        <circle cx="40.5" cy="40.5" r="4.2"/><circle cx="79.5" cy="40.5" r="4.2"/>
+      </g>
+    </symbol>
+    <symbol id="leaf" viewBox="0 0 100 100">
+      <path style="fill:var(--body,#69802d)" d="M50 6 C24 26 20 64 50 96 C80 64 76 26 50 6 Z"/>
+      <path style="fill:none;stroke:var(--vein,#f4efe4);stroke-width:6;stroke-linecap:round" d="M50 90 C50 64 50 36 50 16"/>
+    </symbol>
+  </svg>
+
+  <!-- 1. logotipo principal -->
+  <div class="fig" id="fig-principal">
+    <span class="wm principal"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100" style="--body:#69802d;--vein:#f4efe4"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span>
+  </div>
+
+  <!-- 2. símbolo: hoja-circuito -->
+  <div class="fig" id="fig-isotipo">
+    <svg class="iso" viewBox="0 0 120 120" style="--body:#69802d;--vein:#f4efe4;--node:#bd4c18"><use href="#leafc"/></svg>
+    <div class="leg">
+      <div><span class="dot" style="background:#69802d"></span> <span><b>La hoja:</b> la minka, vida y naturaleza</span></div>
+      <div><span class="dot" style="background:#bd4c18"></span> <span><b>Los nodos:</b> la inteligencia artificial</span></div>
+      <div><span class="dot" style="background:#f4efe4;border:1px solid #d8ddd2"></span> <span><b>Las nervaduras:</b> el vínculo entre ambos</span></div>
+    </div>
+  </div>
+
+  <!-- 3. las cuatro versiones -->
+  <div class="fig" id="fig-versiones">
+    <div class="card">
+      <div class="stage claro"><span class="wm principal cardwm"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100" style="--body:#69802d;--vein:#f4efe4"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span></div>
+      <div class="meta"><div class="n">VERSIÓN 01</div><div class="t">Principal, a color</div></div>
+    </div>
+    <div class="card">
+      <div class="stage blanco"><div class="tile"><svg width="80" height="80" viewBox="0 0 120 120" style="--body:#f4efe4;--vein:#1b4228;--node:#df7a48"><use href="#leafc"/></svg></div></div>
+      <div class="meta"><div class="n">VERSIÓN 02</div><div class="t">Isotipo (ícono)</div></div>
+    </div>
+    <div class="card">
+      <div class="stage blanco"><span class="wm mono cardwm"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100" style="--body:#1b4228;--vein:#ffffff"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span></div>
+      <div class="meta"><div class="n">VERSIÓN 03</div><div class="t">Monocromática</div></div>
+    </div>
+    <div class="card">
+      <div class="stage oscuro"><span class="wm dark cardwm"><span class="mink">M<span class="li">ı<svg viewBox="0 0 100 100" style="--body:#8aa54a;--vein:#0f2616"><use href="#leaf"/></svg></span>nk</span><span class="ia">IA</span></span></div>
+      <div class="meta"><div class="n">VERSIÓN 04</div><div class="t">Sobre fondo oscuro</div></div>
+    </div>
+  </div>
+
+  <!-- 4. construcción y área de protección -->
+  <div class="fig" id="fig-construccion">
+    <svg class="grid" viewBox="0 0 160 160">
+      <defs>
+        <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0 L0 0 0 20" fill="none" stroke="#eef1ea" stroke-width="1"/></pattern>
+      </defs>
+      <rect x="10" y="10" width="140" height="140" fill="url(#g)"/>
+      <rect x="10" y="10" width="140" height="140" fill="none" stroke="#d8ddd2" stroke-width="1" stroke-dasharray="3 3"/>
+      <rect x="30" y="30" width="100" height="100" fill="none" stroke="#bd4c18" stroke-width="1.4" stroke-dasharray="5 4"/>
+      <svg x="44" y="38" width="72" height="72" viewBox="0 0 120 120" style="--body:#69802d;--vein:#f4efe4;--node:#bd4c18"><use href="#leafc"/></svg>
+    </svg>
+    <div class="txt">El isotipo se inscribe en una retícula modular. El <b>área de protección</b> equivale a una unidad “x” (la altura de un nodo) por cada lado; ningún otro elemento gráfico debe invadir ese margen, para preservar la legibilidad del símbolo en cualquier soporte.</div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Fondo patroneado reutilizable de las pantallas de entrada (splash, onboarding,
+  acceso): base crema, patrón andino tejido y un resplandor central que aclara la
+  zona del contenido para mantener la legibilidad. Una sola fuente de verdad para
+  que todas esas pantallas compartan el mismo mundo visual.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/crema" />
+    <item android:drawable="@drawable/bg_patron_andino" />
+    <item android:drawable="@drawable/bg_glow" />
+</layer-list>
