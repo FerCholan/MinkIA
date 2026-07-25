@@ -26,7 +26,7 @@ abstract class BaseViewModel : ViewModel() {
             target.value = try {
                 UiState.Success(block())
             } catch (e: Exception) {
-                UiState.Error(e.message ?: "Ocurrió un error inesperado. Intentá de nuevo.")
+                UiState.Error(e.message ?: "Ocurrió un error inesperado. Intenta de nuevo.")
             }
         }
     }

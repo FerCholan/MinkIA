@@ -1,12 +1,10 @@
 package com.moviles.minkia.ui.permisos
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.moviles.minkia.data.local.PreferenciasRepository
-import com.moviles.minkia.ui.MainActivity
 import kotlinx.coroutines.flow.first
 
 /**
@@ -31,14 +29,28 @@ object RuteoPermisos {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
 
-    /** Activity destino del ciudadano: Permisos solo si nunca se vio y falta algún permiso clave. */
+    /**
+     * A dónde debe ir el ciudadano recién logueado. Antes de este refactor
+     * devolvía la Activity destino (`Class<out Activity>`, MainActivity o
+     * PermisosActivity). Con Navigation Component eso ya no alcanza: Permisos
+     * pasó a ser un fragment DENTRO del propio grafo de auth (nav_auth),
+     * mientras que Inicio sigue siendo una Activity real fuera del grafo. Por
+     * eso el resultado ahora es este enum: cada camino necesita un mecanismo
+     * de navegación distinto (findNavController().navigate(...) vs
+     * startActivity(...)), y esa decisión le corresponde al fragment que
+     * llama (LoginFragment/RegistroFragment), no a este objeto. La REGLA en
+     * sí (la condición del if de abajo) es exactamente la misma que antes.
+     */
+    enum class DestinoCiudadano { INICIO, PERMISOS }
+
+    /** Permisos solo si nunca se vio esa pantalla y falta algún permiso clave. */
     suspend fun destinoCiudadano(
         context: Context,
         prefs: PreferenciasRepository
-    ): Class<out Activity> =
+    ): DestinoCiudadano =
         if (prefs.permisosVistos.first() || permisosClaveConcedidos(context)) {
-            MainActivity::class.java
+            DestinoCiudadano.INICIO
         } else {
-            PermisosActivity::class.java
+            DestinoCiudadano.PERMISOS
         }
 }

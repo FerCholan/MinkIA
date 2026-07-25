@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Grafo de navegación del ciudadano (FASE 2 migró las 4 pestañas del
+BottomNavigationView; FASE 3 incorpora las pantallas de contenido que colgaban
+de ellas: Detalle, Notificaciones, Configuración y Mis datos, que hasta ahora
+eran Activities independientes con su propio Intent. FASE 4 suma el flujo de
+reporte (Captura/Análisis/Formulario/Confirmación) como grafo ANIDADO, con
+<include>: ver nav_reporte.xml.
+
+Los android:id de las 4 pestañas de acá abajo COINCIDEN a propósito con los
+android:id de menu/bottom_nav_menu.xml: así es como
+BottomNavigationView.setupWithNavController() empareja cada ítem del menú con
+su destino (ver MainActivity.configurarGrafoSegunRol). Sin esa coincidencia de
+ids, tocar una pestaña no navegaría a ningún lado.
+
+FASE 3, el cambio central: cada pantalla de contenido nueva declara UN SOLO
+<argument> (el identificador del reporte) en vez de recibir el objeto entero
+por extras (11 en Detalle, ver DetalleActivity.EXTRA_* que ya no existen). El
+fragment le pide el resto a su ViewModel/repositorio. Detalle usa "ticket" y no
+"reporteId": MiReporte/FocoMapa no guardan el id de documento de Firestore,
+solo el ticket visible, que es lo único recuperable hoy (ver
+CiudadanoRepository.obtenerReportePorTicket). Notificaciones/Configuración/Mis
+datos no llevan argumento: ya se abrían sin extras.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_ciudadano"
+    app:startDestination="@id/homeFragment">
+
+    <!-- C07: inicio, con el resumen de la Minka digital y el mapa de calor en miniatura. -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.moviles.minkia.ui.home.HomeFragment"
+        android:label="Inicio"
+        tools:layout="@layout/fragment_home">
+
+        <!-- Botón de campana: antes abría NotificacionesActivity con startActivity. -->
+        <action
+            android:id="@+id/action_home_a_notificaciones"
+            app:destination="@id/notificacionesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <!-- Mapa completo de puntos críticos y focos activos. -->
+    <fragment
+        android:id="@+id/mapaFragment"
+        android:name="com.moviles.minkia.ui.mapa.MapaFragment"
+        android:label="Mapa"
+        tools:layout="@layout/fragment_mapa">
+
+        <!-- Tocar un marcador. Sin elemento compartido (un pin no tiene tarjeta
+             que expandir, nunca lo tuvo): fundido simple, mismo lenguaje que
+             nav_auth. Compárese con action_reportes_a_detalle, más abajo. -->
+        <action
+            android:id="@+id/action_mapa_a_detalle"
+            app:destination="@id/detalleFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <!-- C13/C14: historial de reportes del ciudadano, con filtro por estado. -->
+    <fragment
+        android:id="@+id/reportesFragment"
+        android:name="com.moviles.minkia.ui.reportes.ReportesFragment"
+        android:label="Reportes"
+        tools:layout="@layout/fragment_reportes">
+
+        <!-- Tocar una tarjeta: sin enterAnim/exitAnim a propósito. La tarjeta
+             tocada ES la transición (container transform vía
+             FragmentNavigatorExtras, ver ReportesFragment.abrirDetalle y
+             DetalleFragment); una animación de contenido de más competiría con
+             ese transform en vez de complementarlo. -->
+        <action
+            android:id="@+id/action_reportes_a_detalle"
+            app:destination="@id/detalleFragment" />
+    </fragment>
+
+    <!-- C17: perfil y Minka digital (gamificación). -->
+    <fragment
+        android:id="@+id/perfilFragment"
+        android:name="com.moviles.minkia.ui.perfil.PerfilFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil">
+
+        <!-- Menú de cuenta: antes cada fila abría su Activity con startActivity. -->
+        <action
+            android:id="@+id/action_perfil_a_configuracion"
+            app:destination="@id/configuracionFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_perfil_a_mis_datos"
+            app:destination="@id/misDatosFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <!-- C15: detalle y seguimiento de un reporte (antes DetalleActivity, 11
+         extras). Alcanzable desde Reportes (con transición compartida) o Mapa
+         (sin ella). Ver KDoc de arriba sobre por qué el argumento es "ticket". -->
+    <fragment
+        android:id="@+id/detalleFragment"
+        android:name="com.moviles.minkia.ui.detalle.DetalleFragment"
+        android:label="Detalle"
+        tools:layout="@layout/fragment_detalle">
+        <argument android:name="ticket" app:argType="string" />
+    </fragment>
+
+    <!-- C16: notificaciones (antes NotificacionesActivity, sin extras). -->
+    <fragment
+        android:id="@+id/notificacionesFragment"
+        android:name="com.moviles.minkia.ui.notificaciones.NotificacionesFragment"
+        android:label="Notificaciones"
+        tools:layout="@layout/fragment_notificaciones" />
+
+    <!-- C18: configuración (antes ConfiguracionActivity, sin extras). -->
+    <fragment
+        android:id="@+id/configuracionFragment"
+        android:name="com.moviles.minkia.ui.configuracion.ConfiguracionFragment"
+        android:label="Configuracion"
+        tools:layout="@layout/fragment_configuracion" />
+
+    <!-- C17b: mis datos (antes MisDatosActivity, sin extras). -->
+    <fragment
+        android:id="@+id/misDatosFragment"
+        android:name="com.moviles.minkia.ui.misdatos.MisDatosFragment"
+        android:label="MisDatos"
+        tools:layout="@layout/fragment_mis_datos" />
+
+    <!-- C09-C12: flujo de reporte (cámara, análisis, formulario, confirmación).
+         Entra como grafo ANIDADO, no como cuatro destinos sueltos, y esa es la
+         diferencia que importa: al ser un grafo propio, sus cuatro pasos pueden
+         compartir un único ReporteFlowViewModel con
+         `by navGraphViewModels(R.id.nav_reporte)`, que nace al entrar al flujo y
+         se destruye al salir de él. Así el dato que cada paso produce (la foto,
+         el resultado del análisis, los datos del formulario) queda disponible
+         para el siguiente sin pasarlo por argumentos, que era lo que antes
+         obligaba a encadenar extras de Activity en Activity.
+
+         Se lo dispara el FAB de "Reportar" con navigate(R.id.nav_reporte); ver
+         MainActivity.configurarGrafoSegunRol. Un grafo incluido es
+         autocontenido: no puede declarar acciones hacia los destinos de acá
+         arriba, por eso la salida del flujo se resuelve desapilándolo entero
+         (ver ConfirmacionFragment.cerrarFlujo). -->
+    <include app:graph="@navigation/nav_reporte" />
+
+</navigation>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/misDatosRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/verde_bosque"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/mis_datos_titulo"
+        app:titleCentered="true"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView style="@style/GrupoConfig" android:text="@string/mis_datos_grupo_identidad" />
+
+            <LinearLayout style="@style/CardConfig">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilApodo"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxStrokeColor="@color/verde_hoja"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:hintEnabled="true"
+                        android:hint="@string/mis_datos_apodo_label"
+                        app:startIconDrawable="@drawable/ic_edit"
+                        app:startIconTint="@color/texto_secundario">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etApodo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLength="20"
+                            android:maxLines="1"
+                            android:textColor="@color/texto_principal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDni"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:boxStrokeColor="@color/verde_hoja"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="8"
+                        app:hintEnabled="true"
+                        android:hint="@string/mis_datos_dni_label"
+                        app:startIconDrawable="@drawable/ic_person"
+                        app:startIconTint="@color/texto_secundario">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDni"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="8"
+                            android:maxLines="1"
+                            android:textColor="@color/texto_principal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView style="@style/GrupoConfig" android:text="@string/mis_datos_grupo_privacidad" />
+
+            <LinearLayout style="@style/CardConfig">
+
+                <LinearLayout style="@style/FilaConfig">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mis_datos_usar_apodo"
+                            android:textColor="@color/texto_principal"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/mis_datos_usar_apodo_sub"
+                            android:textColor="@color/texto_secundario"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/swUsarApodo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardar"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/verde_bosque"
+                android:text="@string/mis_datos_guardar"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="14dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

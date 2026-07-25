@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/validacionRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/verde_bosque"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/app_name"
+        app:titleCentered="true"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:id="@+id/scrollValidacion"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Foto -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="@drawable/bg_card_stat">
+
+                <com.moviles.minkia.ui.common.FotoReporteView
+                    android:id="@+id/fotoReporte"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/chipIa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_chip_permitido"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:textColor="@color/verde_hoja"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="IA: Basura · 86%" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_chip_ia"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:text="YOLOv8"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- Chips -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chipSeveridad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip_permitir"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="Severidad ALTA" />
+
+                <TextView
+                    android:id="@+id/chipArea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_azul"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:textColor="@color/azul"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="4.2 m²" />
+
+                <TextView
+                    android:id="@+id/chipReportes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_permitido"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:textColor="@color/verde_hoja"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="5 reportes" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvUnificados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_banner_info"
+                android:padding="14dp"
+                android:textColor="@color/verde_bosque"
+                android:textSize="13sp"
+                tools:text="5 reportes ciudadanos fueron unificados automáticamente en este punto crítico." />
+
+            <!-- Detalles: dirección, coordenadas, fecha/hora, estado y reportantes -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_card_stat"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:textStyle="normal" android:textColor="@color/texto_secundario" android:text="@string/admin_val_ubicacion" />
+                    <TextView android:id="@+id/tvUbicacion" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="end" android:textColor="@color/texto_principal" android:textStyle="bold" android:textSize="14sp" tools:text="Jr. Elías Aguirre 450" />
+                </LinearLayout>
+                <View style="@style/SeparadorMenu" />
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:textStyle="normal" android:textColor="@color/texto_secundario" android:text="@string/admin_val_coordenadas" />
+                    <TextView android:id="@+id/tvCoordenadas" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/texto_principal" android:textStyle="bold" android:textSize="14sp" tools:text="-9.07450, -78.59360" />
+                </LinearLayout>
+                <View style="@style/SeparadorMenu" />
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:textStyle="normal" android:textColor="@color/texto_secundario" android:text="@string/admin_val_fecha" />
+                    <TextView android:id="@+id/tvFechaHora" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/texto_principal" android:textStyle="bold" android:textSize="14sp" tools:text="05 jul · 09:41" />
+                </LinearLayout>
+                <View style="@style/SeparadorMenu" />
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:textStyle="normal" android:textColor="@color/texto_secundario" android:text="@string/admin_val_estado" />
+                    <TextView android:id="@+id/tvEstado" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/texto_principal" android:textStyle="bold" android:textSize="14sp" tools:text="Recibido" />
+                </LinearLayout>
+                <View style="@style/SeparadorMenu" />
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:textStyle="normal" android:textColor="@color/texto_secundario" android:text="@string/admin_val_tipo" />
+                    <TextView android:id="@+id/tvTipo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="end" android:textColor="@color/texto_principal" android:textStyle="bold" android:textSize="14sp" tools:text="Residuo domiciliario" />
+                </LinearLayout>
+                <View style="@style/SeparadorMenu" />
+                <LinearLayout style="@style/FilaConfig">
+                    <TextView style="@style/FilaConfigTexto" android:textStyle="normal" android:textColor="@color/texto_secundario" android:text="@string/admin_val_reportado" />
+                    <TextView android:id="@+id/tvReportado" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/texto_principal" android:textStyle="bold" android:textSize="14sp" tools:text="1 vecino" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Descripción del vecino (se oculta si el reporte no trae texto) -->
+            <LinearLayout
+                android:id="@+id/bloqueDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_card_stat"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_val_descripcion"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp"
+                    tools:text="Hay una montaña de basura hace días, atrae perros y moscas." />
+            </LinearLayout>
+
+            <!-- Acción principal: aprobar resuelto -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnResolver"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/verde_bosque"
+                android:text="@string/admin_val_resolver"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_check_chip"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white" />
+
+            <!-- Validar (en proceso) + cambiar nivel -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnValidar"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:text="@string/admin_val_validar"
+                    android:textColor="@color/verde_bosque"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="@color/verde_bosque" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNivel"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/admin_val_nivel"
+                    android:textColor="@color/azul"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="@color/azul" />
+            </LinearLayout>
+
+            <!-- Duplicado + anular -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDuplicado"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:text="@string/admin_val_duplicado"
+                    android:textColor="@color/texto_secundario"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="@color/linea" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAnular"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/admin_val_anular"
+                    android:textColor="@color/naranja_terracota"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="@color/naranja_terracota" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

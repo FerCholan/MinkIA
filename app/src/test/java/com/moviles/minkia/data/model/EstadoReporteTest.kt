@@ -17,22 +17,26 @@ class EstadoReporteTest {
     }
 
     @Test
-    fun `RECIBIDO EN_PROCESO y EN_RUTA son pendientes`() {
+    fun `RECIBIDO y EN_PROCESO son pendientes`() {
         assertTrue(EstadoReporte.RECIBIDO.esPendiente)
         assertTrue(EstadoReporte.EN_PROCESO.esPendiente)
-        assertTrue(EstadoReporte.EN_RUTA.esPendiente)
     }
 
     @Test
     fun `los estados pendientes no estan resueltos`() {
         assertFalse(EstadoReporte.RECIBIDO.esResuelto)
         assertFalse(EstadoReporte.EN_PROCESO.esResuelto)
-        assertFalse(EstadoReporte.EN_RUTA.esResuelto)
     }
 
     @Test
     fun `DUPLICADO no es ni pendiente ni resuelto`() {
         assertFalse(EstadoReporte.DUPLICADO.esPendiente)
         assertFalse(EstadoReporte.DUPLICADO.esResuelto)
+    }
+
+    @Test
+    fun `ANULADO no es ni pendiente ni resuelto`() {
+        assertFalse(EstadoReporte.ANULADO.esPendiente)
+        assertFalse(EstadoReporte.ANULADO.esResuelto)
     }
 }

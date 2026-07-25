@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/logo_minkia"
+        android:src="@drawable/avd_logo_minkia"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

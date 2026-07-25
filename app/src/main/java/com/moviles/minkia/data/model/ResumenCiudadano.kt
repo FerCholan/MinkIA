@@ -9,5 +9,6 @@ data class ResumenCiudadano(
     val tusReportes: Int,
     val resueltos: Int,
     val focosCerca: Int,
-    val puntosCercanos: List<PuntoCritico>
+    val puntosCercanos: List<PuntoCritico>,
+    val nombre: String = ""
 )

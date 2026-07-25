@@ -1,11 +1,11 @@
 package com.moviles.minkia.ui.admin
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
 import com.moviles.minkia.R
 import com.moviles.minkia.core.BaseFragment
@@ -25,6 +25,7 @@ class AlertasFragment : BaseFragment<FragmentAdminAlertasBinding>() {
     private val adapter = AlertaAdapter { abrirValidacion(it) }
 
     private var todas: List<AlertaAdmin> = emptyList()
+    private var primeraCarga = true
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentAdminAlertasBinding.inflate(inflater, container, false)
@@ -57,14 +58,20 @@ class AlertasFragment : BaseFragment<FragmentAdminAlertasBinding>() {
                     filtrar(binding.tabs.selectedTabPosition.coerceAtLeast(0))
                 }
                 is UiState.Error -> {
+                    // Sin datos viejos disfrazados de válidos: la bandeja es el trabajo
+                    // del admin, un fallo de red debe avisarse, no moderar a ciegas.
                     binding.skeletonAlertas.root.mostrarSkeleton(false)
-                    binding.rvAlertas.visibility = View.VISIBLE
+                    binding.rvAlertas.visibility = View.GONE
+                    binding.tvVacioAlertas.visibility = View.GONE
+                    android.widget.Toast.makeText(
+                        requireContext(), estado.mensaje, android.widget.Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
     }
 
-    /** 0 = Nuevos, 1 = Sin asignar, 2 = Urgentes. */
+    /** 0 = Nuevos (RECIBIDO), 1 = En proceso (ya validados), 2 = Urgentes (severidad ALTA). */
     private fun filtrar(posicion: Int) {
         val lista = when (posicion) {
             0 -> todas.filter { it.nuevo }
@@ -72,16 +79,33 @@ class AlertasFragment : BaseFragment<FragmentAdminAlertasBinding>() {
             2 -> todas.filter { it.severidad == com.moviles.minkia.data.model.Severidad.ALTA }
             else -> todas
         }
+        binding.tvVacioAlertas.visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
         adapter.submitList(lista) { binding.rvAlertas.scheduleLayoutAnimation() }
     }
 
+    /**
+     * Abre la Validación de la alerta tocada (A04). Antes viajaban trece extras
+     * completos (toda AlertaAdmin); ahora solo su id, que YA es el id real del
+     * documento en Firestore (a diferencia del ticket que usa el lado
+     * ciudadano). ValidacionFragment le pide el resto a
+     * ValidacionViewModel/AdminRepository.
+     */
     private fun abrirValidacion(a: AlertaAdmin) {
-        startActivity(
-            Intent(requireContext(), ValidacionActivity::class.java)
-                .putExtra(ValidacionActivity.EXTRA_DIRECCION, a.direccion)
-                .putExtra(ValidacionActivity.EXTRA_SEVERIDAD, a.severidad.name)
-                .putExtra(ValidacionActivity.EXTRA_AGRUPADOS, a.agrupados)
-        )
+        findNavController().navigate(R.id.action_alertas_a_validacion, Bundle().apply { putString("reporteId", a.id) })
+    }
+
+    /**
+     * Al volver de validar/rechazar un reporte, recarga la bandeja para reflejar
+     * el cambio (un reporte rechazado desaparece; uno validado cambia de estado).
+     * Salta la primera vez porque el ViewModel ya carga en su init.
+     */
+    override fun onResume() {
+        super.onResume()
+        if (primeraCarga) {
+            primeraCarga = false
+            return
+        }
+        viewModel.cargar()
     }
 
     override fun onBindingDestroy() {

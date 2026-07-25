@@ -6,6 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.TileOverlayOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.maps.android.heatmaps.HeatmapTileProvider
 import com.moviles.minkia.R
 import com.moviles.minkia.core.BaseFragment
 import com.moviles.minkia.core.UiState
@@ -13,6 +21,7 @@ import com.moviles.minkia.core.animarEntrada
 import com.moviles.minkia.core.aplicarInsetSuperior
 import com.moviles.minkia.core.aplicarPulsacion
 import com.moviles.minkia.core.recortarEsquinasInferiores
+import com.moviles.minkia.data.model.FocoMapa
 import com.moviles.minkia.data.model.ResumenCiudadano
 import com.moviles.minkia.databinding.FragmentHomeBinding
 
@@ -27,6 +36,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private val adapter = PuntoCriticoAdapter()
 
+    // El mapa de calor necesita dos piezas que llegan por caminos asíncronos
+    // distintos: la instancia del mapa (callback de getMapAsync) y los focos (el
+    // ViewModel, que los lee de Firestore). Se guarda cada una al llegar y pinta
+    // la que llegue segunda; ver [pintarHeatmap].
+    private var mapaPreview: GoogleMap? = null
+    private var focos: List<FocoMapa>? = null
+
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -34,14 +50,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.headerContenido.aplicarInsetSuperior()
         binding.headerInicio.recortarEsquinasInferiores()
         binding.rvPuntosCercanos.adapter = adapter
+        configurarMapaCalor()
         binding.btnReintentar.setOnClickListener { viewModel.cargarResumen() }
         binding.btnNotificaciones.setOnClickListener {
-            startActivity(
-                android.content.Intent(
-                    requireContext(),
-                    com.moviles.minkia.ui.notificaciones.NotificacionesActivity::class.java
-                )
-            )
+            findNavController().navigate(R.id.action_home_a_notificaciones)
         }
         TooltipCompat.setTooltipText(binding.btnNotificaciones, getString(R.string.tooltip_notificaciones))
         binding.btnNotificaciones.aplicarPulsacion()
@@ -53,6 +65,62 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 is UiState.Error -> mostrarError(state.mensaje)
             }
         }
+
+        // Focos del mapa de calor: carga aparte del resumen. Si falla, la tarjeta
+        // queda con el mapa sin heatmap y sin aviso, igual que antes del refactor:
+        // es un adorno de la pantalla, no su contenido principal.
+        viewModel.focosState.observe(viewLifecycleOwner) { estado ->
+            if (estado is UiState.Success) {
+                focos = estado.data
+                pintarHeatmap()
+            }
+        }
+    }
+
+    /** Mapa de calor del Inicio: Google Map sin gestos con un heatmap de los focos. */
+    private fun configurarMapaCalor() {
+        val mapaCalor = childFragmentManager
+            .findFragmentById(R.id.mapaCalorContainer) as SupportMapFragment
+        mapaCalor.getMapAsync { mapa ->
+            mapa.uiSettings.setAllGesturesEnabled(false) // es un preview, no se navega acá
+            mapa.uiSettings.isMapToolbarEnabled = false
+            mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-9.0745, -78.5936), 12.5f))
+            mapa.setOnMapClickListener { irAlMapa() }
+            mapaPreview = mapa
+            pintarHeatmap()
+        }
+    }
+
+    /**
+     * Superpone el heatmap cuando ya están disponibles el mapa y los focos. Se
+     * llama desde los dos orígenes asíncronos y sale sin hacer nada si todavía
+     * falta alguno, así no importa cuál termine primero.
+     */
+    private fun pintarHeatmap() {
+        val mapa = mapaPreview ?: return
+        val puntos = focos?.takeIf { it.isNotEmpty() } ?: return
+        val provider = HeatmapTileProvider.Builder()
+            .data(puntos.map { LatLng(it.latitud, it.longitud) })
+            .build()
+        mapa.addTileOverlay(TileOverlayOptions().tileProvider(provider))
+    }
+
+    /** El mapa vive en la vista: soltarlo evita retenerla tras onDestroyView. */
+    override fun onDestroyView() {
+        mapaPreview = null
+        super.onDestroyView()
+    }
+
+    /**
+     * Tocar el mapa de calor abre el mapa completo (pestaña Mapa). Se asigna el
+     * id del destino (no se llama a NavController.navigate directo) para pasar
+     * por el mismo listener que instala BottomNavigationView.setupWithNavController
+     * en MainActivity: así la pestaña Mapa queda marcada como seleccionada y la
+     * navegación aplica el mismo popUpTo/restoreState que un toque directo.
+     */
+    private fun irAlMapa() {
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
+            .selectedItemId = R.id.mapaFragment
     }
 
     private fun mostrarCarga() {
@@ -68,6 +136,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.grupoError.visibility = View.GONE
         binding.contenido.visibility = View.VISIBLE
 
+        if (resumen.nombre.isNotBlank()) binding.tvSaludoNombre.text = resumen.nombre
         binding.tvPuntosActivos.text = resumen.puntosActivos.toString()
         binding.tvTusReportes.text = resumen.tusReportes.toString()
         binding.tvResueltos.text = formatearMiles(resumen.resueltos)

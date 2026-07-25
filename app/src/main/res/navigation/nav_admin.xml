@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Grafo de navegación del administrador (FASE 2 migró las 4 pestañas del
+BottomNavigationView, reemplazando a AdminMainActivity; FASE 3 incorpora
+Validación (A04/A05), que hasta ahora era una Activity independiente lanzada
+desde AlertasFragment con trece extras).
+
+Los android:id de las 4 pestañas de acá abajo COINCIDEN a propósito con los
+android:id de menu/admin_nav_menu.xml, por el mismo motivo documentado en
+nav_ciudadano.xml: es así como BottomNavigationView.setupWithNavController()
+empareja cada ítem del menú con su destino.
+
+validacionFragment declara UN SOLO <argument> ("reporteId"): a diferencia de
+Detalle (ciudadano), acá SÍ es el id real del documento de Firestore, porque
+AlertaAdmin.id ya lo trae (lo usan directo resolver/validar/anular). El
+fragment le pide el resto a ValidacionViewModel/AdminRepository.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_admin"
+    app:startDestination="@id/alertasFragment">
+
+    <!-- A02: bandeja de moderación de reportes entrantes. Es el destino inicial
+         porque la AdminMainActivity que este grafo reemplaza abría acá: la
+         moderación es el trabajo diario del administrador, no el mapa. -->
+    <fragment
+        android:id="@+id/alertasFragment"
+        android:name="com.moviles.minkia.ui.admin.AlertasFragment"
+        android:label="Bandeja"
+        tools:layout="@layout/fragment_admin_alertas">
+
+        <!-- Tocar un ítem de la bandeja: antes abría ValidacionActivity con
+             startActivity + trece putExtra. Sin elemento compartido (nunca lo
+             tuvo): fundido simple. -->
+        <action
+            android:id="@+id/action_alertas_a_validacion"
+            app:destination="@id/validacionFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <!-- A03: mapa de puntos críticos. -->
+    <fragment
+        android:id="@+id/puntosCriticosFragment"
+        android:name="com.moviles.minkia.ui.admin.PuntosCriticosFragment"
+        android:label="Mapa"
+        tools:layout="@layout/fragment_admin_puntos" />
+
+    <!-- A06: reporte municipal (exportación PDF/CSV). -->
+    <fragment
+        android:id="@+id/reporteriaFragment"
+        android:name="com.moviles.minkia.ui.admin.ReporteriaFragment"
+        android:label="Reportes"
+        tools:layout="@layout/fragment_admin_reportes" />
+
+    <!-- A07: cuenta del administrador. -->
+    <fragment
+        android:id="@+id/adminCuentaFragment"
+        android:name="com.moviles.minkia.ui.admin.AdminCuentaFragment"
+        android:label="Cuenta"
+        tools:layout="@layout/fragment_admin_cuenta" />
+
+    <!-- A04/A05: detalle y moderación de un reporte (antes ValidacionActivity,
+         13 extras). Ver KDoc de arriba sobre "reporteId". -->
+    <fragment
+        android:id="@+id/validacionFragment"
+        android:name="com.moviles.minkia.ui.admin.ValidacionFragment"
+        android:label="Validacion"
+        tools:layout="@layout/fragment_admin_validacion">
+        <argument android:name="reporteId" app:argType="string" />
+    </fragment>
+
+</navigation>

@@ -33,6 +33,7 @@ class PuntoCriticoAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(punto: PuntoCritico) {
+            binding.fotoReporte.cargar(punto.fotoUrl)
             binding.tvDireccion.text = punto.direccion
             binding.tvReferencia.text =
                 "${punto.referencia} · ${punto.cantidadReportes} reportes"

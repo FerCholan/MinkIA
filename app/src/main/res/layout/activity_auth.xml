@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Contenedor único del flujo de acceso: un FragmentContainerView que aloja el
+NavHostFragment del grafo nav_auth (onboarding, login, registro, recuperar,
+términos, permisos). Cada pantalla resuelve su propio fondo andino (ver sus
+fragment_*.xml); el fondo de acá abajo es el mismo que usaba hoy Login
+(bg_andino_superior) y actúa como respaldo detrás de las transiciones con
+fundido entre fragments (ver nav_auth.xml), para que no se vea un flash negro
+en el instante en que un fragment se atenúa y el siguiente todavía no cubrió
+la pantalla.
+
+NO se declara acá app:navGraph a propósito. El destino inicial del grafo es
+dinámico (onboarding en arranque en frío, login al volver de un logout), así que
+AuthActivity.configurarDestinoInicial() infla el grafo y fija su startDestination
+en código. Declararlo TAMBIÉN acá lo inflaría dos veces: en el arranque con
+logout se crearía el fragment de onboarding (con su ViewPager2) solo para
+destruirlo un instante después, y en cada rotación ese segundo inflado pisaría
+el back stack que el NavHostFragment ya restauró. Costo asumido: el editor
+visual de Android Studio no asocia este layout con el grafo; el grafo se abre
+desde res/navigation/nav_auth.xml.
+-->
+<androidx.fragment.app.FragmentContainerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navHostAuth"
+    android:name="androidx.navigation.fragment.NavHostFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_andino_superior"
+    app:defaultNavHost="true" />

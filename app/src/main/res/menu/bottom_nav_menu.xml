@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Los android:id de acá abajo (salvo nav_placeholder, que no navega a ningún
+lado) COINCIDEN a propósito con los android:id de los destinos declarados en
+navigation/nav_ciudadano.xml: BottomNavigationView.setupWithNavController()
+empareja cada ítem con su destino por id (ver MainActivity).
+-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_inicio"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/ic_nav_inicio"
         android:title="@string/nav_inicio" />
     <item
-        android:id="@+id/nav_mapa"
+        android:id="@+id/mapaFragment"
         android:icon="@drawable/ic_nav_mapa"
         android:title="@string/nav_mapa" />
-    <!-- Hueco central reservado para el FAB de Reportar -->
+    <!-- Hueco central reservado para el FAB de Reportar: sin destino asociado. -->
     <item
         android:id="@+id/nav_placeholder"
         android:enabled="false"
         android:title=""
         android:icon="@android:color/transparent" />
     <item
-        android:id="@+id/nav_reportes"
+        android:id="@+id/reportesFragment"
         android:icon="@drawable/ic_nav_reportes"
         android:title="@string/nav_reportes" />
     <item
-        android:id="@+id/nav_perfil"
+        android:id="@+id/perfilFragment"
         android:icon="@drawable/ic_nav_perfil"
         android:title="@string/nav_perfil" />
 </menu>

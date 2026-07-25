@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Contenedor único del ciudadano Y del administrador (FASE 2 de la migración de
+18 Activities a 3 con Navigation Component). AdminMainActivity desaparece: es
+esta misma Activity la que aloja, en un único NavHostFragment, uno de dos
+grafos posibles según el rol de la sesión activa (nav_ciudadano o nav_admin;
+ver MainActivity.configurarGrafoSegunRol).
+
+NO se declara acá app:navGraph, por el mismo motivo que activity_auth.xml: el
+grafo depende del rol, que se resuelve en código de forma asíncrona (lee la
+sesión de DataStore), y declararlo también acá lo inflaría dos veces. El fondo
+(@color/fondo) del root cubre el instante breve en que el NavHostFragment
+todavía no tiene grafo asignado.
+
+El BottomNavigationView trae app:menu="@menu/bottom_nav_menu" como valor "de
+fábrica" (el del ciudadano), igual de fábrica-y-reemplazado-en-código que
+app:startDestination en nav_auth.xml: MainActivity siempre lo reemplaza según
+el rol con menu.clear() + inflateMenu(...). El FAB "Reportar" es una acción
+exclusiva del ciudadano: MainActivity lo oculta cuando el grafo resuelto es el
+de administrador.
+-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,11 +27,13 @@
     android:layout_height="match_parent"
     android:background="@color/fondo">
 
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navHostMain"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="56dp" />
+        android:layout_marginBottom="56dp"
+        app:defaultNavHost="true" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"

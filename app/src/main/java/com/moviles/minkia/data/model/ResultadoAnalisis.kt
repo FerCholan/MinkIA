@@ -9,5 +9,6 @@ data class ResultadoAnalisis(
     val tipo: String,        // p. ej. "Basura acumulada"
     val confianza: Int,      // 0..100 (%)
     val severidad: Severidad,
-    val areaM2: Double       // área estimada del foco
+    val areaM2: Double,      // área estimada del foco
+    val esBasura: Boolean = true // false si el modelo NO detectó residuos: no se reporta
 )

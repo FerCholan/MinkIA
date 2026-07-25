@@ -1,41 +1,54 @@
 package com.moviles.minkia.data.model
 
-/** Modelos del módulo administrador (Épica 5). Datos mock por ahora. */
+/** Modelos del módulo administrador (Épica 5). Datos REALES desde Firestore. */
 
-/** Tarjeta de KPI del panel (A01). */
-data class KpiAdmin(
-    val valor: String,
-    val etiqueta: String,
-    val delta: String
-)
-
-/** Zona afectada del panel (A01) y de puntos críticos (A03). */
+/**
+ * Zona afectada de puntos críticos (A03): agrupación de focos por dirección. Trae
+ * una coordenada representativa (el centro de sus focos) para poder enfocar el mapa
+ * en la zona al tocarla.
+ */
 data class ZonaAfectada(
     val nombre: String,
     val focos: Int,
-    val severidad: Severidad
+    val severidad: Severidad,
+    val latitud: Double = 0.0,
+    val longitud: Double = 0.0
 )
 
-/** Reporte entrante de la bandeja de alertas (A02). */
+/**
+ * Reporte entrante de la bandeja de moderación (A02). Trae coordenadas y hora
+ * REALES para que el admin decida sobre el terreno (mapa, dirección, momento).
+ */
 data class AlertaAdmin(
+    val id: String,
     val direccion: String,
     val tiempoTexto: String,
     val agrupados: Int,
     val severidad: Severidad,
-    val nuevo: Boolean
+    val nuevo: Boolean,
+    val ticket: String = "",
+    val estado: EstadoReporte = EstadoReporte.RECIBIDO,
+    val fotoUrl: String = "",
+    val latitud: Double = 0.0,
+    val longitud: Double = 0.0,
+    val fechaHoraTexto: String = "—",
+    val tipo: String = "",
+    val descripcion: String = "",
+    val areaM2: Double = 0.0,
+    val confianza: Int = 0
 )
 
-/** Parada de una ruta de recolección (A05). */
-data class ParadaRuta(
-    val orden: Int,
-    val nombre: String,
-    val focos: Int,
-    val distanciaKm: Double,
-    val severidad: Severidad
-)
-
-/** Agregado del panel del administrador (A01): KPIs y zonas más afectadas. */
-data class PanelAdmin(
-    val kpis: List<KpiAdmin>,
-    val zonas: List<ZonaAfectada>
+/**
+ * Fila del reporte municipal (A06): un reporte con sus columnas clave, ya
+ * formateadas. Es la fuente única que alimenta la pantalla, el CSV y el PDF.
+ */
+data class FilaReporte(
+    val ticket: String,
+    val direccion: String,
+    val tipo: String,
+    val severidad: Severidad,
+    val estado: EstadoReporte,
+    val fechaHoraTexto: String,
+    val latitud: Double,
+    val longitud: Double
 )

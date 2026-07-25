@@ -54,71 +54,19 @@
                 android:layout_marginTop="14dp"
                 android:orientation="horizontal">
 
-                <TextView style="@style/ChipMapa" android:background="@drawable/bg_chip_mapa_sel" android:text="@string/mapa_filtro_todos" android:textColor="@color/verde_bosque" />
-                <TextView style="@style/ChipMapa" android:text="@string/mapa_filtro_alta" />
-                <TextView style="@style/ChipMapa" android:text="@string/mapa_filtro_media" />
-                <TextView style="@style/ChipMapa" android:text="@string/mapa_filtro_baja" />
+                <TextView android:id="@+id/chipTodos" style="@style/ChipMapa" android:background="@drawable/bg_chip_mapa_sel" android:text="@string/mapa_filtro_todos" android:textColor="@color/verde_bosque" />
+                <TextView android:id="@+id/chipAlta" style="@style/ChipMapa" android:text="@string/mapa_filtro_alta" />
+                <TextView android:id="@+id/chipMedia" style="@style/ChipMapa" android:text="@string/mapa_filtro_media" />
+                <TextView android:id="@+id/chipBaja" style="@style/ChipMapa" android:text="@string/mapa_filtro_baja" />
             </LinearLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Mapa (vista previa) -->
-    <FrameLayout
+    <!-- Mapa real (Google Maps). MapaFragment le agrega los marcadores de los focos. -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mapaContainer"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#DDE5D5">
-
-        <ImageView
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="-60dp"
-            android:layout_marginTop="-120dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_nav_mapa"
-            app:tint="@color/sev_alta" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="-180dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_nav_mapa"
-            app:tint="@color/sev_media" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="-10dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_nav_mapa"
-            app:tint="@color/azul" />
-
-        <ImageView
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="-90dp"
-            android:layout_marginTop="120dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_nav_mapa"
-            app:tint="@color/sev_baja" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_margin="16dp"
-            android:background="@drawable/bg_chip_ia"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="8dp"
-            android:text="@string/mapa_nota"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-    </FrameLayout>
+        android:layout_weight="1" />
 </LinearLayout>

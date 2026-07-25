@@ -11,14 +11,11 @@
     android:orientation="horizontal"
     android:padding="14dp">
 
-    <ImageView
+    <com.moviles.minkia.ui.common.FotoReporteView
+        android:id="@+id/fotoReporte"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:background="@color/linea"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_camara"
-        app:tint="@color/verde_hoja_claro"
-        xmlns:app="http://schemas.android.com/apk/res-auto" />
+        android:background="@color/linea" />
 
     <LinearLayout
         android:layout_width="0dp"

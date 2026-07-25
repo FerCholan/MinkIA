@@ -10,7 +10,8 @@ data class PuntoCritico(
     val referencia: String,
     val distanciaMetros: Int,
     val cantidadReportes: Int,
-    val severidad: Severidad
+    val severidad: Severidad,
+    val fotoUrl: String = ""
 )
 
 enum class Severidad {

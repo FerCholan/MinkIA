@@ -36,6 +36,7 @@ class MiReporteAdapter(
 
         fun bind(r: MiReporte) {
             val ctx = binding.root.context
+            binding.fotoReporte.cargar(r.fotoUrl)
             binding.tvDireccion.text = r.direccion
             binding.tvFecha.text = ctx.getString(R.string.reportes_fecha_ticket, r.fechaTexto, r.ticket)
 
@@ -53,9 +54,9 @@ class MiReporteAdapter(
             chip.text = estado.etiqueta
             val (bg, color) = when (estado) {
                 EstadoReporte.RESUELTO -> R.drawable.bg_chip_permitido to R.color.verde_hoja
-                EstadoReporte.EN_PROCESO, EstadoReporte.EN_RUTA -> R.drawable.bg_chip_permitir to R.color.naranja_terracota
+                EstadoReporte.EN_PROCESO -> R.drawable.bg_chip_permitir to R.color.naranja_terracota
                 EstadoReporte.RECIBIDO -> R.drawable.bg_chip_azul to R.color.azul
-                EstadoReporte.DUPLICADO -> R.drawable.bg_chip_opcional to R.color.texto_secundario
+                EstadoReporte.DUPLICADO, EstadoReporte.ANULADO -> R.drawable.bg_chip_opcional to R.color.texto_secundario
             }
             chip.setBackgroundResource(bg)
             chip.setTextColor(ContextCompat.getColor(ctx, color))

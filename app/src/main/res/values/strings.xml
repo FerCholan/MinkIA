@@ -3,56 +3,79 @@
     <string name="app_name">MinkIA</string>
 
     <!-- Administrador (Épica 5) -->
-    <string name="admin_nav_panel">Panel</string>
     <string name="admin_nav_mapa">Mapa</string>
-    <string name="admin_nav_rutas">Rutas</string>
-    <string name="admin_nav_alertas">Alertas</string>
+    <string name="admin_nav_alertas">Bandeja</string>
+    <string name="admin_nav_reportes">Reportes</string>
+    <string name="admin_nav_cuenta">Cuenta</string>
 
-    <string name="admin_panel_titulo">Panel administrador</string>
-    <string name="admin_panel_subtitulo">Gestión de residuos sólidos</string>
-    <string name="admin_panel_iniciales">MS</string>
-    <string name="admin_panel_grafico">Reportes por día</string>
-    <string name="admin_panel_grafico_rango">7 días</string>
-    <string name="admin_panel_zonas">Zonas más afectadas</string>
-    <string name="admin_zona_focos">%1$d focos</string>
+    <string name="admin_cuenta_titulo">Mi cuenta</string>
+    <string name="admin_cuenta_rol">Administrador municipal</string>
+    <string name="admin_cuenta_acerca">Acerca de MinkIA</string>
+    <string name="admin_cuenta_acerca_sub">Versión e información de la app</string>
+    <string name="admin_cuenta_cerrar_confirma">¿Seguro que quieres cerrar sesión? Tendrás que iniciar sesión de nuevo para volver a entrar.</string>
+
+    <string name="admin_puntos_total_fmt">%1$d zonas con focos activos</string>
 
     <string name="admin_alertas_titulo">Reportes entrantes</string>
-    <string name="admin_alertas_volver">Volver</string>
     <string name="admin_alertas_tab_nuevos">Nuevos</string>
-    <string name="admin_alertas_tab_sin">Sin asignar</string>
+    <string name="admin_alertas_tab_sin">En proceso</string>
     <string name="admin_alertas_tab_urgentes">Urgentes</string>
     <string name="admin_alertas_nuevo">NUEVO</string>
     <string name="admin_alertas_agrupados">x%1$d</string>
+    <string name="admin_alertas_vacio">No hay reportes en esta pestaña.</string>
 
     <string name="admin_puntos_titulo">Puntos críticos</string>
     <string name="admin_puntos_buscar">Buscar zona o dirección…</string>
-    <string name="admin_puntos_agrupacion">Agrupación espacial activa</string>
-    <string name="admin_puntos_total">62 puntos · por severidad</string>
-    <string name="admin_puntos_ordenar">Ordenar</string>
     <string name="admin_puntos_reportes">%1$d reportes agrupados</string>
-
-    <string name="admin_rutas_titulo">Ruta de recolección</string>
-    <string name="admin_rutas_paradas">paradas</string>
-    <string name="admin_rutas_distancia">distancia</string>
-    <string name="admin_rutas_estimado">estimado</string>
-    <string name="admin_rutas_lista">Paradas (por prioridad)</string>
-    <string name="admin_rutas_camion">Camión C-04</string>
-    <string name="admin_rutas_camion_sub">Cuadrilla 2 · disponible</string>
-    <string name="admin_rutas_asignar">Asignar</string>
-    <string name="admin_rutas_enviar">Asignar y enviar ruta</string>
-    <string name="admin_rutas_parada_sub">%1$d focos · %2$s km</string>
 
     <string name="admin_val_titulo">Reporte %1$s</string>
     <string name="admin_val_ia">IA: %1$s · %2$d%%</string>
+    <string name="admin_val_area">%1$s m²</string>
+    <string name="admin_val_descripcion">Descripción del vecino</string>
     <string name="admin_val_unificados">%1$d reportes ciudadanos fueron unificados automáticamente en este punto crítico.</string>
-    <string name="admin_val_ubicacion">Ubicación</string>
-    <string name="admin_val_primer">Primer reporte</string>
+    <string name="admin_val_ubicacion">Dirección</string>
+    <string name="admin_val_coordenadas">Coordenadas</string>
+    <string name="admin_val_fecha">Fecha y hora</string>
+    <string name="admin_val_coord_fmt">%1$.5f, %2$.5f</string>
+    <string name="admin_val_estado">Estado</string>
     <string name="admin_val_tipo">Tipo</string>
     <string name="admin_val_reportado">Reportado por</string>
-    <string name="admin_val_validar">Validar y asignar cuadrilla</string>
+    <string name="admin_val_validar">Validar (en proceso)</string>
+    <string name="admin_val_resolver">Aprobar resuelto</string>
+    <string name="admin_val_nivel">Cambiar nivel</string>
     <string name="admin_val_duplicado">Duplicado</string>
-    <string name="admin_val_rechazar">Rechazar</string>
-    <string name="admin_val_validado_ok">Reporte validado y cuadrilla asignada</string>
+    <string name="admin_val_anular">Anular</string>
+    <string name="admin_val_validado_ok">Reporte validado (en proceso)</string>
+    <string name="admin_val_resuelto_ok">Reporte aprobado como resuelto</string>
+    <string name="admin_val_duplicado_ok">Reporte marcado como duplicado</string>
+    <string name="admin_val_anulado_ok">Reporte anulado</string>
+    <string name="admin_val_nivel_ok">Nivel actualizado</string>
+    <string name="admin_val_nivel_titulo">Nivel (severidad) del reporte</string>
+    <string name="admin_val_anular_titulo">¿Anular este reporte?</string>
+    <string name="admin_val_anular_mensaje">Se marcará como anulado (troll o falso). Queda registrado para auditoría, no se elimina.</string>
+    <string name="admin_val_resolver_titulo">¿Aprobar como resuelto?</string>
+    <string name="admin_val_resolver_mensaje">Confirmas que el foco fue limpiado. El reporte pasará a Resuelto.</string>
+    <string name="admin_val_validar_titulo">¿Validar el reporte?</string>
+    <string name="admin_val_validar_mensaje">Pasará a En proceso y el vecino verá que su reporte fue validado.</string>
+    <string name="admin_val_duplicado_titulo">¿Marcar como duplicado?</string>
+    <string name="admin_val_duplicado_mensaje">Se marcará como duplicado de otro foco ya registrado.</string>
+    <string name="admin_val_error">No se pudo completar la acción. ¿Tienes permiso de administrador?</string>
+
+    <!-- Reportería municipal (A06) -->
+    <string name="admin_rep_titulo">Reporte municipal</string>
+    <string name="admin_rep_desde">Desde</string>
+    <string name="admin_rep_hasta">Hasta</string>
+    <string name="admin_rep_nivel">Nivel</string>
+    <string name="admin_rep_nivel_todos">Todos</string>
+    <string name="admin_rep_generar">Generar</string>
+    <string name="admin_rep_pdf">PDF</string>
+    <string name="admin_rep_csv">CSV</string>
+    <string name="admin_rep_total">%1$d reportes en el rango</string>
+    <string name="admin_rep_vacio">No hay reportes en el rango elegido.</string>
+    <string name="admin_rep_fila_sub">%1$s · %2$s · %3$s</string>
+    <string name="admin_rep_pdf_titulo">Reporte municipal MinkIA</string>
+    <string name="admin_rep_error">No se pudo generar el reporte. Intenta de nuevo.</string>
+    <string name="admin_rep_rango_invalido">La fecha inicial no puede ser posterior a la final.</string>
 
     <!-- Splash -->
     <string name="splash_eslogan">Tu ciudad limpia empieza con un reporte</string>
@@ -82,8 +105,6 @@
     <string name="login_google">Google</string>
     <string name="login_sin_cuenta">¿No tienes cuenta? </string>
     <string name="login_registrate">Regístrate</string>
-    <string name="login_bienvenida">¡Hola de nuevo, %1$s!</string>
-    <string name="login_proximamente">Esta pantalla está en construcción</string>
     <string name="login_error_email_vacio">Ingresa tu correo electrónico</string>
     <string name="login_error_email_invalido">El correo no tiene un formato válido</string>
     <string name="login_error_password_vacio">Ingresa tu contraseña</string>
@@ -101,12 +122,14 @@
     <string name="registro_hint_dni">Para validar reportes</string>
     <string name="registro_label_password">Contraseña</string>
     <string name="registro_hint_password">Mínimo 6 caracteres</string>
-    <string name="registro_terminos">Acepto los términos y la política de datos</string>
+    <string name="registro_terminos">Acepto los Términos y Condiciones y la Política de Datos</string>
+    <string name="registro_terminos_link">Términos y Condiciones</string>
+    <string name="registro_privacidad_link">Política de Datos</string>
     <string name="registro_boton">Registrarme</string>
     <string name="registro_registrando">Creando cuenta…</string>
     <string name="registro_ya_tienes">¿Ya tienes cuenta? </string>
     <string name="registro_inicia_sesion">Inicia sesión</string>
-    <string name="registro_bienvenida">¡Cuenta creada! Bienvenido, %1$s</string>
+    <string name="registro_continua_con">o regístrate con</string>
     <string name="registro_error_nombre_vacio">Ingresa tu nombre completo</string>
     <string name="registro_error_nombre_corto">El nombre es demasiado corto</string>
     <string name="registro_error_email_vacio">Ingresa tu correo electrónico</string>
@@ -114,7 +137,47 @@
     <string name="registro_error_dni_invalido">El DNI debe tener 8 dígitos</string>
     <string name="registro_error_password_vacio">Ingresa una contraseña</string>
     <string name="registro_error_password_corto">La contraseña debe tener al menos 6 caracteres</string>
-    <string name="registro_error_terminos">Debés aceptar los términos para continuar</string>
+    <string name="registro_error_terminos">Debes aceptar los términos para continuar</string>
+
+    <!-- Editar DNI (perfil progresivo) -->
+    <string name="editar_dni_subtitulo">El DNI ayuda a validar tus reportes. El apodo (nickname) aparecerá en tus reportes en lugar de tu nombre. Ambos son opcionales.</string>
+    <string name="editar_dni_hint">8 dígitos</string>
+    <string name="editar_dni_guardado">Datos guardados</string>
+    <string name="editar_nickname_hint">Apodo (opcional)</string>
+    <string name="editar_nickname_ocupado">Ese apodo ya está en uso. Elige otro.</string>
+    <string name="editar_nickname_invalido">El apodo debe tener entre 3 y 20 caracteres (letras, números o _).</string>
+
+    <!-- Pantalla Mis datos (C17b) -->
+    <string name="mis_datos_titulo">Mis datos</string>
+    <string name="mis_datos_grupo_identidad">IDENTIDAD</string>
+    <string name="mis_datos_grupo_privacidad">PRIVACIDAD EN REPORTES</string>
+    <string name="mis_datos_dni_label">DNI</string>
+    <string name="mis_datos_apodo_label">Apodo</string>
+    <string name="mis_datos_usar_apodo">Usar mi apodo en los reportes</string>
+    <string name="mis_datos_usar_apodo_sub">Si está activo, en tus reportes aparece tu apodo en lugar de tu nombre real.</string>
+    <string name="mis_datos_apodo_falta">Activa esta opción pero primero escribe un apodo válido.</string>
+    <string name="mis_datos_guardar">Guardar</string>
+
+    <!-- Google Maps API key (restringida por paquete + SHA-1). Reemplazar el placeholder. -->
+    <string name="google_maps_key" translatable="false">AIzaSyB2prnWZOiHcaDA2_r-nB_kMvzOHp_zWyQ</string>
+
+    <!-- Términos y Política de Datos -->
+    <string name="terminos_titulo">Términos y Política de Datos</string>
+    <string name="terminos_volver">Volver</string>
+    <string name="terminos_intro">Al crear tu cuenta en MinkIA aceptas estos términos. Te recomendamos leerlos con atención.</string>
+    <string name="terminos_s1_titulo">1. Qué es MinkIA</string>
+    <string name="terminos_s1_cuerpo">MinkIA es una aplicación ciudadana para reportar focos de acumulación de residuos en Chimbote. Busca ayudar a la comunidad y a la municipalidad a identificar y atender esos puntos.</string>
+    <string name="terminos_s2_titulo">2. Uso responsable</string>
+    <string name="terminos_s2_cuerpo">Te comprometes a enviar reportes reales y de buena fe. No subas contenido ofensivo, falso o que no corresponda a un foco de residuos. El mal uso puede llevar a la suspensión de tu cuenta.</string>
+    <string name="terminos_s3_titulo">3. Sobre tus reportes</string>
+    <string name="terminos_s3_cuerpo">Tus reportes se comparten con la municipalidad para su gestión. MinkIA no garantiza un tiempo de respuesta ni la solución de cada caso, porque eso depende de las autoridades competentes.</string>
+    <string name="terminos_s4_titulo">4. Datos que recopilamos</string>
+    <string name="terminos_s4_cuerpo">De tu cuenta: nombre, correo electrónico y, si quieres, DNI. De cada reporte: la foto que tomas, la ubicación aproximada y la descripción que agregas. No pedimos datos que no necesitemos.</string>
+    <string name="terminos_s5_titulo">5. Cómo usamos tus datos</string>
+    <string name="terminos_s5_cuerpo">Usamos tus datos solo para gestionar los reportes, mostrarte tu actividad y mejorar el servicio. No vendemos ni cedemos tus datos a terceros con fines comerciales. Puedes pedir la baja de tu cuenta y tus datos cuando quieras.</string>
+    <string name="terminos_s6_titulo">6. Contacto</string>
+    <string name="terminos_s6_cuerpo">Si tienes dudas sobre estos términos o el uso de tus datos, escríbenos desde la sección de soporte de la app.</string>
+    <string name="terminos_nota">Este es un documento inicial y puede actualizarse. Última actualización: junio de 2026.</string>
 
     <!-- Recuperar contraseña -->
     <string name="recuperar_titulo">Recuperar contraseña</string>
@@ -128,7 +191,7 @@
     <string name="recuperar_volver_login_prefijo">Volver a </string>
     <string name="recuperar_volver_login">iniciar sesión</string>
     <string name="recuperar_exito_titulo">Enlace enviado</string>
-    <string name="recuperar_exito_mensaje">Si %1$s tiene una cuenta, te enviamos un enlace para crear una nueva contraseña. Revisa tu bandeja de entrada.</string>
+    <string name="recuperar_exito_mensaje">Si %1$s tiene una cuenta, te enviamos un enlace para crear una nueva contraseña. Revisa tu bandeja de entrada y, si no lo ves en unos minutos, la carpeta de spam.</string>
     <string name="recuperar_exito_boton">Volver a iniciar sesión</string>
     <string name="recuperar_error_email_vacio">Ingresa tu correo electrónico</string>
     <string name="recuperar_error_email_invalido">El correo no tiene un formato válido</string>
@@ -147,26 +210,28 @@
     <string name="permisos_chip_opcional">Opcional</string>
     <string name="permisos_banner">Tus datos solo se comparten con la administración para gestionar el reporte.</string>
     <string name="permisos_boton">Permitir y continuar</string>
-    <string name="permisos_boton_continuar">Continuar</string>
 
     <!-- Captura con cámara (C09) -->
     <string name="captura_volver">Volver</string>
-    <string name="captura_modelo">YOLOv8 Nano · en el dispositivo</string>
+    <string name="captura_modelo">Detección con IA</string>
     <string name="captura_flash">Activar o desactivar el flash</string>
-    <string name="captura_hint">Encuadrá el foco de basura</string>
+    <string name="captura_hint">Encuadra el foco de basura</string>
     <string name="captura_info">La IA analizará la foto al capturar, funciona sin internet.</string>
     <string name="captura_tomar">Tomar foto</string>
-    <string name="captura_sin_permiso">Necesitamos la cámara para reportar. Activala en Ajustes.</string>
-    <string name="captura_error">No se pudo tomar la foto. Intentá de nuevo.</string>
+    <string name="captura_sin_permiso">Necesitamos la cámara para reportar. Actívala en Ajustes.</string>
+    <string name="captura_error">No se pudo tomar la foto. Intenta de nuevo.</string>
 
     <!-- Análisis IA (C10) -->
     <string name="analisis_volver">Volver</string>
     <string name="analisis_analizando">Analizando…</string>
     <string name="analisis_listo">Análisis listo</string>
     <string name="analisis_titulo_panel">Analizando con IA</string>
-    <string name="analisis_modelo">YOLOv8 Nano · en el dispositivo</string>
+    <string name="analisis_modelo">Análisis con IA</string>
     <string name="analisis_estado_proceso">Detectando residuos y midiendo el área…</string>
     <string name="analisis_estado_listo">Detección completada. Revisa y confirma el reporte.</string>
+    <string name="analisis_no_basura_chip">Sin basura</string>
+    <string name="analisis_no_basura_texto">No detectamos basura en la foto. Toma otra enfocando bien el foco de residuos.</string>
+    <string name="analisis_retomar">Retomar foto</string>
     <string name="analisis_banner">Procesa localmente, no se envía nada a la nube todavía.</string>
     <string name="analisis_continuar">Continuar</string>
     <string name="analisis_reintentar">Reintentar</string>
@@ -186,7 +251,11 @@
     <string name="form_sev_alta">Alta</string>
     <string name="form_ubicacion">Ubicación (GPS exacto)</string>
     <string name="form_ubicacion_preciso">Preciso</string>
-    <string name="form_ubicacion_aprox">Aproximado</string>
+    <string name="form_ubicacion_obteniendo">Obteniendo ubicación…</string>
+    <string name="form_ubicacion_permiso">Permiso denegado. Toca para permitir</string>
+    <string name="form_ubicacion_desactivada">Ubicación desactivada. Toca para activar</string>
+    <string name="form_ubicacion_no_disp">No se pudo obtener. Toca para reintentar</string>
+    <string name="form_ubicacion_obligatoria">Necesitas activar la ubicación para enviar el reporte. Sin ella no sabemos dónde está el foco.</string>
     <string name="form_tipo">Tipo de residuo</string>
     <string name="form_descripcion">Descripción (opcional)</string>
     <string name="form_descripcion_hint">Acumulación en la esquina hace 3 días…</string>
@@ -203,8 +272,6 @@
     <string name="conf_estado_recibido_sub">Hoy · recién</string>
     <string name="conf_estado_validando">Validando con IA</string>
     <string name="conf_estado_validando_sub">Agrupando con reportes cercanos</string>
-    <string name="conf_estado_ruta">En ruta</string>
-    <string name="conf_estado_ruta_sub">Cuadrilla asignada</string>
     <string name="conf_estado_resuelto">Resuelto</string>
     <string name="conf_ver_mapa">Ver mapa</string>
     <string name="conf_volver_inicio">Volver al inicio</string>
@@ -229,31 +296,41 @@
     <string name="detalle_seguimiento">Seguimiento</string>
     <string name="detalle_recibido">Recibido</string>
     <string name="detalle_validado">Validado</string>
-    <string name="detalle_en_ruta">En ruta</string>
     <string name="detalle_resuelto">Resuelto</string>
+    <string name="detalle_autor_fmt">Reportado por %1$s</string>
+    <string name="detalle_autor_anonimo">Reportado por un vecino</string>
+    <string name="detalle_anulado">Este reporte fue anulado por la administración (troll o falso).</string>
+    <string name="detalle_duplicado">Este reporte fue unificado con el de otros vecinos en el mismo punto.</string>
     <string name="detalle_union">Tu reporte se unió al de otros %1$d vecinos en el mismo punto.</string>
     <string name="detalle_ver_mapa">Ver en el mapa</string>
+    <string name="foto_reporte_desc">Foto del foco reportado</string>
+
+    <!-- Configuración: Acerca de / Idioma (C18) -->
+    <string name="config_acerca_titulo">Acerca de MinkIA</string>
+    <string name="config_acerca_mensaje">MinkIA · versión %1$s\n\nUna app para que los vecinos de Chimbote reporten focos de basura y la municipalidad los atienda más rápido.\n\nHecho con cariño, de vecinos para vecinos.</string>
+    <string name="config_idioma_titulo">Idioma</string>
+    <string name="config_idioma_mensaje">La app está en Español (Perú). Más adelante sumaremos otros idiomas.</string>
+    <string name="config_cerrar_dialogo">Cerrar</string>
 
     <!-- Notificaciones (C16) -->
     <string name="notif_titulo">Notificaciones</string>
     <string name="notif_volver">Volver</string>
-    <string name="notif_marcar">Marcar todo leído</string>
 
     <!-- Explorar mapa (C08) -->
     <string name="mapa_titulo">Explorar focos</string>
-    <string name="mapa_buscar">Buscar</string>
     <string name="mapa_filtro_todos">Todos</string>
     <string name="mapa_filtro_alta">Alta</string>
     <string name="mapa_filtro_media">Media</string>
     <string name="mapa_filtro_baja">Baja</string>
-    <string name="mapa_nota">Mapa de focos (vista previa). El mapa interactivo se integra con Google Maps.</string>
 
     <!-- Perfil y Minka digital (C17) -->
     <string name="perfil_titulo">Mi perfil</string>
-    <string name="perfil_editar">Editar perfil</string>
+    <string name="perfil_editar">Editar mis datos</string>
     <string name="perfil_nombre">Fernando Cholán</string>
     <string name="perfil_rol">Vecino fiscalizador · Nivel 3</string>
     <string name="perfil_iniciales">FC</string>
+    <string name="perfil_dni_fmt">DNI: %1$s</string>
+    <string name="perfil_dni_vacio">DNI sin registrar</string>
     <string name="perfil_stat_reportes">Reportes</string>
     <string name="perfil_stat_resueltos">Resueltos</string>
     <string name="perfil_stat_puntos">Puntos minka</string>
@@ -261,13 +338,23 @@
     <string name="perfil_nivel">Nivel 3 · Guardián del barrio</string>
     <string name="perfil_progreso">340 / 500</string>
     <string name="perfil_faltan">Te faltan 160 puntos para ser Héroe del barrio.</string>
-    <string name="perfil_badge_primero">Primer reporte</string>
-    <string name="perfil_badge_diez">10 reportes</string>
-    <string name="perfil_badge_mes">Reportero del mes</string>
-    <string name="perfil_badge_heroe">Héroe del barrio</string>
-    <string name="perfil_mis_reportes">Mis reportes</string>
     <string name="perfil_config">Configuración</string>
     <string name="perfil_cerrar">Cerrar sesión</string>
+
+    <!-- Insignias de nivel (Minka digital) -->
+    <string name="perfil_insignias">Insignias de nivel</string>
+    <string name="perfil_proximo_fmt">Próximo: %1$s</string>
+    <string name="perfil_nivel_max">¡Alcanzaste el nivel máximo!</string>
+    <string name="nivel_1_corto">Brote</string>
+    <string name="nivel_2_corto">Protector</string>
+    <string name="nivel_3_corto">Forjador</string>
+    <string name="nivel_4_corto">Héroe</string>
+    <string name="nivel_5_corto">Guardián</string>
+    <string name="nivel_1_nombre">Brote Ciudadano</string>
+    <string name="nivel_2_nombre">Protector Verde</string>
+    <string name="nivel_3_nombre">Forjador Urbano</string>
+    <string name="nivel_4_nombre">Héroe Eco-Tecnológico</string>
+    <string name="nivel_5_nombre">Guardián Global</string>
 
     <!-- Configuración (C18) -->
     <string name="config_titulo">Configuración</string>
@@ -279,6 +366,12 @@
     <string name="config_wifi">Sincronizar solo con WiFi</string>
     <string name="config_sin_enviar">Reportes sin enviar</string>
     <string name="config_sin_enviar_sub">Pendientes de sincronizar</string>
+    <string name="config_sync_al_dia">Todo sincronizado</string>
+    <string name="config_sync_pendientes">Toca para reintentar el envío</string>
+    <string name="config_sync_sincronizando">Sincronizando…</string>
+    <string name="config_sync_enviados">%1$d reporte(s) enviado(s)</string>
+    <string name="config_sync_sin_red">Sin conexión. Se reintentará solo al volver internet.</string>
+    <string name="config_sync_nada">No hay reportes pendientes</string>
     <string name="config_grupo_general">GENERAL</string>
     <string name="config_idioma">Idioma</string>
     <string name="config_idioma_valor">Español</string>
@@ -286,7 +379,6 @@
     <string name="config_cerrar">Cerrar sesión</string>
 
     <!-- Inicio -->
-    <string name="inicio_saludo">Hola, vecino</string>
     <string name="inicio_saludo_hola">Hola,</string>
     <string name="inicio_saludo_nombre">vecino</string>
     <string name="inicio_avatar_inicial">V</string>
@@ -295,9 +387,10 @@
     <string name="label_tus_reportes">Tus reportes</string>
     <string name="label_resueltos">Resueltos</string>
     <string name="titulo_mapa_calor">Mapa de calor</string>
-    <string name="titulo_cerca_tuyo">Cerca tuyo</string>
+    <string name="titulo_cerca_tuyo">Cerca de ti</string>
     <string name="btn_reintentar">Reintentar</string>
     <string name="error_generico">No se pudo cargar la información. Toca para reintentar.</string>
+    <string name="notif_vacio">Aún no tienes notificaciones.</string>
 
     <!-- Navegación inferior -->
     <string name="nav_inicio">Inicio</string>
@@ -305,9 +398,6 @@
     <string name="nav_reportar">Reportar</string>
     <string name="nav_reportes">Reportes</string>
     <string name="nav_perfil">Perfil</string>
-
-    <!-- Placeholder de pantallas en construcción -->
-    <string name="placeholder_pendiente">Pantalla en construcción</string>
 
     <!-- Onboarding interactivo: coach marks (primer arranque) -->
     <string name="coach_fab_titulo">Reporta un foco</string>
@@ -317,5 +407,4 @@
 
     <!-- Tooltips de íconos -->
     <string name="tooltip_notificaciones">Notificaciones</string>
-    <string name="tooltip_editar_perfil">Editar perfil</string>
 </resources>

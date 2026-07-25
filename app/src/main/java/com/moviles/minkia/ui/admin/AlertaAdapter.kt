@@ -29,6 +29,7 @@ class AlertaAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(a: AlertaAdmin) {
             val ctx = binding.root.context
+            binding.fotoReporte.cargar(a.fotoUrl)
             binding.tvDireccion.text = a.direccion
             binding.tvTiempo.text = a.tiempoTexto
 
@@ -56,7 +57,7 @@ class AlertaAdapter(
 
     companion object {
         private val DIFF = object : DiffUtil.ItemCallback<AlertaAdmin>() {
-            override fun areItemsTheSame(a: AlertaAdmin, b: AlertaAdmin) = a.direccion == b.direccion
+            override fun areItemsTheSame(a: AlertaAdmin, b: AlertaAdmin) = a.id == b.id
             override fun areContentsTheSame(a: AlertaAdmin, b: AlertaAdmin) = a == b
         }
     }
