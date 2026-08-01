@@ -10,16 +10,18 @@
 //     key que funcione server-side (la de Maps del manifest está restringida a
 //     Android y NO sirve acá).
 //
-// Uso (PowerShell):
-//   $env:ADMIN_PASSWORD="lacontraseña"; $env:GEOCODING_KEY="AIza..."; node scripts/regeocodificar.mjs
+// Uso (PowerShell), las cuatro son obligatorias:
+//   $env:FIREBASE_API_KEY="AIza..."; $env:ADMIN_EMAIL="admin@..."
+//   $env:ADMIN_PASSWORD="lacontraseña"; $env:GEOCODING_KEY="AIza..."
+//   node scripts/regeocodificar.mjs
 //   (opcional)  $env:DRY_RUN="1"     -> solo muestra qué haría, no escribe
 //   (opcional)  $env:REGEOCODE_ALL="1" -> re-geocodifica TODOS, no solo los genéricos
-//   (opcional)  $env:ADMIN_EMAIL="otro@correo"  -> por defecto admin@minkia.pe
 
 const PROJECT_ID = process.env.PROJECT_ID || "minkia-4a73d";
 // API key de Firebase (del google-services.json). Sirve para el login REST.
-const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || "AIzaSyCAxk5q1rL1e9itvmS-hktEW-tfm7l93UI";
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@minkia.pe";
+// Sin fallback en el codigo: se pasa por entorno o el script no arranca.
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const GEOCODING_KEY = process.env.GEOCODING_KEY;
 const DRY_RUN = process.env.DRY_RUN === "1";
@@ -106,6 +108,8 @@ async function patchDireccion(token, id, direccion) {
 }
 
 async function main() {
+  if (!FIREBASE_API_KEY) throw new Error("Falta FIREBASE_API_KEY (key web de Firebase).");
+  if (!ADMIN_EMAIL) throw new Error("Falta ADMIN_EMAIL (correo del admin).");
   if (!ADMIN_PASSWORD) throw new Error("Falta ADMIN_PASSWORD (contraseña del admin).");
   if (!GEOCODING_KEY) throw new Error("Falta GEOCODING_KEY (key del Geocoding API).");
 

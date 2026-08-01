@@ -158,8 +158,12 @@
     <string name="mis_datos_apodo_falta">Activa esta opción pero primero escribe un apodo válido.</string>
     <string name="mis_datos_guardar">Guardar</string>
 
-    <!-- Google Maps API key (restringida por paquete + SHA-1). Reemplazar el placeholder. -->
-    <string name="google_maps_key" translatable="false">AIzaSyB2prnWZOiHcaDA2_r-nB_kMvzOHp_zWyQ</string>
+    <!--
+      google_maps_key NO se declara aca: se genera en tiempo de build desde
+      local.properties (MAPS_API_KEY), que no se versiona. Ver app/build.gradle.kts.
+      La clave viaja igual dentro del APK: la proteccion real es la restriccion
+      por paquete + SHA-1 en Google Cloud, no esconderla del repo.
+    -->
 
     <!-- Términos y Política de Datos -->
     <string name="terminos_titulo">Términos y Política de Datos</string>
