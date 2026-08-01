@@ -4,10 +4,21 @@
 // Requiere que el admin tenga rol:'admin' en usuarios/{uid} (si no, las reglas
 // rechazan el update con 403).
 
-const KEY = "AIzaSyCAxk5q1rL1e9itvmS-hktEW-tfm7l93UI";
-const PID = "minkia-4a73d";
-const EMAIL = process.env.ADMIN_EMAIL || "admin@minkia.pe";
-const PASSWORD = process.env.ADMIN_PASSWORD || "123456";
+// Uso (PowerShell):
+//   $env:FIREBASE_API_KEY="AIza..."; $env:ADMIN_EMAIL="admin@..."; $env:ADMIN_PASSWORD="..."
+//   node scripts/migrar-en-ruta.mjs
+// Nada de valores por defecto: una credencial con fallback en el codigo es una
+// credencial publicada.
+
+const KEY = process.env.FIREBASE_API_KEY;
+const PID = process.env.FIREBASE_PROJECT_ID || "minkia-4a73d";
+const EMAIL = process.env.ADMIN_EMAIL;
+const PASSWORD = process.env.ADMIN_PASSWORD;
+
+if (!KEY) { console.error("Falta FIREBASE_API_KEY."); process.exit(1); }
+if (!EMAIL) { console.error("Falta ADMIN_EMAIL."); process.exit(1); }
+if (!PASSWORD) { console.error("Falta ADMIN_PASSWORD."); process.exit(1); }
+
 const VIEJO = "EN_RUTA";
 const NUEVO = "RECIBIDO";
 

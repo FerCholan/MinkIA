@@ -1,6 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
+}
+
+// La API key de Maps se lee de local.properties (no versionado) o de la variable
+// de entorno MAPS_API_KEY, para que un checkout limpio o un CI puedan construir.
+val mapsApiKey: String = run {
+    val local = rootProject.file("local.properties")
+    val desdeArchivo = if (local.exists()) {
+        Properties().apply { local.inputStream().use(::load) }.getProperty("MAPS_API_KEY")
+    } else {
+        null
+    }
+    desdeArchivo ?: System.getenv("MAPS_API_KEY") ?: ""
 }
 
 android {
@@ -15,6 +29,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Genera @string/google_maps_key, que consume el manifest en
+        // com.google.android.geo.API_KEY.
+        resValue("string", "google_maps_key", mapsApiKey)
     }
 
     buildTypes {
@@ -32,6 +50,8 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        // Necesario en AGP 9 para el resValue de google_maps_key.
+        resValues = true
     }
     androidResources {
         // El .tflite debe quedar SIN comprimir para poder mapearlo en memoria.
