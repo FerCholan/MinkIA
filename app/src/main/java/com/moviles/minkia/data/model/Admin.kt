@@ -34,7 +34,7 @@ data class AlertaAdmin(
     val fechaHoraTexto: String = "—",
     val tipo: String = "",
     val descripcion: String = "",
-    val areaM2: Double = 0.0,
+    val porcentajeCobertura: Int = 0,
     val confianza: Int = 0
 )
 

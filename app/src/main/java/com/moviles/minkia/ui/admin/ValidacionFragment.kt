@@ -87,7 +87,7 @@ class ValidacionFragment : BaseFragment<FragmentAdminValidacionBinding>() {
         binding.toolbar.title = getString(R.string.admin_val_titulo, ticket)
         // IA, área y tipo REALES del reporte (no hardcodeados).
         binding.chipIa.text = getString(R.string.admin_val_ia, a.tipo.ifBlank { "Basura" }, a.confianza)
-        binding.chipArea.text = getString(R.string.admin_val_area, "%.1f".format(a.areaM2))
+        binding.chipArea.text = getString(R.string.admin_val_area, a.porcentajeCobertura)
         pintarSeveridad()
         binding.chipReportes.text = getString(R.string.detalle_vecinos, a.agrupados)
         binding.tvUbicacion.text = a.direccion.ifBlank { "—" }

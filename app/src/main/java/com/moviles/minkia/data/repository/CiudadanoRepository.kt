@@ -56,7 +56,7 @@ class CiudadanoRepository(
             fechaTexto = "",
             severidad = foco.severidad,
             estado = foco.estado,
-            areaM2 = foco.areaM2,
+            porcentajeCobertura = foco.porcentajeCobertura,
             vecinos = 0,
             fotoUrl = foco.fotoUrl,
             tipo = foco.tipo,

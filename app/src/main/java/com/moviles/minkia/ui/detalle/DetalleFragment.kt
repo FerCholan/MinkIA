@@ -123,7 +123,7 @@ class DetalleFragment : BaseFragment<FragmentDetalleBinding>() {
         // IA REAL del reporte (tipo + confianza detectados), no hardcodeado.
         val tipo = r.tipo.ifBlank { "Basura" }
         binding.chipIa.text = getString(R.string.detalle_ia, tipo, r.confianza)
-        binding.chipArea.text = getString(R.string.detalle_area, "%.1f".format(r.areaM2))
+        binding.chipArea.text = getString(R.string.detalle_area, r.porcentajeCobertura)
 
         binding.chipSeveridad.text = r.severidad.name
         binding.chipSeveridad.setTextColor(ContextCompat.getColor(requireContext(), colorSeveridad(r.severidad)))

@@ -4,19 +4,30 @@ service cloud.firestore {
 
     // Un vecino es admin si su doc en `usuarios` tiene rol == 'admin'. El rol
     // vive en el SERVIDOR: no se puede falsificar desde la app porque las reglas
-    // de `usuarios` no dejan auto-promoverse (update obliga a conservar el rol).
+    // de `usuarios` no dejan tocar ese campo.
     function esAdmin() {
       return request.auth != null
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
         && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'admin';
     }
 
+    /** Campos que difieren entre el documento guardado y el que llega. */
+    function camposTocados() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
     match /usuarios/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
+
       allow create: if request.auth != null && request.auth.uid == uid
                     && request.resource.data.rol == 'ciudadano';
+
+      // El vecino solo edita SU perfil progresivo. Antes bastaba con conservar el
+      // rol, así que podía reescribir cualquier otro campo del documento (el correo,
+      // el nombre, la fecha de creación). Ahora se enumera lo editable en vez de
+      // enumerar lo prohibido.
       allow update: if request.auth != null && request.auth.uid == uid
-                    && request.resource.data.rol == resource.data.rol;
+                    && camposTocados().hasOnly(['dni', 'nickname', 'usarApodo']);
     }
 
     // Reserva de apodos (nickname único). doc id = apodo en minúscula, valor { uid }.
@@ -24,37 +35,55 @@ service cloud.firestore {
     // Solo se puede reservar uno nuevo a tu propio uid, y liberar el tuyo.
     match /nicknames/{nick} {
       allow read: if request.auth != null;
-      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.keys().hasOnly(['uid']);
       allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
 
     match /reportes/{id} {
-      // Crear: cualquier vecino logueado, atado a su propio userId. El reporte
-      // SIEMPRE nace en RECIBIDO: un cliente no puede crear uno ya RESUELTO/ANULADO.
+      // Crear: cualquier vecino logueado, atado a su propio userId. Se validan los
+      // campos que la app promete, para que un cliente modificado no pueda inyectar
+      // un reporte con severidad inventada, confianza fuera de rango o coordenadas
+      // que no sean números. El reporte SIEMPRE nace en RECIBIDO.
       allow create: if request.auth != null
                     && request.resource.data.userId == request.auth.uid
-                    && request.resource.data.estado == 'RECIBIDO';
+                    && request.resource.data.estado == 'RECIBIDO'
+                    && request.resource.data.severidad in ['BAJA', 'MEDIA', 'ALTA']
+                    && request.resource.data.latitud is number
+                    && request.resource.data.longitud is number
+                    && request.resource.data.confianza is int
+                    && request.resource.data.confianza >= 0
+                    && request.resource.data.confianza <= 100
+                    && request.resource.data.autorNivel is int
+                    && request.resource.data.creadoEn is timestamp;
 
       // Leer: comunitario. Cualquier vecino logueado ve los focos de todos
       // (el Inicio muestra los puntos críticos de la comunidad, no solo los tuyos).
       allow read: if request.auth != null;
 
-      // Editar: el DUEÑO corrige su reporte PERO sin cambiar el dueño, el estado
-      // del flujo ni la severidad (validar/resolver/priorizar es potestad del
-      // admin). El ADMIN puede editar cualquiera. El chequeo del dueño va primero
-      // para no pagar las lecturas de esAdmin() en el caso común.
+      // Editar. El DUEÑO solo toca lo que él mismo escribió a mano, más la URL de la
+      // foto (el reintento de la cola puede resubirla y obtener otra distinta).
+      //
+      // Antes la regla solo prohibía cambiar userId, estado y severidad, o sea que el
+      // dueño podía reescribir su ticket, su nivel de autor, la confianza que reportó
+      // el modelo, las coordenadas del foco o la fecha de creación. Enumerar lo
+      // permitido cierra esa puerta.
+      //
+      // Sobre la idempotencia: el reintento de la cola hace .set() del mismo documento
+      // con los mismos valores, así que diff() queda vacío y hasOnly() lo acepta. Si
+      // el admin ya movió el estado, ese reintento sí queda bloqueado, y está bien: el
+      // documento ya existe en el servidor y no debe volver a RECIBIDO.
       allow update: if (request.auth != null
                         && resource.data.userId == request.auth.uid
-                        && request.resource.data.userId == resource.data.userId
-                        && request.resource.data.estado == resource.data.estado
-                        && request.resource.data.severidad == resource.data.severidad)
+                        && camposTocados().hasOnly(['descripcion', 'tipo', 'fotoUrl']))
                     || esAdmin();
 
-      // Borrar: el DUEÑO retira su propio reporte; el ADMIN elimina cualquiera
-      // (spam, falsos, duplicados).
-      allow delete: if (request.auth != null
-                        && resource.data.userId == request.auth.uid)
-                    || esAdmin();
+      // Borrar: SOLO el admin. El vecino ya no elimina su propio reporte: se conserva
+      // para auditoría y el admin lo marca ANULADO. Antes el dueño podía borrar la
+      // evidencia de un reporte ya atendido, o un duplicado que el municipio estaba
+      // usando para medir reincidencia.
+      allow delete: if esAdmin();
     }
   }
 }

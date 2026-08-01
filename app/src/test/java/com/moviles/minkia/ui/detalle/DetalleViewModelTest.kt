@@ -36,7 +36,7 @@ class DetalleViewModelTest {
     private val reporte = MiReporte(
         id = "doc-1", ticket = "#MK-3F7A2B91", direccion = "Av. Pardo 123",
         fechaTexto = "12 mar · 10:30", severidad = Severidad.ALTA,
-        estado = EstadoReporte.EN_PROCESO, areaM2 = 4.5,
+        estado = EstadoReporte.EN_PROCESO, porcentajeCobertura = 4,
         vecinos = 7, fotoUrl = "https://foto", tipo = "Basura", confianza = 86
     )
 

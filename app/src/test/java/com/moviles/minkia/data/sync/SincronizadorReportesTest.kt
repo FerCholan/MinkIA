@@ -62,7 +62,7 @@ class SincronizadorReportesTest {
     private fun pendiente(id: String) = ReportePendiente(
         id = id, userId = "u1", ticket = "#MK-$id", tipo = "Basura", severidad = "ALTA",
         descripcion = "", direccion = "", zona = "", latitud = 0.0, longitud = 0.0,
-        areaM2 = 0.0, confianza = 0, fotoPath = null, creadoEn = 1L
+        porcentajeCobertura = 0, confianza = 0, fotoPath = null, creadoEn = 1L
     )
 
     @Test

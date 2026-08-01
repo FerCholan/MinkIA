@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.moviles.minkia.core.UiState
 import com.moviles.minkia.data.model.Reporte
 import com.moviles.minkia.data.model.ResultadoAnalisis
+import com.moviles.minkia.data.model.ResultadoRegistro
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.data.repository.ReporteRepository
 import com.moviles.minkia.util.MainDispatcherRule
@@ -14,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -36,7 +38,7 @@ class ReporteFlowViewModelTest {
     private fun viewModel() = ReporteFlowViewModel(repository)
 
     private val analisis = ResultadoAnalisis(
-        tipo = "Basura acumulada", confianza = 86, severidad = Severidad.ALTA, areaM2 = 4.5
+        tipo = "Basura acumulada", confianza = 86, severidad = Severidad.ALTA, porcentajeCobertura = 4
     )
 
     private val guardado = Reporte(
@@ -44,6 +46,12 @@ class ReporteFlowViewModelTest {
         descripcion = "Montículo", direccion = "Av. Pardo 123",
         latitud = -9.07, longitud = -78.59, fotoPath = "/cache/foto.jpg"
     )
+
+    /** Desenlace de un envío que llegó al servidor. */
+    private val enviado = ResultadoRegistro.Enviado(guardado)
+
+    /** Desenlace de un envío que quedó en la cola local. */
+    private val pendiente = ResultadoRegistro.Pendiente(guardado)
 
     // ---------- paso 1: la foto ----------
 
@@ -112,34 +120,34 @@ class ReporteFlowViewModelTest {
 
     @Test
     fun `enviar guarda con la foto del flujo y con los datos del formulario`() = runBlocking {
-        coEvery { repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns guardado
+        coEvery { repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns enviado
         val vm = viewModel()
         vm.fijarFoto("/cache/foto.jpg")
 
         vm.enviar(
             tipo = "Basura acumulada", severidad = Severidad.ALTA, descripcion = "Montículo",
             direccion = "Av. Pardo 123", zona = "Casco Urbano",
-            latitud = -9.07, longitud = -78.59, areaM2 = 4.5, confianza = 86
+            latitud = -9.07, longitud = -78.59, porcentajeCobertura = 4, confianza = 86
         )
 
-        assertEquals(UiState.Success(guardado), vm.envio.value)
+        assertEquals(UiState.Success<ResultadoRegistro>(enviado), vm.envio.value)
         coVerify(exactly = 1) {
             repository.guardar(
                 tipo = "Basura acumulada", severidad = Severidad.ALTA, descripcion = "Montículo",
                 direccion = "Av. Pardo 123", zona = "Casco Urbano",
                 latitud = -9.07, longitud = -78.59, fotoPath = "/cache/foto.jpg",
-                areaM2 = 4.5, confianza = 86
+                porcentajeCobertura = 4, confianza = 86
             )
         }
     }
 
     @Test
     fun `el reporte guardado queda cacheado para la pantalla de Confirmacion`() {
-        coEvery { repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns guardado
+        coEvery { repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns enviado
         val vm = viewModel()
 
         assertNull(vm.reporte)
-        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0.0, 0)
+        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0, 0)
 
         assertEquals(guardado, vm.reporte)
         assertEquals("#MK-2001", vm.reporte?.ticket)
@@ -152,22 +160,64 @@ class ReporteFlowViewModelTest {
         } throws IllegalStateException("No hay sesión activa")
         val vm = viewModel()
 
-        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0.0, 0)
+        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0, 0)
 
         assertEquals(UiState.Error("No hay sesión activa"), vm.envio.value)
         assertNull(vm.reporte)
     }
 
     @Test
+    fun `un rechazo permanente NO lleva a Confirmacion ni deja ticket`() {
+        // El repositorio devuelve Error (Firestore rechazó el reporte de forma
+        // permanente y NO se encoló). El ViewModel debe publicar Error, no Success:
+        // si publicara Success, el formulario navegaría a Confirmación y el vecino
+        // vería un ticket de un reporte que no existe.
+        coEvery {
+            repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any())
+        } returns ResultadoRegistro.Error("El reporte fue rechazado")
+        val vm = viewModel()
+
+        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0, 0)
+
+        assertEquals(UiState.Error("El reporte fue rechazado"), vm.envio.value)
+        assertNull(vm.reporte)
+    }
+
+    @Test
+    fun `un reporte encolado se marca como pendiente de sincronizar`() {
+        coEvery {
+            repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any())
+        } returns pendiente
+        val vm = viewModel()
+
+        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0, 0)
+
+        assertEquals(guardado, vm.reporte) // el ticket vale igual: el reporte se guardó
+        assertTrue("Confirmación debe avisar que falta sincronizar", vm.pendienteDeSincronizar)
+    }
+
+    @Test
+    fun `un reporte enviado no se marca como pendiente`() {
+        coEvery {
+            repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any())
+        } returns enviado
+        val vm = viewModel()
+
+        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0, 0)
+
+        assertEquals(false, vm.pendienteDeSincronizar)
+    }
+
+    @Test
     fun `analisis y envio no se pisan entre si`() {
         coEvery { repository.analizar(any()) } returns analisis
-        coEvery { repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns guardado
+        coEvery { repository.guardar(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns enviado
         val vm = viewModel()
 
         vm.analizar()
         assertNull(vm.envio.value) // analizar no toca el estado del envío
 
-        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0.0, 0)
+        vm.enviar("Basura", Severidad.ALTA, "", "", "", 0.0, 0.0, 0, 0)
         assertEquals(UiState.Success(analisis), vm.analisis.value) // ni el envío el del análisis
     }
 }

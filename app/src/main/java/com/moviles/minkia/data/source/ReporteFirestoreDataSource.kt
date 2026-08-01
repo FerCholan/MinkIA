@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentSnapshot
+import kotlin.math.roundToInt
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
@@ -28,6 +29,24 @@ import java.util.Locale
 
 /** Resultado de intentar enviar un reporte; la cola decide qué hacer con cada uno. */
 enum class ResultadoEnvio { ENVIADO, REINTENTAR, DESCARTAR }
+
+/**
+ * Cobertura del encuadre (0..100) de un reporte guardado, con compatibilidad hacia
+ * atrás.
+ *
+ * Los reportes creados antes del cambio guardan `areaM2`, que NO eran metros
+ * cuadrados: era la cobertura multiplicada por un área de encuadre asumida de 6 m².
+ * Se deshace esa multiplicación para recuperar el porcentaje real en vez de dejar en
+ * cero los reportes históricos.
+ */
+private fun coberturaDe(doc: DocumentSnapshot): Int {
+    doc.getLong("porcentajeCobertura")?.let { return it.toInt().coerceIn(0, 100) }
+    val areaHeredada = doc.getDouble("areaM2") ?: return 0
+    return ((areaHeredada / AREA_ENCUADRE_HEREDADA) * 100).roundToInt().coerceIn(0, 100)
+}
+
+/** Área de encuadre que asumía el cálculo viejo de `areaM2`. */
+private const val AREA_ENCUADRE_HEREDADA = 6.0
 
 /** Códigos de Firestore que NO se arreglan reintentando (fallo permanente). */
 private val ERRORES_PERMANENTES = setOf(
@@ -77,7 +96,7 @@ class ReporteFirestoreDataSource(
                     "zona" to p.zona,
                     "latitud" to p.latitud,
                     "longitud" to p.longitud,
-                    "areaM2" to p.areaM2,
+                    "porcentajeCobertura" to p.porcentajeCobertura,
                     "confianza" to p.confianza,
                     "autor" to p.autor,
                     "autorNivel" to p.autorNivel,
@@ -114,7 +133,7 @@ class ReporteFirestoreDataSource(
                     fechaTexto = formatearFecha(doc.getTimestamp("creadoEn")?.toDate()),
                     severidad = parseSeveridad(doc.getString("severidad")),
                     estado = parseEstado(doc.getString("estado")),
-                    areaM2 = doc.getDouble("areaM2") ?: 0.0,
+                    porcentajeCobertura = coberturaDe(doc),
                     vecinos = (doc.getLong("vecinos") ?: 0L).toInt(),
                     fotoUrl = doc.getString("fotoUrl").orEmpty(),
                     tipo = doc.getString("tipo").orEmpty(),
@@ -219,7 +238,7 @@ class ReporteFirestoreDataSource(
                     fotoUrl = doc.getString("fotoUrl").orEmpty(),
                     zona = zonaDe(doc),
                     confianza = (doc.getLong("confianza") ?: 0L).toInt(),
-                    areaM2 = doc.getDouble("areaM2") ?: 0.0,
+                    porcentajeCobertura = coberturaDe(doc),
                     autor = doc.getString("autor").orEmpty(),
                     autorNivel = (doc.getLong("autorNivel") ?: 1L).toInt()
                 )
@@ -259,7 +278,7 @@ class ReporteFirestoreDataSource(
                     fechaHoraTexto = formatearFecha(fecha),
                     tipo = doc.getString("tipo").orEmpty(),
                     descripcion = doc.getString("descripcion").orEmpty(),
-                    areaM2 = doc.getDouble("areaM2") ?: 0.0,
+                    porcentajeCobertura = coberturaDe(doc),
                     confianza = (doc.getLong("confianza") ?: 0L).toInt()
                 )
             }

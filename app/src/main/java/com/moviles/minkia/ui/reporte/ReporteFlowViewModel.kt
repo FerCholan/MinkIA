@@ -9,6 +9,7 @@ import com.moviles.minkia.core.BaseViewModel
 import com.moviles.minkia.core.UiState
 import com.moviles.minkia.data.model.Reporte
 import com.moviles.minkia.data.model.ResultadoAnalisis
+import com.moviles.minkia.data.model.ResultadoRegistro
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.data.repository.ReporteRepository
 import com.moviles.minkia.data.source.DetectorBasuraDataSource
@@ -68,11 +69,19 @@ class ReporteFlowViewModel(
 
     // --- Envío del reporte (C11): guarda con los datos que completa el ciudadano ---
 
-    private val _envio = MutableLiveData<UiState<Reporte>>()
-    val envio: LiveData<UiState<Reporte>> = _envio
+    private val _envio = MutableLiveData<UiState<ResultadoRegistro>>()
+    val envio: LiveData<UiState<ResultadoRegistro>> = _envio
 
     /** Reporte ya guardado, con ticket. Confirmación lo lee acá. */
     var reporte: Reporte? = null
+        private set
+
+    /**
+     * El reporte quedó en la cola local y todavía no llegó al servidor. Confirmación
+     * lo lee para avisar que la sincronización está pendiente en vez de afirmar que
+     * la alerta ya llegó al equipo de gestión.
+     */
+    var pendienteDeSincronizar: Boolean = false
         private set
 
     fun enviar(
@@ -83,10 +92,10 @@ class ReporteFlowViewModel(
         zona: String,
         latitud: Double,
         longitud: Double,
-        areaM2: Double,
+        porcentajeCobertura: Int,
         confianza: Int
     ) = loadInto(_envio) {
-        repository.guardar(
+        val resultado = repository.guardar(
             tipo = tipo,
             severidad = severidad,
             descripcion = descripcion,
@@ -95,9 +104,25 @@ class ReporteFlowViewModel(
             latitud = latitud,
             longitud = longitud,
             fotoPath = fotoPath,
-            areaM2 = areaM2,
+            porcentajeCobertura = porcentajeCobertura,
             confianza = confianza
-        ).also { reporte = it }
+        )
+        // Solo Enviado y Pendiente son éxitos: en ambos el reporte QUEDÓ guardado
+        // (en el servidor o en la cola) y el ticket sirve. Error se relanza para que
+        // loadInto lo publique como UiState.Error y el formulario NO navegue a la
+        // confirmación: antes este caso mostraba un ticket de un reporte perdido.
+        when (resultado) {
+            is ResultadoRegistro.Enviado -> {
+                reporte = resultado.reporte
+                pendienteDeSincronizar = false
+            }
+            is ResultadoRegistro.Pendiente -> {
+                reporte = resultado.reporte
+                pendienteDeSincronizar = true
+            }
+            is ResultadoRegistro.Error -> error(resultado.mensaje)
+        }
+        resultado
     }
 
     /**

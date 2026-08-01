@@ -16,7 +16,7 @@ data class FocoMapa(
     val fotoUrl: String = "",
     val zona: String = "",
     val confianza: Int = 0,
-    val areaM2: Double = 0.0,
+    val porcentajeCobertura: Int = 0,
     val autor: String = "",
     val autorNivel: Int = 1
 )

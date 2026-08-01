@@ -2,6 +2,7 @@ package com.moviles.minkia.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -50,22 +51,45 @@ class PerfilRepository(
     }
 
     /**
-     * Guarda el apodo: libera la reserva anterior (si cambió), reserva la nueva y lo
-     * escribe en el perfil. Si viene vacío, solo libera. Validar unicidad ANTES.
+     * Guarda el apodo de forma ATÓMICA: libera la reserva anterior, reserva la nueva
+     * y actualiza el perfil, todo dentro de una transacción de Firestore. Si viene
+     * vacío, solo libera.
+     *
+     * Antes eran tres operaciones sueltas y en ese orden: borrar la reserva vieja,
+     * crear la nueva y escribir el perfil. Si la del medio fallaba (porque otro
+     * vecino se había quedado con ese apodo entre el chequeo de disponibilidad y la
+     * escritura, que es una condición de carrera real), el usuario terminaba sin su
+     * apodo anterior, sin el nuevo y con el perfil apuntando a uno que no tenía
+     * reservado. Ahora, o pasan las tres cosas, o no pasa ninguna.
+     *
+     * La verificación de que el apodo sigue libre se hace DENTRO de la transacción,
+     * que es lo único que cierra la ventana de carrera: [nicknameDisponible] sirve
+     * para avisar temprano en la UI, no como garantía.
      */
     suspend fun guardarNickname(nickname: String) {
         val yo = uid() ?: return
+        val perfil = docActual() ?: return
         val nuevo = nickname.trim()
         val anterior = obtenerNickname().trim()
+        if (nuevo.equals(anterior, ignoreCase = true)) return
 
-        val cambio = !nuevo.equals(anterior, ignoreCase = true)
-        if (cambio && anterior.isNotEmpty()) {
-            runCatching { nicknameDoc(anterior).delete().await() } // libera el viejo
-        }
-        if (cambio && nuevo.isNotEmpty()) {
-            nicknameDoc(nuevo).set(mapOf("uid" to yo)).await() // reserva el nuevo (create)
-        }
-        docActual()?.update("nickname", nuevo)?.await()
+        val refNuevo = if (nuevo.isNotEmpty()) nicknameDoc(nuevo) else null
+        val refAnterior = if (anterior.isNotEmpty()) nicknameDoc(anterior) else null
+
+        db.runTransaction { tx ->
+            // Firestore exige TODAS las lecturas antes de cualquier escritura.
+            val ocupado = refNuevo?.let { tx.get(it) }
+            if (ocupado != null && ocupado.exists() && ocupado.getString("uid") != yo) {
+                throw FirebaseFirestoreException(
+                    "Ese apodo ya está en uso",
+                    FirebaseFirestoreException.Code.ABORTED
+                )
+            }
+            refAnterior?.let { tx.delete(it) }
+            refNuevo?.let { tx.set(it, mapOf("uid" to yo)) }
+            tx.update(perfil, "nickname", nuevo)
+            null
+        }.await()
     }
 
     /** ¿El vecino activó usar su apodo en los reportes? (por defecto no). */

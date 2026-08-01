@@ -5,6 +5,7 @@ import com.moviles.minkia.data.local.ColaReportes
 import com.moviles.minkia.data.model.Reporte
 import com.moviles.minkia.data.model.ReportePendiente
 import com.moviles.minkia.data.model.ResultadoAnalisis
+import com.moviles.minkia.data.model.ResultadoRegistro
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.data.source.AnalisisDataSource
 import com.moviles.minkia.data.source.AnalisisMockDataSource
@@ -18,9 +19,12 @@ import java.util.UUID
  * OFFLINE-FIRST del reporte. La UI habla solo con el repositorio.
  *
  * Guardado offline-first: con internet se envía directo (feedback inmediato); sin
- * internet o si el envío falla, el reporte va a la cola local ([ColaReportes]) y se
- * reintenta cuando vuelva la conexión. El reporte NUNCA se pierde: siempre se
- * confirma al vecino con su ticket.
+ * internet o si el envío falla de forma transitoria, el reporte va a la cola local
+ * ([ColaReportes]) y se reintenta cuando vuelva la conexión.
+ *
+ * El desenlace se declara en [ResultadoRegistro] y NO se confirma nada que no haya
+ * quedado guardado: un rechazo permanente de Firestore (regla de seguridad, dato
+ * inválido, sesión vencida) devuelve [ResultadoRegistro.Error], no un ticket.
  */
 class ReporteRepository(
     private val analisisDataSource: AnalisisDataSource = AnalisisMockDataSource(),
@@ -55,9 +59,9 @@ class ReporteRepository(
         latitud: Double,
         longitud: Double,
         fotoPath: String?,
-        areaM2: Double = 0.0,
+        porcentajeCobertura: Int = 0,
         confianza: Int = 0
-    ): Reporte {
+    ): ResultadoRegistro {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: error("No hay sesión activa")
 
         // El id local es TAMBIÉN el id del documento en Firestore (ver
@@ -80,7 +84,7 @@ class ReporteRepository(
             zona = zona,
             latitud = latitud,
             longitud = longitud,
-            areaM2 = areaM2,
+            porcentajeCobertura = porcentajeCobertura,
             confianza = confianza,
             fotoPath = fotoPath,
             creadoEn = System.currentTimeMillis(),
@@ -97,9 +101,8 @@ class ReporteRepository(
         } else {
             ResultadoEnvio.REINTENTAR
         }
-        if (resultado == ResultadoEnvio.REINTENTAR) ColaReportes.encolar(pendiente)
 
-        return Reporte(
+        val reporte = Reporte(
             ticket = ticket,
             tipo = tipo,
             severidad = severidad,
@@ -109,10 +112,29 @@ class ReporteRepository(
             longitud = longitud,
             fotoPath = fotoPath
         )
+
+        // Cada desenlace se declara tal cual es. DESCARTAR no encola ni confirma:
+        // devolver un ticket ahí sería mentirle al vecino sobre un reporte perdido.
+        return when (resultado) {
+            ResultadoEnvio.ENVIADO -> ResultadoRegistro.Enviado(reporte)
+            ResultadoEnvio.REINTENTAR -> {
+                ColaReportes.encolar(pendiente)
+                ResultadoRegistro.Pendiente(reporte)
+            }
+            ResultadoEnvio.DESCARTAR -> ResultadoRegistro.Error(MENSAJE_RECHAZO)
+        }
     }
 
     private companion object {
         /** Dígitos hex del id que entran en el ticket visible. 8 = 4.294.967.296 combinaciones. */
         const val TICKET_LARGO = 8
+
+        /**
+         * Mensaje del rechazo permanente. Habla de lo que el vecino PUEDE hacer
+         * (revisar su sesión, volver a intentar) sin exponer detalles internos de
+         * las reglas de seguridad.
+         */
+        const val MENSAJE_RECHAZO =
+            "No se pudo registrar el reporte. Verifica que tu sesión siga activa y vuelve a intentarlo."
     }
 }

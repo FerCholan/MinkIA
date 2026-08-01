@@ -3,8 +3,10 @@ package com.moviles.minkia.data.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.moviles.minkia.data.local.ColaReportes
+import com.moviles.minkia.data.model.Reporte
 import com.moviles.minkia.data.model.ReportePendiente
 import com.moviles.minkia.data.model.ResultadoAnalisis
+import com.moviles.minkia.data.model.ResultadoRegistro
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.data.source.AnalisisDataSource
 import com.moviles.minkia.data.source.ReporteFirestoreDataSource
@@ -80,9 +82,23 @@ class ReporteRepositoryTest {
         latitud = -9.07,
         longitud = -78.59,
         fotoPath = "/cache/foto.jpg",
-        areaM2 = 4.5,
+        porcentajeCobertura = 4,
         confianza = 86
     )
+
+    /**
+     * Atajo para los tests que solo miran el reporte confirmado. Falla el test si el
+     * desenlace fue un rechazo: si `guardar()` devolviera Error, no hay ticket que
+     * mirar (ese es justo el caso que antes se confirmaba de mentira).
+     */
+    private suspend fun guardarConfirmado(): Reporte = when (val r = guardar()) {
+        is ResultadoRegistro.Enviado -> r.reporte
+        is ResultadoRegistro.Pendiente -> r.reporte
+        // throw y no fail(): fail() devuelve void, o sea Unit para Kotlin, y el when
+        // pasaría a ser de tipo Any en vez de Reporte.
+        is ResultadoRegistro.Error ->
+            throw AssertionError("se esperaba un reporte guardado, llegó: ${r.mensaje}")
+    }
 
     // ---------- los cuatro caminos de la cola ----------
 
@@ -127,13 +143,49 @@ class ReporteRepositoryTest {
         coVerify(exactly = 0) { ColaReportes.encolar(any()) }
     }
 
+    // ---------- el desenlace declarado: no se confirma lo que no se guardó ----------
+
+    @Test
+    fun `un rechazo permanente devuelve Error y NO un ticket de confirmacion`() = runBlocking {
+        // Este es el bug que motivó ResultadoRegistro: con DESCARTAR el reporte no se
+        // enviaba ni se encolaba, o sea se perdía, y aun así guardar() devolvía un
+        // Reporte con ticket. La UI mostraba "tu alerta llegó al equipo de gestión"
+        // sobre un reporte inexistente.
+        every { SincronizadorReportes.hayInternet() } returns true
+        coEvery { fuente.enviarReporte(any()) } returns ResultadoEnvio.DESCARTAR
+
+        val resultado = guardar()
+
+        assertTrue("se esperaba Error, llegó $resultado", resultado is ResultadoRegistro.Error)
+        coVerify(exactly = 0) { ColaReportes.encolar(any()) }
+    }
+
+    @Test
+    fun `un envio exitoso se declara como Enviado`() = runBlocking {
+        every { SincronizadorReportes.hayInternet() } returns true
+        coEvery { fuente.enviarReporte(any()) } returns ResultadoEnvio.ENVIADO
+
+        val resultado = guardar()
+
+        assertTrue("se esperaba Enviado, llegó $resultado", resultado is ResultadoRegistro.Enviado)
+    }
+
+    @Test
+    fun `sin internet se declara Pendiente para poder avisar que falta sincronizar`() = runBlocking {
+        every { SincronizadorReportes.hayInternet() } returns false
+
+        val resultado = guardar()
+
+        assertTrue("se esperaba Pendiente, llegó $resultado", resultado is ResultadoRegistro.Pendiente)
+    }
+
     // ---------- lo que el vecino ve y lo que viaja ----------
 
     @Test
     fun `el vecino recibe su ticket aunque no haya internet`() = runBlocking {
         every { SincronizadorReportes.hayInternet() } returns false
 
-        val reporte = guardar()
+        val reporte = guardarConfirmado()
 
         assertTrue("ticket inesperado: ${reporte.ticket}", reporte.ticket.matches(Regex("#MK-[0-9A-F]{8}")))
         assertEquals("Basura acumulada", reporte.tipo)
@@ -150,7 +202,7 @@ class ReporteRepositoryTest {
         val encolados = mutableListOf<ReportePendiente>()
         coEvery { ColaReportes.encolar(capture(encolados)) } just Runs
 
-        val tickets = (1..50).map { guardar().ticket }
+        val tickets = (1..50).map { guardarConfirmado().ticket }
 
         assertEquals("50 reportes deben dar 50 tickets distintos", 50, tickets.toSet().size)
         // Y cada ticket corresponde al id de SU reporte, no a otro.
@@ -171,7 +223,7 @@ class ReporteRepositoryTest {
         val capturado = slot<ReportePendiente>()
         coEvery { ColaReportes.encolar(capture(capturado)) } just Runs
 
-        val reporte = guardar()
+        val reporte = guardarConfirmado()
         val p = capturado.captured
 
         assertEquals(reporte.ticket, p.ticket) // el ticket que ve el vecino es el que viaja
@@ -180,7 +232,7 @@ class ReporteRepositoryTest {
         assertEquals("Casco Urbano", p.zona)
         assertEquals(-9.07, p.latitud, 1e-9)
         assertEquals(-78.59, p.longitud, 1e-9)
-        assertEquals(4.5, p.areaM2, 1e-9)
+        assertEquals(4, p.porcentajeCobertura)
         assertEquals(86, p.confianza)
         assertEquals("/cache/foto.jpg", p.fotoPath)
         assertEquals("Fernando", p.autor)
@@ -239,7 +291,7 @@ class ReporteRepositoryTest {
 
     @Test
     fun `analizar delega en la fuente de vision sin tocar nada`() = runBlocking {
-        val esperado = ResultadoAnalisis("Basura acumulada", 86, Severidad.ALTA, 4.5)
+        val esperado = ResultadoAnalisis("Basura acumulada", 86, Severidad.ALTA, 45)
         coEvery { analisis.analizar("/cache/foto.jpg") } returns esperado
 
         assertEquals(esperado, repo().analizar("/cache/foto.jpg"))

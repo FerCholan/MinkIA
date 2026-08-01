@@ -105,6 +105,10 @@ dependencies {
     // Kotlin-first, liviano. Lo usa el FotoReporteView reutilizable.
     implementation(libs.coil)
 
+    // Reintento de la cola offline garantizado por el sistema, incluso si el
+    // proceso fue matado: el callback de red solo vive mientras la app vive.
+    implementation(libs.androidx.work.runtime)
+
     // Mapa real + mapa de calor de los focos (Google Maps)
     implementation(libs.play.services.maps)
     implementation(libs.maps.utils)

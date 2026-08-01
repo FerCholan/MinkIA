@@ -55,7 +55,7 @@ class ColaReportesTest {
         zona = "Casco Urbano",
         latitud = -9.07,
         longitud = -78.59,
-        areaM2 = 4.5,
+        porcentajeCobertura = 4,
         confianza = 86,
         fotoPath = fotoPath,
         creadoEn = 1_700_000_000_000L,
@@ -96,7 +96,7 @@ class ColaReportesTest {
         val p = ColaReportes.listar().single()
         assertEquals(-9.07, p.latitud, 1e-9)
         assertEquals(-78.59, p.longitud, 1e-9)
-        assertEquals(4.5, p.areaM2, 1e-9)
+        assertEquals(4, p.porcentajeCobertura)
     }
 
     @Test
@@ -195,6 +195,56 @@ class ColaReportesTest {
 
         assertEquals(0, ColaReportes.cantidad.value)
         assertTrue(ColaReportes.listar().isEmpty())
+    }
+
+    // ---------- durabilidad: la cola no puede evaporarse en silencio ----------
+
+    @Test
+    fun `una escritura cortada a la mitad se recupera del respaldo`() = runBlocking {
+        // Escenario real: el proceso muere mientras se vuelca el JSON y el archivo
+        // principal queda truncado. Antes eso devolvía una lista vacía y el vecino
+        // perdía TODOS sus pendientes sin enterarse.
+        ColaReportes.encolar(pendiente(id = "a"))
+        ColaReportes.encolar(pendiente(id = "b")) // esta escritura deja el respaldo con "a"
+
+        File(tmp.root, "reportes_pendientes.json").writeText("[{\"id\":\"a\",\"userId\"")
+
+        ColaReportes.recargarContador()
+
+        val recuperados = ColaReportes.listar()
+        assertFalse("la cola no debe quedar vacía si hay respaldo", recuperados.isEmpty())
+        assertFalse(ColaReportes.colaDaniada.value)
+    }
+
+    @Test
+    fun `una cola ilegible sin respaldo se marca como daniada y conserva la evidencia`() = runBlocking {
+        File(tmp.root, "reportes_pendientes.json").writeText("{esto no es un array json")
+
+        ColaReportes.recargarContador()
+
+        assertTrue("se debe avisar el daño, no fingir que no había nada", ColaReportes.colaDaniada.value)
+        assertTrue(
+            "el archivo dañado debe conservarse para poder recuperarlo",
+            File(tmp.root, "reportes_pendientes.corrupto").exists()
+        )
+    }
+
+    @Test
+    fun `cada escritura deja respaldo del contenido bueno anterior`() = runBlocking {
+        ColaReportes.encolar(pendiente(id = "a"))
+        ColaReportes.encolar(pendiente(id = "b"))
+
+        val bak = File(tmp.root, "reportes_pendientes.bak")
+        assertTrue("debe existir el respaldo", bak.exists())
+        assertTrue("el respaldo guarda el estado previo", bak.readText().contains("\"a\""))
+    }
+
+    @Test
+    fun `la escritura no deja archivos temporales sueltos`() = runBlocking {
+        ColaReportes.encolar(pendiente(id = "a"))
+
+        assertFalse(File(tmp.root, "reportes_pendientes.tmp").exists())
+        assertTrue(File(tmp.root, "reportes_pendientes.json").exists())
     }
 
     @Test

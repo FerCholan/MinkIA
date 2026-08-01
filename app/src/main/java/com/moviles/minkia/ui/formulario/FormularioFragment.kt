@@ -168,9 +168,9 @@ class FormularioFragment : BaseFragment<FragmentFormularioBinding>() {
 
         val resultado = flujo.resultadoAnalisis
         val tipo = resultado?.tipo ?: "Basura"
-        val areaM2 = resultado?.areaM2 ?: 0.0
+        val porcentajeCobertura = resultado?.porcentajeCobertura ?: 0
 
-        binding.tvDeteccion.text = getString(R.string.form_deteccion, tipo, areaM2.toString())
+        binding.tvDeteccion.text = getString(R.string.form_deteccion, tipo, porcentajeCobertura)
         binding.chipIa.text = getString(R.string.form_ia, resultado?.confianza ?: 0)
     }
 
@@ -337,7 +337,7 @@ class FormularioFragment : BaseFragment<FragmentFormularioBinding>() {
             zona = zona,
             latitud = latitud,
             longitud = longitud,
-            areaM2 = flujo.resultadoAnalisis?.areaM2 ?: 0.0,
+            porcentajeCobertura = flujo.resultadoAnalisis?.porcentajeCobertura ?: 0,
             confianza = flujo.resultadoAnalisis?.confianza ?: 0
         )
     }

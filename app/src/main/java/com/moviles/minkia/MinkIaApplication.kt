@@ -7,6 +7,7 @@ import android.net.Network
 import androidx.appcompat.app.AppCompatDelegate
 import com.moviles.minkia.data.local.ColaReportes
 import com.moviles.minkia.data.sync.SincronizadorReportes
+import com.moviles.minkia.data.sync.SincronizarReportesWorker
 
 /**
  * Application de MinkIA. Fija el modo claro (identidad cálida) e inicializa el
@@ -23,6 +24,10 @@ class MinkIaApplication : Application() {
         registrarCallbackRed()
         // Al abrir la app: intenta enviar lo que haya quedado de una sesión anterior.
         SincronizadorReportes.disparar()
+        // Y deja el reintento agendado en el sistema, que es lo único que sigue vivo
+        // cuando Android mata el proceso: sin esto, una cola con reportes podía
+        // quedarse esperando a que el vecino volviera a abrir la app.
+        SincronizarReportesWorker.programar(this)
     }
 
     /** Cuando vuelve la conexión, dispara la sincronización de la cola. */

@@ -29,6 +29,7 @@ okhttp = "4.12.0"
 coil = "2.7.0"
 playServicesMaps = "19.0.0"
 mapsUtils = "3.8.2"
+work = "2.10.0"
 # Testing
 mockk = "1.13.13"
 archCoreTesting = "2.2.0"
@@ -73,6 +74,8 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 maps-utils = { group = "com.google.maps.android", name = "android-maps-utils", version.ref = "mapsUtils" }
+# Sincronizacion garantizada de la cola offline aunque el proceso este muerto
+androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 # Testing
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }

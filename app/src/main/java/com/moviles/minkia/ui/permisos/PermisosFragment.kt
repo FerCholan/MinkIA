@@ -3,7 +3,6 @@ package com.moviles.minkia.ui.permisos
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -31,11 +30,10 @@ import kotlinx.coroutines.launch
  */
 class PermisosFragment : BaseFragment<FragmentPermisosBinding>() {
 
-    // POST_NOTIFICATIONS solo existe desde Android 13; antes no se pide.
-    private val permisoNotif =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.POST_NOTIFICATIONS
-        } else null
+    // Las notificaciones de MinkIA son INTERNAS: se generan desde el estado de los
+    // reportes y se leen dentro de la app (ver ui/notificaciones). No se publica
+    // ninguna notificación del sistema, así que no se declara ni se pide
+    // POST_NOTIFICATIONS: era un permiso que la app solicitaba y nunca usaba.
 
     // registerForActivityResult también existe en Fragment (fragment-ktx): se
     // registra igual, como propiedad, para quedar listo antes de que la
@@ -78,7 +76,7 @@ class PermisosFragment : BaseFragment<FragmentPermisosBinding>() {
     private fun configurarAcciones() {
         binding.chipCamara.setOnClickListener { pedirSiFalta(Manifest.permission.CAMERA) }
         binding.chipUbicacion.setOnClickListener { pedirSiFalta(Manifest.permission.ACCESS_FINE_LOCATION) }
-        binding.chipNotif.setOnClickListener { permisoNotif?.let { pedirSiFalta(it) } }
+        // El chip de avisos no dispara ningún diálogo: no hay permiso que pedir.
 
         binding.btnContinuar.setOnClickListener {
             val pendientes = permisosRequeridos().filterNot { estaConcedido(it) }
@@ -90,12 +88,11 @@ class PermisosFragment : BaseFragment<FragmentPermisosBinding>() {
         }
     }
 
-    /** Permisos que pedimos en esta pantalla (notif solo si la versión lo soporta). */
+    /** Permisos reales que pide esta pantalla. */
     private fun permisosRequeridos(): List<String> =
-        listOfNotNull(
+        listOf(
             Manifest.permission.CAMERA,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            permisoNotif
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
 
     private fun pedirSiFalta(permiso: String) {
@@ -108,9 +105,9 @@ class PermisosFragment : BaseFragment<FragmentPermisosBinding>() {
     private fun actualizarChips() {
         pintarChip(binding.chipCamara, estaConcedido(Manifest.permission.CAMERA), opcional = false)
         pintarChip(binding.chipUbicacion, estaConcedido(Manifest.permission.ACCESS_FINE_LOCATION), opcional = false)
-        // En Android < 13 las notificaciones están permitidas por defecto.
-        val notifConcedido = permisoNotif?.let { estaConcedido(it) } ?: true
-        pintarChip(binding.chipNotif, notifConcedido, opcional = true)
+        // Los avisos de la app no dependen de un permiso del sistema: siempre están
+        // disponibles porque se muestran dentro de la propia aplicación.
+        pintarChip(binding.chipNotif, concedido = true, opcional = true)
     }
 
     /**
