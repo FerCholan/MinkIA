@@ -34,14 +34,6 @@ class DetectorBasuraDataSource(
     private val postproceso: PostprocesoYolo = PostprocesoYolo()
 ) : AnalisisDataSource {
 
-    // El intérprete es caro de crear: se construye una sola vez, perezosamente.
-    private val interprete: Interpreter by lazy {
-        Interpreter(cargarModelo(MODELO_ASSET))
-    }
-
-    // Interpreter.run NO es thread-safe: este mutex serializa las inferencias.
-    private val mutexInferencia = Mutex()
-
     override suspend fun analizar(rutaFoto: String): ResultadoAnalisis =
         withContext(Dispatchers.Default) {
             // Decodifica submuestreado (cerca de 640) para NO cargar la foto full-res en RAM.
@@ -57,7 +49,7 @@ class DetectorBasuraDataSource(
             // Dos analisis simultaneos (p. ej. al rotar la pantalla mid-inferencia) nunca
             // deben tocar el interprete a la vez -> crash nativo. El mutex lo impide.
             mutexInferencia.withLock {
-                interprete.run(entrada, salida)
+                obtenerInterprete(context).run(entrada, salida)
             }
 
             postproceso.procesar(aplanar(salida))
@@ -130,19 +122,35 @@ class DetectorBasuraDataSource(
         return plano
     }
 
-    /** Mapea en memoria el .tflite desde assets (read-only, sin copiarlo). */
-    private fun cargarModelo(nombre: String): ByteBuffer {
-        context.assets.openFd(nombre).use { fd ->
-            FileInputStream(fd.fileDescriptor).channel.use { canal ->
-                return canal.map(FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength)
-            }
-        }
-    }
-
     companion object {
         private const val MODELO_ASSET = "best_float32.tflite"
         private const val TAM_ENTRADA = 640
         private const val SALIDA_ATRIBUTOS = 5    // cx, cy, w, h, score
         private const val SALIDA_CAJAS = 8400
+
+        // UNA sola instancia del intérprete por proceso: el modelo es caro de crear y
+        // mapea memoria nativa. Antes se construía uno por cada Activity de análisis y
+        // NUNCA se cerraba -> fuga nativa acumulativa que podía agotar el heap nativo.
+        // Ahora se comparte; el mutex (también compartido) serializa el run() entre
+        // todas las llamadas porque Interpreter.run no es thread-safe.
+        @Volatile
+        private var interpreteCompartido: Interpreter? = null
+        private val mutexInferencia = Mutex()
+
+        private fun obtenerInterprete(context: Context): Interpreter =
+            interpreteCompartido ?: synchronized(this) {
+                interpreteCompartido
+                    ?: Interpreter(cargarModelo(context.applicationContext, MODELO_ASSET))
+                        .also { interpreteCompartido = it }
+            }
+
+        /** Mapea en memoria el .tflite desde assets (read-only, sin copiarlo). */
+        private fun cargarModelo(context: Context, nombre: String): ByteBuffer {
+            context.assets.openFd(nombre).use { fd ->
+                FileInputStream(fd.fileDescriptor).channel.use { canal ->
+                    return canal.map(FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength)
+                }
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.moviles.minkia.core.BaseViewModel
 import com.moviles.minkia.core.UiState
+import com.moviles.minkia.data.model.FocoMapa
 import com.moviles.minkia.data.model.ResumenCiudadano
 import com.moviles.minkia.data.repository.CiudadanoRepository
 
@@ -20,11 +21,22 @@ class HomeViewModel(
     private val _uiState = MutableLiveData<UiState<ResumenCiudadano>>()
     val uiState: LiveData<UiState<ResumenCiudadano>> = _uiState
 
+    /**
+     * Focos para el mapa de calor de vista previa. Va aparte del resumen porque
+     * son dos lecturas distintas de Firestore y la tarjeta del mapa se pinta
+     * cuando el mapa termina de cargar, sin esperar al resto de la pantalla.
+     */
+    private val _focosState = MutableLiveData<UiState<List<FocoMapa>>>()
+    val focosState: LiveData<UiState<List<FocoMapa>>> = _focosState
+
     init {
         cargarResumen()
+        cargarFocos()
     }
 
     fun cargarResumen() = loadInto(_uiState) { repository.obtenerResumen() }
+
+    fun cargarFocos() = loadInto(_focosState) { repository.focosMapa() }
 
     /** Factory para inyectar el repositorio sin librerías de DI. */
     class Factory(

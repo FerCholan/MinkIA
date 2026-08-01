@@ -69,6 +69,19 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_alerta" />
 
+        <TextView
+            android:id="@+id/tvVacioAlertas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="32dp"
+            android:text="@string/admin_alertas_vacio"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <include
             android:id="@+id/skeletonAlertas"
             layout="@layout/view_skeleton_lista"

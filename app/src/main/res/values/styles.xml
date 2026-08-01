@@ -41,7 +41,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingVertical">8dp</item>
+        <!-- paddingTop/Bottom y no paddingVertical: ese atributo existe recién
+             desde API 26 y el minSdk del proyecto es 24. -->
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
     </style>
 
     <style name="PasoDot">
@@ -74,6 +77,14 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <style name="BadgeColGrande">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginEnd">14dp</item>
+    </style>
+
     <style name="BadgeIcon">
         <item name="android:layout_width">52dp</item>
         <item name="android:layout_height">52dp</item>
@@ -84,10 +95,13 @@
     <style name="BadgeLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">6dp</item>
+        <!-- Negativo: los PNG de nivel traen margen transparente; esto acerca el
+             nombre al logo visible en vez de dejar un hueco grande debajo. -->
+        <item name="android:layout_marginTop">-12dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/texto_secundario</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Filas de menú del perfil (C17) -->
@@ -107,7 +121,10 @@
     <style name="SeparadorMenu">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:layout_marginHorizontal">16dp</item>
+        <!-- marginStart/End y no marginHorizontal: ese atributo existe recién
+             desde API 26 y el minSdk del proyecto es 24. -->
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
         <item name="android:background">@color/linea</item>
     </style>
 
@@ -153,136 +170,34 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">8dp</item>
         <item name="android:background">@drawable/bg_chip_mapa</item>
-        <item name="android:paddingHorizontal">14dp</item>
-        <item name="android:paddingVertical">7dp</item>
+        <!-- paddingStart/End y Top/Bottom en vez de paddingHorizontal/Vertical:
+             esos dos existen recién desde API 26 y el minSdk del proyecto es 24. -->
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">7dp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- Panel admin (A01) -->
-    <style name="KpiCard">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:background">@drawable/bg_card_stat</item>
-        <item name="android:padding">16dp</item>
-    </style>
-
-    <style name="KpiDelta">
+    <!-- Términos y Política de Datos -->
+    <style name="TituloTermino">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">end</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">22dp</item>
+        <item name="android:textColor">@color/texto_principal</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="KpiNumero">
-        <item name="android:layout_width">wrap_content</item>
+    <style name="CuerpoTermino">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">2dp</item>
-        <item name="android:textColor">@color/texto_principal</item>
-        <item name="android:textSize">28sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="KpiLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:textColor">@color/texto_secundario</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
-    <style name="BarraCol">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">bottom|center_horizontal</item>
-    </style>
-
-    <style name="Barra">
-        <item name="android:layout_width">18dp</item>
-        <item name="android:background">@drawable/bg_barra</item>
-    </style>
-
-    <style name="BarraLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">6dp</item>
-        <item name="android:textColor">@color/texto_secundario</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="ZonaNombre">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/texto_principal</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="ZonaBarra" parent="@android:style/Widget.ProgressBar.Horizontal">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">6dp</item>
-        <item name="android:max">100</item>
-    </style>
-
-    <!-- Rutas admin (A05) -->
-    <style name="ParadaCirculo">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:background">@drawable/bg_check_circulo</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="ResumenCol">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="ResumenNum">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/texto_principal</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="ResumenLbl">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">2dp</item>
-        <item name="android:textColor">@color/texto_secundario</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="CardParada">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginHorizontal">16dp</item>
-        <item name="android:layout_marginTop">12dp</item>
-        <item name="android:background">@drawable/bg_card_stat</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:padding">14dp</item>
-    </style>
-
-    <style name="ParadaTexto">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_marginStart">12dp</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
 </resources>

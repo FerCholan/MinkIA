@@ -16,6 +16,7 @@
         android:id="@+id/contenidoPerfil"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="28dp"
         android:orientation="vertical">
 
         <!-- Header andino: degradé verde + textura textil tenue y esquinas inferiores
@@ -52,31 +53,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/perfil_titulo"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/btnEditar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_boton_camara"
-                        android:contentDescription="@string/perfil_editar"
-                        android:padding="9dp"
-                        android:src="@drawable/ic_chevron_down"
-                        app:tint="@color/white" />
-                </LinearLayout>
+                    android:text="@string/perfil_titulo"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -120,6 +103,15 @@
                             android:text="@string/perfil_rol"
                             android:textColor="@color/crema"
                             android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tvDni"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@color/crema"
+                            android:textSize="13sp"
+                            tools:text="DNI: 12345678" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -213,33 +205,69 @@
                 android:textColor="@color/texto_secundario"
                 android:textSize="13sp" />
 
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/perfil_insignias"
+                android:textColor="@color/texto_principal"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Las 5 insignias de nivel, grandes. Las que superan el nivel actual
+                 quedan atenuadas (preview de desbloqueo). Scroll horizontal para que
+                 entren todas. Lo pinta PerfilFragment. -->
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:layout_marginTop="10dp"
+                android:scrollbars="none">
 
-                <LinearLayout style="@style/BadgeCol">
-                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_on" android:src="@drawable/ic_camara" app:tint="@color/white" />
-                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_primero" />
-                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
-                <LinearLayout style="@style/BadgeCol">
-                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_on" android:src="@drawable/ic_check" app:tint="@color/white" />
-                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_diez" />
-                </LinearLayout>
+                    <LinearLayout style="@style/BadgeColGrande">
+                        <ImageView android:id="@+id/badgeNivel1" android:layout_width="96dp" android:layout_height="96dp" android:adjustViewBounds="true" android:contentDescription="@string/nivel_1_nombre" android:src="@drawable/nivel_1" />
+                        <TextView style="@style/BadgeLabel" android:text="@string/nivel_1_corto" />
+                    </LinearLayout>
 
-                <LinearLayout style="@style/BadgeCol">
-                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_terracota" android:src="@drawable/ic_shield" app:tint="@color/white" />
-                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_mes" />
-                </LinearLayout>
+                    <LinearLayout style="@style/BadgeColGrande">
+                        <ImageView android:id="@+id/badgeNivel2" android:layout_width="96dp" android:layout_height="96dp" android:adjustViewBounds="true" android:contentDescription="@string/nivel_2_nombre" android:src="@drawable/nivel_2" />
+                        <TextView style="@style/BadgeLabel" android:text="@string/nivel_2_corto" />
+                    </LinearLayout>
 
-                <LinearLayout style="@style/BadgeCol">
-                    <ImageView style="@style/BadgeIcon" android:background="@drawable/bg_badge_off" android:src="@drawable/ic_lock" app:tint="@color/texto_secundario" />
-                    <TextView style="@style/BadgeLabel" android:text="@string/perfil_badge_heroe" />
+                    <LinearLayout style="@style/BadgeColGrande">
+                        <ImageView android:id="@+id/badgeNivel3" android:layout_width="96dp" android:layout_height="96dp" android:adjustViewBounds="true" android:contentDescription="@string/nivel_3_nombre" android:src="@drawable/nivel_3" />
+                        <TextView style="@style/BadgeLabel" android:text="@string/nivel_3_corto" />
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/BadgeColGrande">
+                        <ImageView android:id="@+id/badgeNivel4" android:layout_width="96dp" android:layout_height="96dp" android:adjustViewBounds="true" android:contentDescription="@string/nivel_4_nombre" android:src="@drawable/nivel_4" />
+                        <TextView style="@style/BadgeLabel" android:text="@string/nivel_4_corto" />
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/BadgeColGrande">
+                        <ImageView android:id="@+id/badgeNivel5" android:layout_width="96dp" android:layout_height="96dp" android:adjustViewBounds="true" android:contentDescription="@string/nivel_5_nombre" android:src="@drawable/nivel_5" />
+                        <TextView style="@style/BadgeLabel" android:text="@string/nivel_5_corto" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/tvProximo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_banner_info"
+                android:gravity="center"
+                android:padding="12dp"
+                android:textColor="@color/verde_bosque"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="Próximo: Héroe Eco-Tecnológico" />
         </LinearLayout>
 
         <!-- Menú -->
@@ -251,10 +279,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/btnMisReportes"
+                android:id="@+id/btnEditarPerfil"
                 style="@style/MenuPerfil"
-                android:text="@string/perfil_mis_reportes"
-                app:drawableStartCompat="@drawable/ic_lista"
+                android:text="@string/perfil_editar"
+                app:drawableStartCompat="@drawable/ic_edit"
                 app:drawableEndCompat="@drawable/ic_chevron_right" />
 
             <View style="@style/SeparadorMenu" />
@@ -263,7 +291,7 @@
                 android:id="@+id/btnConfig"
                 style="@style/MenuPerfil"
                 android:text="@string/perfil_config"
-                app:drawableStartCompat="@drawable/ic_chevron_down"
+                app:drawableStartCompat="@drawable/ic_ajustes"
                 app:drawableEndCompat="@drawable/ic_chevron_right" />
 
             <View style="@style/SeparadorMenu" />

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Grafo de navegación del flujo de REPORTE (FASE 4 de la migración de 18
+Activities a 3 con Navigation Component). Reúne las 4 pantallas que antes
+eran Activities encadenadas por putExtra: captura con la cámara, análisis con
+IA, formulario y confirmación.
+
+El dato que antes viajaba de Activity en Activity por el Intent (foto, tipo,
+confianza, severidad, área, ticket) ahora vive en ReporteFlowViewModel, un
+ViewModel scopeado a ESTE grafo (ver navGraphViewModels(R.id.nav_reporte) en
+cada fragment: CapturaFragment, AnalisisFragment, FormularioFragment,
+ConfirmacionFragment). Por eso ninguno de los cuatro destinos de acá abajo
+declara <argument>: no hay nada que pasar por Bundle porque las cuatro
+pantallas comparten la misma instancia del ViewModel mientras estén dentro
+del grafo.
+
+Grafo INDEPENDIENTE: a diferencia de nav_auth, no lo aloja una Activity
+propia, sino que nav_ciudadano.xml lo incorpora con
+<include app:graph="@navigation/nav_reporte" /> para colgarlo detrás del FAB
+"Reportar" de MainActivity. Por eso mismo ninguna <action> de acá puede
+apuntar a un destino de nav_ciudadano (p. ej. homeFragment o mapaFragment):
+un grafo incluido se infla desde su propio archivo, sin ver los ids que
+declaran otros archivos de navegación. La salida hacia una pestaña puntual
+del ciudadano se resuelve en código, en ConfirmacionFragment (ver el KDoc de
+su método cerrarFlujo).
+
+Las acciones reutilizan el mismo fundido (fade_in/fade_out) que nav_auth.xml,
+para no perder continuidad visual entre pantallas ahora que son fragments.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_reporte"
+    app:startDestination="@id/capturaFragment">
+
+    <!-- C09: cámara. Punto de entrada del flujo (lo abre el FAB "Reportar" de
+         MainActivity). Aporta la foto al ViewModel compartido. -->
+    <fragment
+        android:id="@+id/capturaFragment"
+        android:name="com.moviles.minkia.ui.captura.CapturaFragment"
+        android:label="Captura"
+        tools:layout="@layout/fragment_captura">
+
+        <action
+            android:id="@+id/action_captura_a_analisis"
+            app:destination="@id/analisisFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <!-- C10: análisis con IA. Lee la foto del ViewModel compartido y corre la
+         inferencia; guarda ahí el resultado para que Formulario lo use. -->
+    <fragment
+        android:id="@+id/analisisFragment"
+        android:name="com.moviles.minkia.ui.analisis.AnalisisFragment"
+        android:label="Analisis"
+        tools:layout="@layout/fragment_analisis">
+
+        <action
+            android:id="@+id/action_analisis_a_formulario"
+            app:destination="@id/formularioFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <!-- C11: formulario. Lee foto y resultado del ViewModel compartido, pide
+         ubicación GPS y, al enviar, guarda ahí el reporte con su ticket. -->
+    <fragment
+        android:id="@+id/formularioFragment"
+        android:name="com.moviles.minkia.ui.formulario.FormularioFragment"
+        android:label="Formulario"
+        tools:layout="@layout/fragment_formulario">
+
+        <!-- Al enviar, saca del back stack a Captura/Análisis/Formulario (todo
+             lo que hay entre el inicio del grafo y este destino), SIN incluir
+             el propio nodo nav_reporte: ahí sigue viviendo el ViewModel
+             compartido, que Confirmación todavía necesita leer. Antes de
+             esto, ConfirmacionActivity llegaba con finishAffinity(): mismo
+             efecto de "no se puede volver al formulario", ahora expresado
+             como popUpTo en vez de terminar Activities. -->
+        <action
+            android:id="@+id/action_formulario_a_confirmacion"
+            app:destination="@id/confirmacionFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/nav_reporte"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- C12: confirmación. Lee el reporte ya guardado (con ticket) del
+         ViewModel compartido. No declara acciones propias: su salida no es
+         "otra pantalla del flujo", es DEJAR el flujo por completo (ver
+         ConfirmacionFragment.cerrarFlujo). -->
+    <fragment
+        android:id="@+id/confirmacionFragment"
+        android:name="com.moviles.minkia.ui.confirmacion.ConfirmacionFragment"
+        android:label="Confirmacion"
+        tools:layout="@layout/fragment_confirmacion" />
+
+</navigation>

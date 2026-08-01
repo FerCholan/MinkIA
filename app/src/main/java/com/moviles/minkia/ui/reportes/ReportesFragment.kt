@@ -1,22 +1,21 @@
 package com.moviles.minkia.ui.reportes
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
 import com.moviles.minkia.R
 import com.moviles.minkia.core.BaseFragment
 import com.moviles.minkia.core.UiState
 import com.moviles.minkia.core.aplicarInsetSuperior
 import com.moviles.minkia.core.mostrarSkeleton
+import com.moviles.minkia.ui.detalle.DetalleFragment
 import com.moviles.minkia.data.model.MiReporte
 import com.moviles.minkia.databinding.FragmentReportesBinding
-import com.moviles.minkia.ui.captura.CapturaActivity
-import com.moviles.minkia.ui.detalle.DetalleActivity
 
 /**
  * Historial de reportes del ciudadano (mockups C13 y C14). Lista los reportes,
@@ -61,7 +60,14 @@ class ReportesFragment : BaseFragment<FragmentReportesBinding>() {
                     todos = estado.data
                     aplicarFiltro(binding.tabs.selectedTabPosition.coerceAtLeast(0))
                 }
-                is UiState.Error -> binding.skeletonReportes.root.mostrarSkeleton(false)
+                is UiState.Error -> {
+                    binding.skeletonReportes.root.mostrarSkeleton(false)
+                    binding.rvReportes.visibility = View.GONE
+                    binding.grupoVacio.visibility = View.GONE
+                    android.widget.Toast.makeText(
+                        requireContext(), estado.mensaje, android.widget.Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
@@ -78,25 +84,42 @@ class ReportesFragment : BaseFragment<FragmentReportesBinding>() {
         binding.rvReportes.visibility = if (lista.isEmpty()) View.GONE else View.VISIBLE
     }
 
+    /**
+     * Abre el Detalle del reporte tocado (C15). Antes viajaban once extras
+     * completos (todo MiReporte) más el nombre de la transición; ahora solo el
+     * ticket, que DetalleFragment usa para pedirle el reporte entero al
+     * repositorio Y para recalcular el mismo nombre de transición (no hace
+     * falta mandarlo aparte).
+     *
+     * El reporte tocado sigue siendo el elemento compartido que se expande hacia
+     * el detalle (container transform): FragmentNavigatorExtras es el
+     * equivalente fragment-a-fragment de ActivityOptionsCompat.makeSceneTransitionAnimation,
+     * que es lo que usaba esta misma función cuando Detalle era una Activity
+     * aparte. Empareja "vista" (la tarjeta, marcada con este nombre por
+     * MiReporteAdapter) con la vista que DetalleFragment marca con el mismo
+     * nombre al entrar (ver DetalleFragment.onViewReady).
+     */
     private fun abrirDetalle(vista: View, r: MiReporte) {
-        val nombreTransicion = "reporte_${r.ticket}"
-        val intent = Intent(requireContext(), DetalleActivity::class.java)
-            .putExtra(DetalleActivity.EXTRA_TICKET, r.ticket)
-            .putExtra(DetalleActivity.EXTRA_DIRECCION, r.direccion)
-            .putExtra(DetalleActivity.EXTRA_SEVERIDAD, r.severidad.name)
-            .putExtra(DetalleActivity.EXTRA_AREA, r.areaM2)
-            .putExtra(DetalleActivity.EXTRA_VECINOS, r.vecinos)
-            .putExtra(DetalleActivity.EXTRA_ESTADO, r.estado.name)
-            .putExtra(DetalleActivity.EXTRA_TRANSITION, nombreTransicion)
-        // El reporte tocado es el elemento compartido: se expande hacia el detalle.
-        val opciones = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(), vista, nombreTransicion
+        val nombreTransicion = "reporte_${r.id}"
+        findNavController().navigate(
+            R.id.action_reportes_a_detalle,
+            Bundle().apply { putString(DetalleFragment.ARG_REPORTE_ID, r.id) },
+            null,
+            FragmentNavigatorExtras(vista to nombreTransicion)
         )
-        startActivity(intent, opciones.toBundle())
     }
 
+    /**
+     * Abre el flujo de reporte (grafo nav_reporte, FASE 4) desde el estado
+     * vacío, igual que el FAB "Reportar" de MainActivity. Se navega por id, no
+     * por <action>: un grafo incluido con <include> no puede referenciarse
+     * desde una <action> declarada en OTRO archivo de navegación (ver el
+     * comentario de cabecera de nav_reporte.xml), pero sí es un destino
+     * navegable válido en tiempo de ejecución una vez que nav_ciudadano.xml lo
+     * incluye.
+     */
     private fun abrirCaptura() {
-        startActivity(Intent(requireContext(), CapturaActivity::class.java))
+        findNavController().navigate(R.id.nav_reporte)
     }
 
     override fun onBindingDestroy() {

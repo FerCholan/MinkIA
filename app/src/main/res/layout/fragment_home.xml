@@ -83,6 +83,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/tvSaludoNombre"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-2dp"
@@ -177,18 +178,36 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvFocosCerca"
+            <!-- Mapa de calor real: Google Map (gestos off) + overlay con el conteo.
+                 Toca para abrir el mapa completo. Los datos los pone HomeFragment. -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_card_stat"
-                android:gravity="center"
-                android:textColor="@color/naranja_terracota"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:text="3 focos cerca tuyo" />
+                android:clipToOutline="true">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/mapaCalorContainer"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/tvFocosCerca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_chip_ia"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="3 focos cerca de ti" />
+            </FrameLayout>
 
             <!-- Cerca tuyo -->
             <TextView

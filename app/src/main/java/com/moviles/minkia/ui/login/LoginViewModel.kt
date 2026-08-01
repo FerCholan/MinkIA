@@ -52,6 +52,10 @@ class LoginViewModel(
         loadInto(_estado) { repository.iniciarSesion(limpio, password) }
     }
 
+    /** Cambia el ID token de Google por una sesión (la primera vez crea la cuenta). */
+    fun iniciarSesionConGoogle(idToken: String) =
+        loadInto(_estado) { repository.iniciarSesionConGoogle(idToken) }
+
     private fun validar(email: String, password: String): ErroresLogin = ErroresLogin(
         email = when {
             email.isBlank() -> R.string.login_error_email_vacio

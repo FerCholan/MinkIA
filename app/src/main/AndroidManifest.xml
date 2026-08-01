@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Red: Firebase (auth/firestore) y subida de fotos a Cloudinary -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Detectar cuándo vuelve la conexión para reenviar los reportes en cola -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- Permisos del flujo de reporte (pedidos en tiempo de ejecución en C06) -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -22,6 +27,12 @@
         android:theme="@style/Theme.MinkIA"
         tools:targetApi="31">
 
+        <!-- Google Maps: la API key vive en strings.xml (conviene restringirla por
+             paquete + SHA-1 en Google Cloud para que solo funcione en esta app). -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
@@ -32,66 +43,44 @@
             </intent-filter>
         </activity>
 
+        <!-- Contenedora del flujo de acceso (Navigation Component): reemplaza
+             a las 6 Activities de onboarding/login/registro/recuperar/
+             términos/permisos, ahora fragments del grafo nav_auth. -->
         <activity
-            android:name=".ui.onboarding.OnboardingActivity"
+            android:name=".ui.auth.AuthActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="false" />
+        <!-- Captura/Análisis/Formulario/Confirmación (FASE 4) dejaron de ser
+             Activities: son el grafo nav_reporte, que nav_ciudadano.xml
+             incluye e infla dentro del NavHostFragment de MainActivity. La
+             orientación portrait que fijaba CapturaActivity ahora se aplica
+             y se restaura en código (ver CapturaFragment.onResume /
+             onBindingDestroy), porque ya no hay una Activity propia donde
+             declararla en el Manifest. -->
 
-        <activity
-            android:name=".ui.registro.RegistroActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.recuperar.RecuperarActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.permisos.PermisosActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.captura.CapturaActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.analisis.AnalisisActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.formulario.FormularioActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.confirmacion.ConfirmacionActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.detalle.DetalleActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.notificaciones.NotificacionesActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.configuracion.ConfiguracionActivity"
-            android:exported="false" />
-
+        <!-- Contenedora del ciudadano Y del administrador (FASE 2): aloja según
+             el rol el grafo nav_ciudadano o nav_admin. Reemplaza a
+             AdminMainActivity, que desaparece. FASE 3 incorporó a esos grafos las
+             pantallas que antes eran ".ui.detalle.DetalleActivity",
+             ".ui.notificaciones.NotificacionesActivity",
+             ".ui.configuracion.ConfiguracionActivity", ".ui.misdatos.MisDatosActivity"
+             y ".ui.admin.ValidacionActivity": ya no son Activities, así que salen
+             del manifest. -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".ui.admin.AdminMainActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.admin.ValidacionActivity"
-            android:exported="false" />
+        <!-- Para compartir el CSV de reportes exportado (parte municipal) con otras
+             apps (correo, Drive) vía un content:// seguro, sin exponer el filesystem. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

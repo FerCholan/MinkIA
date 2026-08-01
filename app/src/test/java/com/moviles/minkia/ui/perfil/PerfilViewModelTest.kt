@@ -32,7 +32,8 @@ class PerfilViewModelTest {
         reportes = 8,
         resueltos = 5,
         puntosMinka = 340,
-        nivelTexto = "Nivel 3 · Guardián del barrio",
+        nivel = 3,
+        nivelTexto = "Nivel 3 · Forjador Urbano",
         puntosNivelActual = 340,
         puntosNivelObjetivo = 500,
         faltanTexto = "Te faltan 160 puntos para ser Héroe del barrio"

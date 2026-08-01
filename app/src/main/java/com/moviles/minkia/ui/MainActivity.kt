@@ -1,54 +1,64 @@
 package com.moviles.minkia.ui
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.moviles.minkia.R
+import com.moviles.minkia.core.BaseActivity
 import com.moviles.minkia.core.animarPopFab
 import com.moviles.minkia.core.animarSeleccion
 import com.moviles.minkia.core.aplicarPulsacion
 import com.moviles.minkia.core.vibrar
 import com.moviles.minkia.data.local.PreferenciasRepository
 import com.moviles.minkia.databinding.ActivityMainBinding
-import com.moviles.minkia.ui.captura.CapturaActivity
 import com.moviles.minkia.ui.common.CoachMarks
-import com.moviles.minkia.ui.home.HomeFragment
-import com.moviles.minkia.ui.mapa.MapaFragment
-import com.moviles.minkia.ui.perfil.PerfilFragment
-import com.moviles.minkia.ui.reportes.ReportesFragment
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
- * Actividad principal. Orquesta la navegación inferior entre las secciones del
- * ciudadano y el FAB central de "Reportar". Cada sección es un fragment; se
- * intercambian en el contenedor según la pestaña elegida.
+ * Activity contenedora del ciudadano Y del administrador (FASE 2 de la
+ * migración de 18 Activities a 3 con Navigation Component; AdminMainActivity
+ * desaparece). Aloja en un único NavHostFragment uno de dos grafos posibles
+ * según el rol de la sesión activa: nav_ciudadano o nav_admin (ver
+ * [configurarGrafoSegunRol]). El menú del BottomNavigationView y, para el
+ * ciudadano, el FAB de "Reportar" y sus coach marks se resuelven ahí mismo,
+ * porque todos dependen de ese rol.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
-    private lateinit var binding: ActivityMainBinding
     private val prefs by lazy { PreferenciasRepository.create(this) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    // Franja inferior que el NavHostFragment debe dejar libre para no quedar bajo
+    // el BottomNavigationView. Se arma con dos piezas que llegan en momentos
+    // distintos (el alto nominal del nav, al medir; el inset de la barra de
+    // gestos, cuando el sistema lo entrega) y el flujo de reporte las anula a las
+    // dos. Por eso se guardan sueltas y el margen se recalcula en un solo lugar.
+    private var altoNav = 0
+    private var insetInferior = 0
+    private var enFlujoReporte = false
 
-        // Container transform: esta Activity es el origen del elemento compartido
-        // (la tarjeta de reporte que se expande hacia el detalle).
-        setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        window.sharedElementsUseOverlay = false
+    override fun inflateBinding(inflater: LayoutInflater) = ActivityMainBinding.inflate(inflater)
+
+    override fun onViewReady(savedInstanceState: Bundle?) {
+        // Headers verdes oscuros arriba, nav clara abajo: mismos flags que antes
+        // ponía esta Activity a mano (ver BaseActivity.barrasCabeceraVerde).
+        barrasCabeceraVerde()
+
+        // La transición compartida de Reportes a Detalle ya no se configura acá:
+        // desde que ambas pantallas son fragments del mismo host, la resuelven
+        // ellas con FragmentNavigatorExtras y sus propias sharedElementTransition
+        // (ver ReportesFragment.abrirDetalle y DetalleFragment). Los callbacks a
+        // nivel Activity solo intervienen entre Activities distintas.
 
         val densidad = resources.displayMetrics.density
         // Lado del FAB = fabCustomSize (68dp). Lo usamos en vez de medir su height,
@@ -59,26 +69,14 @@ class MainActivity : AppCompatActivity() {
         // NO padea ni arriba ni abajo: el inset superior fluye a cada fragment (su
         // header de color sube tras la status bar y baja solo el contenido vía
         // aplicarInsetSuperior); el inferior lo absorbe el nav. Solo left/right por
-        // si hay gestos laterales. Las 4 pantallas tienen header verde oscuro arriba,
-        // así que los íconos de la status bar van en CLARO.
-        WindowCompat.getInsetsController(window, binding.root).apply {
-            isAppearanceLightStatusBars = false // headers verdes oscuros arriba
-            isAppearanceLightNavigationBars = true // nav claro abajo: iconos oscuros
-        }
-        // Mismo fix que BaseActivity: forzar barras transparentes y matar el scrim de
-        // contraste que Samsung One UI pinta como franja blanca bajo el nav.
-        window.statusBarColor = android.graphics.Color.TRANSPARENT
-        window.navigationBarColor = android.graphics.Color.TRANSPARENT
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            window.isStatusBarContrastEnforced = false
-            window.isNavigationBarContrastEnforced = false
-        }
+        // si hay gestos laterales. Las pantallas de ambos roles tienen header verde
+        // oscuro arriba, así que los íconos de la status bar van en CLARO.
+        altoNav = (56 * densidad).toInt()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updatePadding(left = bars.left, right = bars.right)
-            binding.fragmentContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = (56 * densidad).toInt() + bars.bottom
-            }
+            insetInferior = bars.bottom
+            ajustarMargenDelHost()
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNav) { v, insets ->
@@ -111,7 +109,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Pop de entrada: el FAB aparece creciendo con rebote la primera vez que se
-        // posiciona, para que el ojo vaya derecho al corazón de la app.
+        // posiciona, para que el ojo vaya derecho al corazón de la app. Corre igual
+        // para los dos roles (no se condiciona por rol, para no tocar este código
+        // calibrado); en el admin el FAB queda GONE apenas se resuelve la sesión,
+        // ver configurarGrafoSegunRol.
         binding.fabReportar.post {
             binding.fabReportar.scaleX = 0.5f
             binding.fabReportar.scaleY = 0.5f
@@ -122,50 +123,125 @@ class MainActivity : AppCompatActivity() {
                 .start()
         }
 
-        if (savedInstanceState == null) {
-            mostrarFragment(HomeFragment())
-            binding.bottomNav.selectedItemId = R.id.nav_inicio
-        }
-
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            val fragment: Fragment? = when (item.itemId) {
-                R.id.nav_inicio -> HomeFragment()
-                R.id.nav_mapa -> MapaFragment()
-                R.id.nav_reportes -> ReportesFragment()
-                R.id.nav_perfil -> PerfilFragment()
-                else -> null
-            }
-            fragment?.let {
-                mostrarFragment(it)
-                // El ícono de la pestaña elegida rebota + haptic: navegar se siente vivo.
-                binding.bottomNav.animarSeleccion(item.itemId)
-                true
-            } ?: false
-        }
-
-        // La confirmación de reporte puede pedir abrir una pestaña puntual.
-        if (intent.getIntExtra(EXTRA_TAB, TAB_INICIO) == TAB_MAPA) {
-            binding.bottomNav.selectedItemId = R.id.nav_mapa
-        }
-
         binding.fabReportar.aplicarPulsacion()
+
+        configurarGrafoSegunRol()
+    }
+
+    /**
+     * Lee la sesión persistida y arma, según el rol, el resto de la pantalla: el
+     * grafo del NavHostFragment, el menú del BottomNavigationView y (solo
+     * ciudadano) la reacción a EXTRA_TAB y los coach marks; (solo admin) ocultar
+     * el FAB. [PreferenciasRepository.sesion] es la única fuente de verdad sobre
+     * quién está logueado (a diferencia de un extra del Intent, sobrevive a que
+     * el sistema mate y recree el proceso), pero leerla es asincrónico
+     * (DataStore), así que todo esto corre dentro de [lifecycleScope]. Durante
+     * ese instante breve el NavHostFragment queda sin grafo asignado y no dibuja
+     * nada, pero el fondo (@color/fondo del root, ver activity_main.xml) ya
+     * cubre toda la pantalla, así que no se ve un frame en blanco.
+     *
+     * El NavHostFragment lo retiene el FragmentManager entre rotaciones (mismo
+     * mecanismo que usa AuthActivity.configurarDestinoInicial, ver su KDoc), así
+     * que en cada recreación de la Activity este método vuelve a correr, vuelve
+     * a resolver el mismo grafo para el mismo usuario, y es el propio
+     * NavController quien restaura el back stack guardado en vez de reiniciar en
+     * el destino de partida: rotar la pantalla no devuelve a la pestaña inicial.
+     */
+    private fun configurarGrafoSegunRol() {
+        lifecycleScope.launch {
+            val usuario = prefs.sesion.first()
+            val navHost = supportFragmentManager.findFragmentById(R.id.navHostMain) as NavHostFragment
+            val nav = navHost.navController
+
+            if (usuario?.esAdmin == true) {
+                nav.graph = nav.navInflater.inflate(R.navigation.nav_admin)
+                binding.bottomNav.menu.clear()
+                binding.bottomNav.inflateMenu(R.menu.admin_nav_menu)
+                binding.bottomNav.setupWithNavController(nav)
+                // El FAB de "Reportar" es una acción del ciudadano (C09): el admin
+                // modera lo que otros reportan, no reporta. El resto de la lógica
+                // del FAB (posicionamiento, pop, elevación), arriba, corre igual
+                // para los dos roles; acá solo se lo oculta.
+                binding.fabReportar.visibility = View.GONE
+            } else {
+                nav.graph = nav.navInflater.inflate(R.navigation.nav_ciudadano)
+                binding.bottomNav.menu.clear()
+                binding.bottomNav.inflateMenu(R.menu.bottom_nav_menu)
+                binding.bottomNav.setupWithNavController(nav)
+                animarSeleccionEnCadaCambioDeDestino(nav)
+                ocultarNavegacionEnFlujoReporte(nav)
+                cablearFab(nav)
+                mostrarCoachMarksSiCorresponde()
+            }
+        }
+    }
+
+    /**
+     * Rebote + haptic del ítem recién elegido: mismo gesto que antes daba
+     * BottomNavigationView.setOnItemSelectedListener a mano (ver
+     * core/Interacciones.kt#animarSeleccion). BottomNavigationView solo admite
+     * UN listener de tap, y setupWithNavController ya lo ocupa; por eso el gesto
+     * se engancha del lado del NavController, que sí admite más de un
+     * observador. Se ignora la primera notificación (la del arranque del grafo
+     * o la restauración tras rotar): esa selección no la disparó un toque, y el
+     * listener manual anterior tampoco la animaba en ese caso.
+     */
+    /**
+     * Deja libre para el host la franja que ocupa el BottomNavigationView. Dentro
+     * del flujo de reporte no hay nav que esquivar (la cámara y el análisis van a
+     * pantalla completa), así que el margen cae a cero. Se centraliza acá porque
+     * las dos piezas que lo componen llegan por caminos distintos.
+     */
+    private fun ajustarMargenDelHost() {
+        binding.navHostMain.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = if (enFlujoReporte) 0 else altoNav + insetInferior
+        }
+    }
+
+    /**
+     * El flujo de reporte se dibuja a pantalla completa: mientras se está dentro
+     * de él se ocultan el BottomNavigationView y el FAB, y el host recupera la
+     * franja inferior. Se reconoce por el grafo PADRE del destino y no por una
+     * lista de ids, así sumar o quitar un paso al flujo no obliga a tocar esto.
+     */
+    private fun ocultarNavegacionEnFlujoReporte(nav: NavController) {
+        nav.addOnDestinationChangedListener { _, destino, _ ->
+            enFlujoReporte = destino.parent?.id == R.id.nav_reporte
+            binding.bottomNav.isVisible = !enFlujoReporte
+            binding.fabReportar.isVisible = !enFlujoReporte
+            ajustarMargenDelHost()
+        }
+    }
+
+    /**
+     * Acción núcleo del producto (C09): el FAB entra al grafo anidado del flujo
+     * de reporte. Se cablea acá, y no junto al resto de la configuración del FAB,
+     * porque necesita el [NavController], que recién existe una vez resuelto el
+     * grafo del rol. La navegación se pospone un instante para que el rebote del
+     * botón alcance a verse antes de que la pantalla cambie.
+     */
+    private fun cablearFab(nav: NavController) {
         binding.fabReportar.setOnClickListener {
             it.vibrar() // feedback háptico en la acción núcleo
             it.animarPopFab() // rebote que confirma el toque al corazón de la app
-            // Núcleo del producto: abre el flujo de reporte por la cámara (C09). Se
-            // pospone apenas para que el pop alcance a verse antes de la transición.
-            it.postDelayed({
-                startActivity(Intent(this, CapturaActivity::class.java))
-            }, 150)
+            it.postDelayed({ nav.navigate(R.id.nav_reporte) }, 150)
         }
+    }
 
-        mostrarCoachMarksSiCorresponde()
+    private fun animarSeleccionEnCadaCambioDeDestino(nav: NavController) {
+        var esPrimeraSincronizacion = true
+        nav.addOnDestinationChangedListener { _, destino, _ ->
+            if (esPrimeraSincronizacion) esPrimeraSincronizacion = false
+            else binding.bottomNav.animarSeleccion(destino.id)
+        }
     }
 
     /**
      * En el primer arranque guía al ciudadano con coach marks sobre el FAB y la
-     * navegación. Espera a que el FAB esté posicionado (post) y al terminar marca
-     * el onboarding como visto para no repetirlo.
+     * navegación. Exclusivo del ciudadano (AdminMainActivity nunca los mostró),
+     * por eso se llama solo desde la rama ciudadano de
+     * [configurarGrafoSegunRol]. Espera a que el FAB esté posicionado (post) y
+     * al terminar marca el onboarding como visto para no repetirlo.
      */
     private fun mostrarCoachMarksSiCorresponde() {
         lifecycleScope.launch {
@@ -178,15 +254,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val EXTRA_TAB = "extra_tab"
-        const val TAB_INICIO = 0
-        const val TAB_MAPA = 1
-    }
-
-    private fun mostrarFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .commit()
-    }
 }

@@ -3,6 +3,7 @@ package com.moviles.minkia.core
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /**
@@ -25,8 +26,15 @@ abstract class BaseViewModel : ViewModel() {
         viewModelScope.launch {
             target.value = try {
                 UiState.Success(block())
+            } catch (e: CancellationException) {
+                // La cancelación NO es un error de la pantalla: pasa cuando el
+                // ViewModel se destruye a mitad de una carga. Hay que relanzarla
+                // para respetar la cancelación estructurada; atraparla como una
+                // excepción más dejaba la corrutina "terminando" un trabajo ya
+                // cancelado y publicando un Error que nunca ocurrió.
+                throw e
             } catch (e: Exception) {
-                UiState.Error(e.message ?: "Ocurrió un error inesperado. Intentá de nuevo.")
+                UiState.Error(e.message ?: "Ocurrió un error inesperado. Intenta de nuevo.")
             }
         }
     }

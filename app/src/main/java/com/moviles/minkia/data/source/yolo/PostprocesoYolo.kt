@@ -100,7 +100,8 @@ class PostprocesoYolo(
                 tipo = "Sin residuos detectados",
                 confianza = 0,
                 severidad = Severidad.BAJA,
-                areaM2 = 0.0
+                areaM2 = 0.0,
+                esBasura = false // no hay basura en la foto: no se puede reportar
             )
         }
 

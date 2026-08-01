@@ -1,59 +1,62 @@
 package com.moviles.minkia.data.repository
 
 import com.moviles.minkia.data.model.AlertaAdmin
-import com.moviles.minkia.data.model.KpiAdmin
-import com.moviles.minkia.data.model.PanelAdmin
-import com.moviles.minkia.data.model.ParadaRuta
+import com.moviles.minkia.data.model.FilaReporte
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.data.model.ZonaAfectada
-import kotlinx.coroutines.delay
+import com.moviles.minkia.data.source.ReporteFirestoreDataSource
 
 /**
- * Acceso a datos del módulo administrador (Épica 5). Mock por ahora; el día de
- * mañana lee del backend de gestión sin afectar a la UI.
+ * Acceso a datos del módulo administrador (Épica 5), reducido a moderación +
+ * reportería. Todo REAL desde Firestore (misma colección `reportes` que el
+ * ciudadano). Las ACCIONES de moderación necesitan rol admin (reglas Firestore).
  */
-class AdminRepository {
+class AdminRepository(
+    private val reporteDataSource: ReporteFirestoreDataSource = ReporteFirestoreDataSource()
+) {
 
-    /** Agregado del panel (A01): KPIs y zonas en una sola carga. */
-    suspend fun panel(): PanelAdmin = PanelAdmin(kpis = kpis(), zonas = zonasAfectadas())
+    /** Bandeja de reportes pendientes (A02), REAL desde Firestore. */
+    suspend fun alertas(): List<AlertaAdmin> = reporteDataSource.alertasAdmin()
 
-    suspend fun kpis(): List<KpiAdmin> {
-        delay(300)
-        return listOf(
-            KpiAdmin("47", "Reportes hoy", "+12%"),
-            KpiAdmin("62", "Puntos críticos", "+3"),
-            KpiAdmin("38", "Resueltos (sem.)", "+8%"),
-            KpiAdmin("81%", "Tasa de atención", "")
-        )
-    }
+    /**
+     * Busca una alerta puntual por id (pantalla de Validación, FASE 3 de la
+     * migración a Navigation Component: reemplaza a los trece extras que antes
+     * recibía ValidacionActivity completos). AlertaAdmin.id YA es el id real del
+     * documento de Firestore (el mismo que usan resolver/validar/anular más
+     * abajo), a diferencia de MiReporte/FocoMapa del lado ciudadano.
+     *
+     * No agrega una consulta nueva: reusa [alertas] (la misma bandeja que ya
+     * lista AlertasFragment) y filtra por id. Alcanza porque el único camino de
+     * entrada real a esta pantalla es tocar un ítem de esa bandeja, siempre
+     * pendiente (los reportes ya resueltos/duplicados/anulados salen de
+     * [alertas], ver su KDoc, y por eso nunca llegan a ofrecerse como ítem).
+     */
+    suspend fun obtenerAlertaPorId(id: String): AlertaAdmin? =
+        alertas().firstOrNull { it.id == id }
 
-    suspend fun zonasAfectadas(): List<ZonaAfectada> {
-        delay(200)
-        return listOf(
-            ZonaAfectada("P. J. La Unión", 18, Severidad.ALTA),
-            ZonaAfectada("Centro histórico", 12, Severidad.MEDIA),
-            ZonaAfectada("Miraflores Alto", 7, Severidad.BAJA)
-        )
-    }
+    /** Zonas afectadas bajo el mapa de puntos críticos (A03). */
+    suspend fun zonas(): List<ZonaAfectada> = reporteDataSource.zonasAfectadas()
 
-    suspend fun alertas(): List<AlertaAdmin> {
-        delay(400)
-        return listOf(
-            AlertaAdmin("P. J. La Unión - Mz H", "Hace 4 min · 5 reportes agrupados", 5, Severidad.ALTA, true),
-            AlertaAdmin("Jr. Bolognesi 540", "Hace 18 min · 3 reportes agrupados", 3, Severidad.MEDIA, true),
-            AlertaAdmin("Av. Pardo 1280", "Hace 1 h · sin asignar", 1, Severidad.MEDIA, false),
-            AlertaAdmin("Calle Tacna 320", "Hace 2 h · sin asignar", 1, Severidad.BAJA, false)
-        )
-    }
+    /** Validar el reporte (-> EN_PROCESO). Necesita rol admin. */
+    suspend fun validar(id: String) = reporteDataSource.validarReporte(id)
 
-    suspend fun ruta(): List<ParadaRuta> {
-        delay(300)
-        return listOf(
-            ParadaRuta(1, "P. J. La Unión - Mz H", 23, 2.1, Severidad.ALTA),
-            ParadaRuta(2, "Jr. Bolognesi 540", 12, 1.4, Severidad.MEDIA),
-            ParadaRuta(3, "Av. Pardo 1280", 8, 1.8, Severidad.MEDIA),
-            ParadaRuta(4, "Centro histórico", 6, 1.2, Severidad.ALTA),
-            ParadaRuta(5, "Miraflores Alto", 4, 1.9, Severidad.BAJA)
-        )
-    }
+    /** Aprobar resuelto (-> RESUELTO): el foco fue limpiado. Necesita rol admin. */
+    suspend fun resolver(id: String) = reporteDataSource.resolverReporte(id)
+
+    /** Marcar el reporte como duplicado. Necesita rol admin. */
+    suspend fun marcarDuplicado(id: String) = reporteDataSource.marcarDuplicado(id)
+
+    /** Anular (troll/falso): marca ANULADO sin borrar. Necesita rol admin. */
+    suspend fun anular(id: String) = reporteDataSource.anularReporte(id)
+
+    /** Actualizar el nivel (severidad) del reporte. Necesita rol admin. */
+    suspend fun actualizarNivel(id: String, severidad: Severidad) =
+        reporteDataSource.actualizarSeveridad(id, severidad)
+
+    /** Reporte municipal filtrado por rango de fechas y nivel (A06). */
+    suspend fun reportes(desde: Long, hasta: Long, severidad: Severidad?): List<FilaReporte> =
+        reporteDataSource.reportesFiltrados(desde, hasta, severidad)
+
+    /** CSV municipal a partir de filas ya filtradas (para exportar/compartir). */
+    fun csv(filas: List<FilaReporte>): String = reporteDataSource.csvDe(filas)
 }

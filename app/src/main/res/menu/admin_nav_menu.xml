@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Los android:id de acá abajo COINCIDEN a propósito con los android:id de los
+destinos declarados en navigation/nav_admin.xml:
+BottomNavigationView.setupWithNavController() empareja cada ítem con su
+destino por id (ver MainActivity).
+-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/admin_panel"
-        android:icon="@drawable/ic_panel"
-        android:title="@string/admin_nav_panel" />
-    <item
-        android:id="@+id/admin_mapa"
+        android:id="@+id/puntosCriticosFragment"
         android:icon="@drawable/ic_nav_mapa"
         android:title="@string/admin_nav_mapa" />
     <item
-        android:id="@+id/admin_rutas"
-        android:icon="@drawable/ic_rutas"
-        android:title="@string/admin_nav_rutas" />
-    <item
-        android:id="@+id/admin_alertas"
+        android:id="@+id/alertasFragment"
         android:icon="@drawable/ic_bell"
         android:title="@string/admin_nav_alertas" />
+    <item
+        android:id="@+id/reporteriaFragment"
+        android:icon="@drawable/ic_nav_reportes"
+        android:title="@string/admin_nav_reportes" />
+    <item
+        android:id="@+id/adminCuentaFragment"
+        android:icon="@drawable/ic_nav_perfil"
+        android:title="@string/admin_nav_cuenta" />
 </menu>

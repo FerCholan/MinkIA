@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/terminosRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/verde_bosque"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationContentDescription="@string/terminos_volver"
+        app:title="@string/terminos_titulo"
+        app:titleCentered="true"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="32dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.15"
+                android:text="@string/terminos_intro"
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp" />
+
+            <TextView
+                style="@style/TituloTermino"
+                android:text="@string/terminos_s1_titulo" />
+
+            <TextView
+                style="@style/CuerpoTermino"
+                android:text="@string/terminos_s1_cuerpo" />
+
+            <TextView
+                style="@style/TituloTermino"
+                android:text="@string/terminos_s2_titulo" />
+
+            <TextView
+                style="@style/CuerpoTermino"
+                android:text="@string/terminos_s2_cuerpo" />
+
+            <TextView
+                style="@style/TituloTermino"
+                android:text="@string/terminos_s3_titulo" />
+
+            <TextView
+                style="@style/CuerpoTermino"
+                android:text="@string/terminos_s3_cuerpo" />
+
+            <TextView
+                style="@style/TituloTermino"
+                android:text="@string/terminos_s4_titulo" />
+
+            <TextView
+                style="@style/CuerpoTermino"
+                android:text="@string/terminos_s4_cuerpo" />
+
+            <TextView
+                style="@style/TituloTermino"
+                android:text="@string/terminos_s5_titulo" />
+
+            <TextView
+                style="@style/CuerpoTermino"
+                android:text="@string/terminos_s5_cuerpo" />
+
+            <TextView
+                style="@style/TituloTermino"
+                android:text="@string/terminos_s6_titulo" />
+
+            <TextView
+                style="@style/CuerpoTermino"
+                android:text="@string/terminos_s6_cuerpo" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/terminos_nota"
+                android:textColor="@color/texto_secundario"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

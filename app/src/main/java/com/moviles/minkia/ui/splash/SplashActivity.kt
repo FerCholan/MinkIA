@@ -3,16 +3,22 @@ package com.moviles.minkia.ui.splash
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import com.moviles.minkia.core.BaseActivity
 import com.moviles.minkia.core.transicionFundido
+import com.moviles.minkia.data.local.PreferenciasRepository
+import com.moviles.minkia.data.model.Usuario
 import com.moviles.minkia.databinding.ActivitySplashBinding
-import com.moviles.minkia.ui.onboarding.OnboardingActivity
+import com.moviles.minkia.ui.MainActivity
+import com.moviles.minkia.ui.auth.AuthActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 /**
  * Pantalla de bienvenida (mockup C01). Muestra el logotipo y el eslogan unos
@@ -29,29 +35,59 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
     // Pulsos de los puntos: se guardan para poder cancelarlos antes de navegar.
     private val animadoresPuntos = mutableListOf<Animator>()
+    private val prefs by lazy { PreferenciasRepository.create(this) }
 
     override fun inflateBinding(inflater: LayoutInflater) = ActivitySplashBinding.inflate(inflater)
 
     override fun onViewReady(savedInstanceState: Bundle?) {
         barraEstadoOscura() // fondo claro (edge-to-edge ya viene de BaseActivity)
 
+        trazarLogo()
         animarEntrada()
         animarPuntos()
 
-        Handler(Looper.getMainLooper()).postDelayed({
+        // Espera el splash y decide el destino según la sesión guardada: si el
+        // usuario ya estaba logueado, salta onboarding y login y entra directo.
+        lifecycleScope.launch {
+            delay(SPLASH_MS)
             animadoresPuntos.forEach { it.cancel() }
-            startActivity(Intent(this, OnboardingActivity::class.java))
+            startActivity(Intent(this@SplashActivity, destinoSegunSesion(prefs.sesion.first())))
             transicionFundido() // el fondo andino se mantiene; solo cambia el contenido
             finish()
-        }, SPLASH_MS)
+        }
     }
 
-    /** Fade-in limpio del logo y el eslogan, sin desplazamientos: discreto. */
+    /**
+     * Con sesión: directo a la app. Sin sesión: al contenedor del flujo de
+     * acceso (antes: OnboardingActivity). AuthActivity arranca en el onboarding
+     * por defecto (sin el extra EXTRA_OMITIR_ONBOARDING), que es exactamente lo
+     * que hacía esta rama antes del refactor.
+     *
+     * MainActivity es la única Activity contenedora tanto para ciudadano como
+     * para administrador (FASE 2): ya no hay una Activity por rol. El rol de
+     * `usuario` deja de decidirse acá; es MainActivity quien, al arrancar, lee
+     * de nuevo la sesión y elige entre nav_ciudadano y nav_admin (ver
+     * MainActivity.configurarGrafoSegunRol).
+     */
+    private fun destinoSegunSesion(usuario: Usuario?): Class<*> =
+        if (usuario == null) AuthActivity::class.java else MainActivity::class.java
+
+    /**
+     * Dibuja el logotipo trazo a trazo (drawable/avd_logo_minkia.xml): cada letra se
+     * traza con una linea fina y recien despues aparece rellena.
+     */
+    private fun trazarLogo() {
+        (binding.ivLogo.drawable as? Animatable)?.start()
+    }
+
+    /** El eslogan entra cuando las letras ya estan casi dibujadas, para que se lea como una secuencia. */
     private fun animarEntrada() {
-        listOf(binding.ivLogo, binding.tvEslogan).forEach { vista ->
-            vista.alpha = 0f
-            vista.animate().alpha(1f).setDuration(ENTRADA_MS).start()
-        }
+        binding.tvEslogan.alpha = 0f
+        binding.tvEslogan.animate()
+            .alpha(1f)
+            .setStartDelay(ESLOGAN_DELAY_MS)
+            .setDuration(ENTRADA_MS)
+            .start()
     }
 
     /**
@@ -73,8 +109,11 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     }
 
     companion object {
-        private const val SPLASH_MS = 1300L
-        private const val ENTRADA_MS = 280L
+        // El trazado del logo dura ~2000 ms (lo calcula design/scripts/gen-logo-avd.mjs,
+        // constante RITMO); el resto es el respiro para verlo entero antes de navegar.
+        private const val SPLASH_MS = 2450L
+        private const val ESLOGAN_DELAY_MS = 1550L
+        private const val ENTRADA_MS = 380L
         private const val PULSO_MS = 420L
         private const val DESFASE_MS = 160L
         private const val ALFA_MIN = 0.3f

@@ -12,6 +12,7 @@ data class PerfilCiudadano(
     val reportes: Int,
     val resueltos: Int,
     val puntosMinka: Int,
+    val nivel: Int,             // 1..5, para pintar las insignias de nivel
     val nivelTexto: String,
     val puntosNivelActual: Int,
     val puntosNivelObjetivo: Int,

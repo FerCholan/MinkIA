@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Grafo de navegación del flujo de ACCESO (FASE 1 de la migración de 18
+Activities a 3 con Navigation Component). Reúne las 6 pantallas que antes
+eran Activities sueltas: onboarding, login, registro, recuperar contraseña,
+términos y permisos. AuthActivity aloja este grafo en un NavHostFragment.
+
+El `app:startDestination` de acá abajo es el valor "de fábrica" (el que usa
+el editor visual de Android Studio y cualquier inflado que no pase por
+código). El destino REAL en tiempo de ejecución lo decide
+AuthActivity.configurarDestinoInicial(), porque depende de cómo se llegó a la
+Activity (arranque en frío sin sesión vs. logout); ver el KDoc de ese método.
+
+Las acciones que antes hacían finish()-y-startActivity() (o finishAffinity())
+usan popUpTo apuntando al propio grafo (app:popUpTo="@id/nav_auth"
+app:popUpToInclusive="true"), que es el equivalente Navigation Component de
+vaciar todo el back stack: así no se puede volver con "atrás" a una pantalla
+que la Activity original ya daba por cerrada. Las transiciones reutilizan los
+mismos fundidos (fade_in/fade_out) que antes daba Activity.transicionFundido()
+entre Activities, para no perder esa continuidad visual ahora que son
+fragments dentro de una sola Activity.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_auth"
+    app:startDestination="@id/onboardingFragment">
+
+    <!-- C02: carrusel de bienvenida (3 diapositivas). Destino inicial "de fábrica". -->
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.moviles.minkia.ui.onboarding.OnboardingFragment"
+        android:label="Onboarding"
+        tools:layout="@layout/fragment_onboarding">
+
+        <!-- "Saltar" o terminar la última diapositiva: antes era finish() de
+             OnboardingActivity. Limpia todo el back stack del grafo porque no
+             se puede volver al carrusel con "atrás" una vez en Login. -->
+        <action
+            android:id="@+id/action_onboarding_a_login"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/nav_auth"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- C03: login. -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.moviles.minkia.ui.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+
+        <!-- "¿Olvidaste tu contraseña?": apila Recuperar arriba de Login (hoy
+             tampoco cierra Login al abrir Recuperar, por eso sin popUpTo). -->
+        <action
+            android:id="@+id/action_login_a_recuperar"
+            app:destination="@id/recuperarFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+
+        <!-- "Regístrate": apila Registro arriba de Login. -->
+        <action
+            android:id="@+id/action_login_a_registro"
+            app:destination="@id/registroFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+
+        <!-- Login OK + ciudadano de primera vez (ver RuteoPermisos): entra a
+             Permisos limpiando todo el back stack del grafo (antes:
+             finishAffinity() al lanzar PermisosActivity), para que no se
+             pueda volver a Login con "atrás" desde Permisos. -->
+        <action
+            android:id="@+id/action_login_a_permisos"
+            app:destination="@id/permisosFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/nav_auth"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- C04: registro. -->
+    <fragment
+        android:id="@+id/registroFragment"
+        android:name="com.moviles.minkia.ui.registro.RegistroFragment"
+        android:label="Registro"
+        tools:layout="@layout/fragment_registro">
+
+        <!-- Enlaces "Términos y Condiciones" / "Política de Datos" del checkbox. -->
+        <action
+            android:id="@+id/action_registro_a_terminos"
+            app:destination="@id/terminosFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+
+        <!-- Registro OK: cuenta recién creada es siempre "primera vez" (ver
+             RuteoPermisos), misma limpieza de back stack que desde Login. -->
+        <action
+            android:id="@+id/action_registro_a_permisos"
+            app:destination="@id/permisosFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/nav_auth"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- C05: recuperar contraseña. Sin acciones propias: sus tres botones
+         "volver" hacen popBackStack() (regresan a Login, que queda debajo en
+         el back stack del grafo, igual que la Activity quedaba debajo). -->
+    <fragment
+        android:id="@+id/recuperarFragment"
+        android:name="com.moviles.minkia.ui.recuperar.RecuperarFragment"
+        android:label="Recuperar"
+        tools:layout="@layout/fragment_recuperar" />
+
+    <!-- Términos y Condiciones + Política de Datos. Solo lectura, sin acciones propias. -->
+    <fragment
+        android:id="@+id/terminosFragment"
+        android:name="com.moviles.minkia.ui.terminos.TerminosFragment"
+        android:label="Terminos"
+        tools:layout="@layout/fragment_terminos" />
+
+    <!-- C06: permisos (priming). Es el último paso del flujo de acceso: su
+         salida ("Continuar") es EXTERNA al grafo (startActivity a
+         MainActivity), no una acción de nav_auth. -->
+    <fragment
+        android:id="@+id/permisosFragment"
+        android:name="com.moviles.minkia.ui.permisos.PermisosFragment"
+        android:label="Permisos"
+        tools:layout="@layout/fragment_permisos" />
+
+</navigation>

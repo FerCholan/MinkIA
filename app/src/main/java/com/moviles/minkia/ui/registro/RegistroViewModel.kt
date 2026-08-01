@@ -69,6 +69,10 @@ class RegistroViewModel(
         }
     }
 
+    /** Registro/login con Google (la primera vez crea la cuenta). */
+    fun iniciarSesionConGoogle(idToken: String) =
+        loadInto(_estado) { repository.iniciarSesionConGoogle(idToken) }
+
     private fun validar(
         nombre: String,
         email: String,

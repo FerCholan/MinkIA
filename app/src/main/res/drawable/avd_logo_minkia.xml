@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generado por design/scripts/gen-logo-avd.mjs desde poppins_semibold.ttf. No editar a mano. -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="150dp"
+            android:height="40.05dp"
+            android:viewportWidth="300"
+            android:viewportHeight="80.1">
+            <path
+                android:name="l0"
+                android:pathData="M55.2,16.62L69.01,16.62L69.01,77.65L56.77,77.65L56.77,37.95L40.42,77.65L31.15,77.65L14.71,37.95L14.71,77.65L2.47,77.65L2.47,16.62L16.38,16.62L35.79,62L55.2,16.62Z"
+                android:fillColor="#1B4228"
+                android:fillAlpha="0"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.45"
+                android:strokeAlpha="0"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="l0_pluma"
+                android:pathData="M55.2,16.62L69.01,16.62L69.01,77.65L56.77,77.65L56.77,37.95L40.42,77.65L31.15,77.65L14.71,37.95L14.71,77.65L2.47,77.65L2.47,16.62L16.38,16.62L35.79,62L55.2,16.62Z"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:trimPathEnd="0" />
+            <path
+                android:name="l1"
+                android:pathData="M82.31,29.21L94.55,29.21L94.55,77.65L82.31,77.65L82.31,29.21Z"
+                android:fillColor="#1B4228"
+                android:fillAlpha="0"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.45"
+                android:strokeAlpha="0"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="l1_pluma"
+                android:pathData="M82.31,29.21L94.55,29.21L94.55,77.65L82.31,77.65L82.31,29.21Z"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:trimPathEnd="0" />
+            <path
+                android:name="l2"
+                android:pathData="M134.69,28.51Q143.35,28.51 148.68,33.97Q154.02,39.44 154.02,49.23L154.02,49.23L154.02,77.65L141.78,77.65L141.78,50.89Q141.78,45.12 138.89,42.02Q136.01,38.91 131.02,38.91L131.02,38.91Q125.95,38.91 123.02,42.02Q120.09,45.12 120.09,50.89L120.09,50.89L120.09,77.65L107.85,77.65L107.85,29.21L120.09,29.21L120.09,35.24Q122.54,32.09 126.34,30.3Q130.15,28.51 134.69,28.51L134.69,28.51Z"
+                android:fillColor="#1B4228"
+                android:fillAlpha="0"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.45"
+                android:strokeAlpha="0"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="l2_pluma"
+                android:pathData="M134.69,28.51Q143.35,28.51 148.68,33.97Q154.02,39.44 154.02,49.23L154.02,49.23L154.02,77.65L141.78,77.65L141.78,50.89Q141.78,45.12 138.89,42.02Q136.01,38.91 131.02,38.91L131.02,38.91Q125.95,38.91 123.02,42.02Q120.09,45.12 120.09,50.89L120.09,50.89L120.09,77.65L107.85,77.65L107.85,29.21L120.09,29.21L120.09,35.24Q122.54,32.09 126.34,30.3Q130.15,28.51 134.69,28.51L134.69,28.51Z"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:trimPathEnd="0" />
+            <path
+                android:name="l3"
+                android:pathData="M210.95,77.65L195.03,77.65L178.6,57.01L178.6,77.65L166.35,77.65L166.35,12.94L178.6,12.94L178.6,49.76L194.86,29.21L210.77,29.21L189.44,53.52L210.95,77.65Z"
+                android:fillColor="#1B4228"
+                android:fillAlpha="0"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.45"
+                android:strokeAlpha="0"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="l3_pluma"
+                android:pathData="M210.95,77.65L195.03,77.65L178.6,57.01L178.6,77.65L166.35,77.65L166.35,12.94L178.6,12.94L178.6,49.76L194.86,29.21L210.77,29.21L189.44,53.52L210.95,77.65Z"
+                android:strokeColor="#1B4228"
+                android:strokeWidth="1.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:trimPathEnd="0" />
+            <path
+                android:name="l4"
+                android:pathData="M218.13,16.62L230.37,16.62L230.37,77.65L218.13,77.65L218.13,16.62Z"
+                android:fillColor="#BD4C18"
+                android:fillAlpha="0"
+                android:strokeColor="#BD4C18"
+                android:strokeWidth="1.45"
+                android:strokeAlpha="0"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="l4_pluma"
+                android:pathData="M218.13,16.62L230.37,16.62L230.37,77.65L218.13,77.65L218.13,16.62Z"
+                android:strokeColor="#BD4C18"
+                android:strokeWidth="1.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:trimPathEnd="0" />
+            <path
+                android:name="l5"
+                android:pathData="M284.59,77.65L280.56,66.02L256.26,66.02L252.23,77.65L239.38,77.65L261.33,16.53L275.58,16.53L297.53,77.65L284.59,77.65ZM259.58,56.23L277.24,56.23L268.41,30.69L259.58,56.23Z"
+                android:fillColor="#BD4C18"
+                android:fillAlpha="0"
+                android:strokeColor="#BD4C18"
+                android:strokeWidth="1.45"
+                android:strokeAlpha="0"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="l5_pluma"
+                android:pathData="M284.59,77.65L280.56,66.02L256.26,66.02L252.23,77.65L239.38,77.65L261.33,16.53L275.58,16.53L297.53,77.65L284.59,77.65ZM259.58,56.23L277.24,56.23L268.41,30.69L259.58,56.23Z"
+                android:strokeColor="#BD4C18"
+                android:strokeWidth="1.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:trimPathEnd="0" />
+            <path
+                android:name="hoja"
+                android:pathData="M107.09,2.47C90.72,3.49 78.43,18.13 81.92,39.79C103.31,34.91 112.28,18.04 107.09,2.47Z"
+                android:fillColor="#69802D"
+                android:fillAlpha="0"
+                android:strokeColor="#69802D"
+                android:strokeWidth="1.45"
+                android:strokeAlpha="0"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="hoja_pluma"
+                android:pathData="M107.09,2.47C90.72,3.49 78.43,18.13 81.92,39.79C103.31,34.91 112.28,18.04 107.09,2.47Z"
+                android:strokeColor="#69802D"
+                android:strokeWidth="1.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:trimPathEnd="0" />
+            <path
+                android:name="nervio"
+                android:pathData="M85.28,34.81C91.43,25.69 97.58,16.57 102.06,9.94"
+                android:strokeColor="#F4EFE4"
+                android:strokeWidth="1.75"
+                android:strokeLineCap="round"
+                android:trimPathEnd="0" />
+        </vector>
+    </aapt:attr>
+
+    <target android:name="l0_pluma">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="0"
+                    android:duration="961"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:startOffset="676"
+                    android:duration="527" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l0">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="596"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="596"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l1_pluma">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="147"
+                    android:duration="961"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:startOffset="823"
+                    android:duration="527" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l1">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="743"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="743"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l2_pluma">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="294"
+                    android:duration="961"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:startOffset="970"
+                    android:duration="527" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l2">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="890"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="890"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l3_pluma">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="441"
+                    android:duration="961"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:startOffset="1117"
+                    android:duration="527" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l3">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1037"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1037"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l4_pluma">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="588"
+                    android:duration="961"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:startOffset="1264"
+                    android:duration="527" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l4">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1184"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1184"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l5_pluma">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="735"
+                    android:duration="961"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:startOffset="1411"
+                    android:duration="527" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="l5">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1331"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1331"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="hoja_pluma">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="882"
+                    android:duration="961"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:startOffset="1558"
+                    android:duration="527" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="hoja">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1478"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:startOffset="1478"
+                    android:duration="527"
+                    android:interpolator="@android:interpolator/decelerate_quad" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="nervio">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:startOffset="1411"
+                android:duration="527"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+</animated-vector>

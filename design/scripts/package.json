@@ -1,0 +1,14 @@
+{
+  "name": "minkia-design-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Generadores de assets de marca (logo vectorial, patron andino).",
+  "scripts": {
+    "logo": "node gen-logo-avd.mjs",
+    "medir-logo": "node medir-logo-png.mjs"
+  },
+  "dependencies": {
+    "opentype.js": "^1.3.4",
+    "pngjs": "^7.0.0"
+  }
+}
