@@ -407,4 +407,14 @@
 
     <!-- Tooltips de íconos -->
     <string name="tooltip_notificaciones">Notificaciones</string>
+
+    <!--
+      Punto crítico del Inicio: tipo de foco + cuántos vecinos reportaron esa zona.
+      Es un plural de verdad y no un texto armado a mano porque el caso de UN solo
+      reporte es el más común de todos, y "1 reportes" se lee mal.
+    -->
+    <plurals name="home_punto_reportes">
+        <item quantity="one">%1$s · %2$d reporte</item>
+        <item quantity="other">%1$s · %2$d reportes</item>
+    </plurals>
 </resources>

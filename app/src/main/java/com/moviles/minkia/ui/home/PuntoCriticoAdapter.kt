@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.moviles.minkia.R
 import com.moviles.minkia.data.model.PuntoCritico
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.databinding.ItemPuntoCriticoBinding
@@ -35,8 +36,12 @@ class PuntoCriticoAdapter(
         fun bind(punto: PuntoCritico) {
             binding.fotoReporte.cargar(punto.fotoUrl)
             binding.tvDireccion.text = punto.direccion
-            binding.tvReferencia.text =
-                "${punto.referencia} · ${punto.cantidadReportes} reportes"
+            binding.tvReferencia.text = binding.root.resources.getQuantityString(
+                R.plurals.home_punto_reportes,
+                punto.cantidadReportes,
+                punto.referencia,
+                punto.cantidadReportes
+            )
             binding.tvSeveridad.text = when (punto.severidad) {
                 Severidad.ALTA -> "ALTA"
                 Severidad.MEDIA -> "MEDIA"

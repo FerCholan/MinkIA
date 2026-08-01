@@ -27,12 +27,15 @@ class CiudadanoRepository(
     suspend fun notificaciones(): List<Notificacion> = reporteDataSource.notificacionesCiudadano()
 
     /**
-     * Busca un reporte por su ticket (pantalla de Detalle, FASE 3 de la migración a
-     * Navigation Component: reemplaza a los once extras que antes recibía
-     * DetalleActivity completos). MiReporte y FocoMapa no guardan el id de
-     * documento de Firestore, solo el ticket visible ("#MK-..."); es el único
-     * identificador que exponen hoy, así que es lo único recuperable para pedir
-     * "el reporte completo" por un solo argumento de navegación.
+     * Busca un reporte por el ID de su documento (pantalla de Detalle).
+     *
+     * Antes buscaba por TICKET, y ahí estaba el problema: el ticket es un texto
+     * para el vecino, no una identidad. Se generaba a partir del reloj con solo
+     * 8000 valores posibles, así que dos reportes distintos podían compartirlo; y
+     * como esta búsqueda mira primero los reportes PROPIOS, una colisión hacía que
+     * tocar el foco de otro vecino en el mapa abriera un reporte tuyo. El id de
+     * documento es único por construcción y ya viajaba en [FocoMapa]; ahora
+     * también en [MiReporte].
      *
      * No agrega una consulta nueva a Firestore: compone las DOS que ya existen y
      * ya usan Reportes y Mapa, sin tocar la fuente de datos.
@@ -43,10 +46,11 @@ class CiudadanoRepository(
      *    Ese origen no trae "vecinos" (el Mapa nunca lo mandó, ni siquiera como
      *    extra): queda en 0, igual que el comportamiento de antes del refactor.
      */
-    suspend fun obtenerReportePorTicket(ticket: String): MiReporte? {
-        misReportes().firstOrNull { it.ticket == ticket }?.let { return it }
-        val foco = focosMapa().firstOrNull { it.ticket == ticket } ?: return null
+    suspend fun obtenerReportePorId(id: String): MiReporte? {
+        misReportes().firstOrNull { it.id == id }?.let { return it }
+        val foco = focosMapa().firstOrNull { it.id == id } ?: return null
         return MiReporte(
+            id = foco.id,
             ticket = foco.ticket,
             direccion = foco.direccion,
             fechaTexto = "",

@@ -18,6 +18,7 @@ import com.moviles.minkia.core.BaseFragment
 import com.moviles.minkia.core.UiState
 import com.moviles.minkia.core.aplicarInsetSuperior
 import com.moviles.minkia.data.model.FocoMapa
+import com.moviles.minkia.ui.detalle.DetalleFragment
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.databinding.FragmentMapaBinding
 
@@ -117,7 +118,10 @@ class MapaFragment : BaseFragment<FragmentMapaBinding>() {
      * nav_ciudadano.xml).
      */
     private fun abrirDetalle(foco: FocoMapa) {
-        findNavController().navigate(R.id.action_mapa_a_detalle, Bundle().apply { putString("ticket", foco.ticket) })
+        findNavController().navigate(
+            R.id.action_mapa_a_detalle,
+            Bundle().apply { putString(DetalleFragment.ARG_REPORTE_ID, foco.id) }
+        )
     }
 
     private fun hueSeveridad(severidad: Severidad) = when (severidad) {

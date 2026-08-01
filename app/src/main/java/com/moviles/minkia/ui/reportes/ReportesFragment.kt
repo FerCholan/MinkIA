@@ -13,6 +13,7 @@ import com.moviles.minkia.core.BaseFragment
 import com.moviles.minkia.core.UiState
 import com.moviles.minkia.core.aplicarInsetSuperior
 import com.moviles.minkia.core.mostrarSkeleton
+import com.moviles.minkia.ui.detalle.DetalleFragment
 import com.moviles.minkia.data.model.MiReporte
 import com.moviles.minkia.databinding.FragmentReportesBinding
 
@@ -99,10 +100,10 @@ class ReportesFragment : BaseFragment<FragmentReportesBinding>() {
      * nombre al entrar (ver DetalleFragment.onViewReady).
      */
     private fun abrirDetalle(vista: View, r: MiReporte) {
-        val nombreTransicion = "reporte_${r.ticket}"
+        val nombreTransicion = "reporte_${r.id}"
         findNavController().navigate(
             R.id.action_reportes_a_detalle,
-            Bundle().apply { putString("ticket", r.ticket) },
+            Bundle().apply { putString(DetalleFragment.ARG_REPORTE_ID, r.id) },
             null,
             FragmentNavigatorExtras(vista to nombreTransicion)
         )

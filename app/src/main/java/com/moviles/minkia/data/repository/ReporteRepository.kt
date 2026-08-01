@@ -30,6 +30,22 @@ class ReporteRepository(
     suspend fun analizar(rutaFoto: String): ResultadoAnalisis =
         analisisDataSource.analizar(rutaFoto)
 
+    /**
+     * Ticket VISIBLE del reporte, derivado de su id (un UUID v4).
+     *
+     * Antes era `"#MK-" + (2000 + System.currentTimeMillis() % 8000)`: ocho mil
+     * valores posibles y un ciclo completo cada ocho segundos, o sea dos reportes
+     * hechos con 8 s de diferencia compartían ticket. Con doscientos reportes en la
+     * comunidad la probabilidad de que existieran dos repetidos era del 92 %, y como
+     * el ticket llegó a usarse para ABRIR un reporte, una colisión mostraba el
+     * reporte de otro vecino.
+     *
+     * Ahora sale del mismo UUID que identifica al documento: ocho dígitos hex, más
+     * de cuatro mil millones de combinaciones, y sin depender del reloj.
+     */
+    private fun ticketDe(id: String): String =
+        "#MK-" + id.filter { it.isLetterOrDigit() }.take(TICKET_LARGO).uppercase()
+
     suspend fun guardar(
         tipo: String,
         severidad: Severidad,
@@ -43,13 +59,18 @@ class ReporteRepository(
         confianza: Int = 0
     ): Reporte {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: error("No hay sesión activa")
-        val ticket = "#MK-" + (2000 + (System.currentTimeMillis() % 8000))
+
+        // El id local es TAMBIÉN el id del documento en Firestore (ver
+        // ReporteFirestoreDataSource.enviarReporte): es la identidad del reporte.
+        val id = UUID.randomUUID().toString()
+        val ticket = ticketDe(id)
+
         // Autor a mostrar: el apodo si lo activó, si no su nombre real (privacidad).
         val autor = try { perfilRepository.nombreVisible() } catch (e: Exception) { "" }
         // Nivel del autor al reportar: sella su insignia en el reporte.
         val autorNivel = try { reporteDataSource.nivelUsuario() } catch (e: Exception) { 1 }
         val pendiente = ReportePendiente(
-            id = UUID.randomUUID().toString(),
+            id = id,
             userId = uid,
             ticket = ticket,
             tipo = tipo,
@@ -88,5 +109,10 @@ class ReporteRepository(
             longitud = longitud,
             fotoPath = fotoPath
         )
+    }
+
+    private companion object {
+        /** Dígitos hex del id que entran en el ticket visible. 8 = 4.294.967.296 combinaciones. */
+        const val TICKET_LARGO = 8
     }
 }

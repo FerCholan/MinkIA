@@ -23,3 +23,9 @@ app/google-services.json
 # dependencias de los generadores de assets (design/scripts)
 node_modules/
 design/scripts/preview-logo.svg
+
+# informe academico: documento y capturas se manejan fuera del repo
+informe/
+
+# archivos temporales de bloqueo de Word
+~$*

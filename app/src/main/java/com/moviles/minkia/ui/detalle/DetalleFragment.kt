@@ -29,7 +29,7 @@ import com.moviles.minkia.databinding.FragmentDetalleBinding
  *
  * FASE 3 (matar los extras): DetalleActivity recibía el reporte COMPLETO por 11
  * extras, uno por campo. Ahora el único dato que cruza la navegación es
- * [ARG_TICKET] (ver nav_ciudadano.xml) y esta pantalla le pide el reporte entero
+ * [ARG_REPORTE_ID] (ver nav_ciudadano.xml) y esta pantalla le pide el reporte entero
  * a [DetalleViewModel]. Por eso, aunque el resto de esta fase reutiliza
  * ViewModels que ya existían, acá se CREÓ uno nuevo: la Activity original no
  * tenía ninguno (pintaba directo lo que llegaba por Intent, sin tocar datos), y
@@ -37,13 +37,15 @@ import com.moviles.minkia.databinding.FragmentDetalleBinding
  */
 class DetalleFragment : BaseFragment<FragmentDetalleBinding>() {
 
-    private val ticket: String by lazy { requireArguments().getString(ARG_TICKET).orEmpty() }
-    private val viewModel: DetalleViewModel by viewModels { DetalleViewModel.Factory(ticket) }
+    private val reporteId: String by lazy { requireArguments().getString(ARG_REPORTE_ID).orEmpty() }
+    private val viewModel: DetalleViewModel by viewModels { DetalleViewModel.Factory(reporteId) }
 
-    // MiReporteAdapter marca la tarjeta tocada con "reporte_<ticket>" (mismo
-    // ticket que viaja como argumento): se recalcula acá en vez de mandarlo como
-    // segundo argumento, porque ya alcanza con el ticket para reproducirlo.
-    private val nombreTransicion: String by lazy { "reporte_$ticket" }
+    // MiReporteAdapter marca la tarjeta tocada con "reporte_<id>" (el mismo id que
+    // viaja como argumento): se recalcula acá en vez de mandarlo como segundo
+    // argumento, porque ya alcanza con el id para reproducirlo. Va por id y no por
+    // ticket justamente porque el nombre de una transición compartida tiene que ser
+    // ÚNICO en pantalla, y los tickets pueden repetirse.
+    private val nombreTransicion: String by lazy { "reporte_$reporteId" }
 
     /**
      * La transición compartida se arma en onCreate (antes de que exista la vista),
@@ -221,7 +223,10 @@ class DetalleFragment : BaseFragment<FragmentDetalleBinding>() {
     }
 
     companion object {
-        /** Único argumento de navegación: reemplaza a los once extras de DetalleActivity. */
-        const val ARG_TICKET = "ticket"
+        /**
+         * Único argumento de navegación: reemplaza a los once extras de
+         * DetalleActivity. Es el id del documento, no el ticket visible.
+         */
+        const val ARG_REPORTE_ID = "reporteId"
     }
 }

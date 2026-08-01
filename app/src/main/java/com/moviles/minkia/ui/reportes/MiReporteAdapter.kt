@@ -44,8 +44,10 @@ class MiReporteAdapter(
             pintarSeveridad(binding.chipSeveridad, r.severidad)
 
             // Nombre de transición único: la tarjeta es el elemento compartido que
-            // se expande hacia el detalle (container transform).
-            ViewCompat.setTransitionName(binding.root, "reporte_${r.ticket}")
+            // se expande hacia el detalle (container transform). Va por ID y no por
+            // ticket porque el nombre tiene que ser ÚNICO en pantalla, y dos reportes
+            // distintos pueden compartir ticket.
+            ViewCompat.setTransitionName(binding.root, "reporte_${r.id}")
             binding.root.setOnClickListener { onClick(binding.root, r) }
         }
 
@@ -76,7 +78,9 @@ class MiReporteAdapter(
 
     companion object {
         private val DIFF = object : DiffUtil.ItemCallback<MiReporte>() {
-            override fun areItemsTheSame(a: MiReporte, b: MiReporte) = a.ticket == b.ticket
+            // Por id: con el ticket, dos reportes repetidos se confundían como el
+            // mismo ítem y la lista reciclaba mal la tarjeta.
+            override fun areItemsTheSame(a: MiReporte, b: MiReporte) = a.id == b.id
             override fun areContentsTheSame(a: MiReporte, b: MiReporte) = a == b
         }
     }

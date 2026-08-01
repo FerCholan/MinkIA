@@ -4,6 +4,13 @@ package com.moviles.minkia.data.model
  * Un reporte hecho por el ciudadano, para el historial (mockup C13/C15).
  */
 data class MiReporte(
+    /**
+     * Id del documento en Firestore. Es la IDENTIDAD del reporte: con esto se
+     * navega al detalle, se emparejan las tarjetas en DiffUtil y se nombra la
+     * transición compartida. El [ticket] NO sirve para eso: es un texto para el
+     * vecino y puede repetirse entre reportes distintos.
+     */
+    val id: String,
     val ticket: String,
     val direccion: String,
     val fechaTexto: String,

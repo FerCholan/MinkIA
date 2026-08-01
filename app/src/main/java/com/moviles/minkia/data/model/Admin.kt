@@ -1,4 +1,4 @@
-package com.moviles.minkia.data.model
+ package com.moviles.minkia.data.model
 
 /** Modelos del módulo administrador (Épica 5). Datos REALES desde Firestore. */
 
@@ -43,6 +43,8 @@ data class AlertaAdmin(
  * formateadas. Es la fuente única que alimenta la pantalla, el CSV y el PDF.
  */
 data class FilaReporte(
+    /** Id del documento: identidad real de la fila (el ticket puede repetirse). */
+    val id: String,
     val ticket: String,
     val direccion: String,
     val tipo: String,

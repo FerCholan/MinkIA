@@ -32,6 +32,7 @@ mapsUtils = "3.8.2"
 # Testing
 mockk = "1.13.13"
 archCoreTesting = "2.2.0"
+json = "20240303"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,6 +77,10 @@ maps-utils = { group = "com.google.maps.android", name = "android-maps-utils", v
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTesting" }
+# Implementación REAL de org.json para los tests: el android.jar de unit test la trae
+# stubbeada (isReturnDefaultValues devuelve null en cada put/toString), así que sin
+# esto la cola offline (ColaReportes, que serializa a JSON) no se puede probar.
+json = { group = "org.json", name = "json", version.ref = "json" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

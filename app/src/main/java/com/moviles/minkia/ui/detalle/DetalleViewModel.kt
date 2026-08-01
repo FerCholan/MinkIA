@@ -20,7 +20,7 @@ import com.moviles.minkia.data.repository.CiudadanoRepository
  * datos.
  */
 class DetalleViewModel(
-    ticket: String,
+    reporteId: String,
     private val repository: CiudadanoRepository = CiudadanoRepository()
 ) : BaseViewModel() {
 
@@ -28,22 +28,22 @@ class DetalleViewModel(
     val uiState: LiveData<UiState<MiReporte>> = _uiState
 
     init {
-        cargar(ticket)
+        cargar(reporteId)
     }
 
-    private fun cargar(ticket: String) = loadInto(_uiState) {
-        repository.obtenerReportePorTicket(ticket)
-            ?: error("No se encontró el reporte $ticket")
+    private fun cargar(reporteId: String) = loadInto(_uiState) {
+        repository.obtenerReportePorId(reporteId)
+            ?: error("No se encontró el reporte")
     }
 
-    /** Factory: el ticket llega por argumento de navegación, no hay forma de inyectarlo sin uno. */
+    /** Factory: el id llega por argumento de navegación, no hay forma de inyectarlo sin uno. */
     class Factory(
-        private val ticket: String,
+        private val reporteId: String,
         private val repository: CiudadanoRepository = CiudadanoRepository()
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return DetalleViewModel(ticket, repository) as T
+            return DetalleViewModel(reporteId, repository) as T
         }
     }
 }

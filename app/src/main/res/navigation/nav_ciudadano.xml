@@ -16,11 +16,11 @@ ids, tocar una pestaña no navegaría a ningún lado.
 FASE 3, el cambio central: cada pantalla de contenido nueva declara UN SOLO
 <argument> (el identificador del reporte) en vez de recibir el objeto entero
 por extras (11 en Detalle, ver DetalleActivity.EXTRA_* que ya no existen). El
-fragment le pide el resto a su ViewModel/repositorio. Detalle usa "ticket" y no
-"reporteId": MiReporte/FocoMapa no guardan el id de documento de Firestore,
-solo el ticket visible, que es lo único recuperable hoy (ver
-CiudadanoRepository.obtenerReportePorTicket). Notificaciones/Configuración/Mis
-datos no llevan argumento: ya se abrían sin extras.
+fragment le pide el resto a su ViewModel/repositorio. Detalle usa "reporteId",
+el id del documento de Firestore, y NO el ticket: el ticket es un texto para el
+vecino y dos reportes distintos pueden compartirlo, así que usarlo como
+identidad abría el reporte equivocado (ver CiudadanoRepository.obtenerReportePorId).
+Notificaciones/Configuración/Mis datos no llevan argumento: ya se abrían sin extras.
 -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -107,13 +107,15 @@ datos no llevan argumento: ya se abrían sin extras.
 
     <!-- C15: detalle y seguimiento de un reporte (antes DetalleActivity, 11
          extras). Alcanzable desde Reportes (con transición compartida) o Mapa
-         (sin ella). Ver KDoc de arriba sobre por qué el argumento es "ticket". -->
+         (sin ella). El argumento es el ID del documento, no el ticket: el ticket
+         es un texto para el vecino y puede repetirse entre reportes distintos,
+         así que usarlo como identidad abría el reporte equivocado. -->
     <fragment
         android:id="@+id/detalleFragment"
         android:name="com.moviles.minkia.ui.detalle.DetalleFragment"
         android:label="Detalle"
         tools:layout="@layout/fragment_detalle">
-        <argument android:name="ticket" app:argType="string" />
+        <argument android:name="reporteId" app:argType="string" />
     </fragment>
 
     <!-- C16: notificaciones (antes NotificacionesActivity, sin extras). -->

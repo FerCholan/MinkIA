@@ -48,7 +48,8 @@ class FilaReporteAdapter : ListAdapter<FilaReporte, FilaReporteAdapter.ViewHolde
 
     companion object {
         private val DIFF = object : DiffUtil.ItemCallback<FilaReporte>() {
-            override fun areItemsTheSame(a: FilaReporte, b: FilaReporte) = a.ticket == b.ticket
+            // Por id, no por ticket: el ticket puede repetirse entre reportes.
+            override fun areItemsTheSame(a: FilaReporte, b: FilaReporte) = a.id == b.id
             override fun areContentsTheSame(a: FilaReporte, b: FilaReporte) = a == b
         }
     }

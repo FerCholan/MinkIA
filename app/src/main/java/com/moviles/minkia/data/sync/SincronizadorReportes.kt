@@ -27,7 +27,15 @@ import kotlinx.coroutines.withTimeoutOrNull
 object SincronizadorReportes {
 
     private lateinit var appContext: Context
-    private val dataSource = ReporteFirestoreDataSource()
+
+    /**
+     * Fuente de envío. Es `internal var` y no `private val` por una única razón:
+     * un `private val` de un `object` compila a un campo static final, imposible
+     * de sustituir (ni por reflexión) en un test, y la política de reintentos de
+     * abajo —qué reporte se conserva y cuál se abandona— es lógica que SÍ hay que
+     * poder probar. En producción no cambia nada: se usa esta misma instancia.
+     */
+    internal var dataSource = ReporteFirestoreDataSource()
     private val mutex = Mutex()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 

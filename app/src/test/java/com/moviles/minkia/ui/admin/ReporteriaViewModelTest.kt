@@ -31,6 +31,7 @@ class ReporteriaViewModelTest {
 
     private val filas = listOf(
         FilaReporte(
+            id = "doc-2048",
             ticket = "#MK-2048",
             direccion = "Jr. Elías Aguirre 450, Chimbote",
             tipo = "Basura",

@@ -2,9 +2,11 @@ package com.moviles.minkia.data.source
 
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import com.moviles.minkia.data.model.AlertaAdmin
 import com.moviles.minkia.data.model.EstadoReporte
 import com.moviles.minkia.data.model.FilaReporte
@@ -103,9 +105,10 @@ class ReporteFirestoreDataSource(
         // para no requerir un índice compuesto en Firestore.
         val snap = db.collection(COLECCION).whereEqualTo("userId", uid).get().await()
         return snap.documents
-            .sortedByDescending { it.getTimestamp("creadoEn")?.toDate()?.time ?: 0L }
+            .sortedByDescending { fechaMs(it) }
             .map { doc ->
                 MiReporte(
+                    id = doc.id,
                     ticket = doc.getString("ticket").orEmpty(),
                     direccion = doc.getString("direccion").orEmpty(),
                     fechaTexto = formatearFecha(doc.getTimestamp("creadoEn")?.toDate()),
@@ -123,42 +126,36 @@ class ReporteFirestoreDataSource(
     }
 
     /**
-     * Resumen del Inicio (C07) calculado sobre TODOS los reportes de la comunidad:
-     * focos activos, resueltos, tus reportes y los focos activos más recientes.
+     * Resumen del Inicio (C07): focos activos, resueltos, tus reportes y los focos
+     * activos más recientes agrupados por zona.
+     *
+     * Solo bajan por la red los focos PENDIENTES: los RESUELTO/DUPLICADO/ANULADO se
+     * acumulan para siempre y esta pantalla no los muestra uno por uno, solo los
+     * cuenta. Por eso los otros dos números se piden como CONTEO AGREGADO, que
+     * resuelve el servidor sin transferir los documentos (antes esta pantalla se
+     * descargaba la colección entera en cada apertura).
      */
     suspend fun obtenerResumen(): ResumenCiudadano {
         val uid = auth.currentUser?.uid
-        val docs = db.collection(COLECCION).get().await().documents
+        val pendientes = db.collection(COLECCION)
+            .whereIn("estado", ESTADOS_PENDIENTES)
+            .get().await().documents
 
-        // "Activos" = focos PENDIENTES (RECIBIDO/EN_PROCESO), igual que el mapa y las
-        // zonas. Antes usaba "!= RESUELTO", que contaba duplicados y anulados como
-        // activos (mal). Resueltos sí es la cuenta directa de RESUELTO.
-        val activos = docs.count { parseEstado(it.getString("estado")).esPendiente }
-        val resueltos = docs.count { it.getString("estado") == EstadoReporte.RESUELTO.name }
-        val mios = docs.count { it.getString("userId") == uid }
+        val resueltos = contar(
+            db.collection(COLECCION).whereEqualTo("estado", EstadoReporte.RESUELTO.name)
+        )
+        val mios = if (uid == null) 0 else contar(
+            db.collection(COLECCION).whereEqualTo("userId", uid)
+        )
 
-        val puntos = docs
-            .filter { parseEstado(it.getString("estado")).esPendiente }
-            .sortedByDescending { it.getTimestamp("creadoEn")?.toDate()?.time ?: 0L }
-            .take(6)
-            .map { doc ->
-                PuntoCritico(
-                    id = doc.id,
-                    direccion = doc.getString("direccion").orEmpty().ifBlank { "Chimbote, Áncash" },
-                    referencia = doc.getString("tipo").orEmpty().ifBlank { "Foco reportado" },
-                    distanciaMetros = 0,
-                    cantidadReportes = 1,
-                    severidad = parseSeveridad(doc.getString("severidad")),
-                    fotoUrl = doc.getString("fotoUrl").orEmpty()
-                )
-            }
+        val puntos = puntosCriticosDe(pendientes).take(MAX_PUNTOS_INICIO)
 
         val nombre = auth.currentUser?.displayName?.takeIf { it.isNotBlank() }
             ?: auth.currentUser?.email?.substringBefore("@")
             ?: "Vecino"
 
         return ResumenCiudadano(
-            puntosActivos = activos,
+            puntosActivos = pendientes.size,
             tusReportes = mios,
             resueltos = resueltos,
             focosCerca = puntos.size,
@@ -168,20 +165,48 @@ class ReporteFirestoreDataSource(
     }
 
     /**
+     * Agrupa los focos pendientes por ZONA y devuelve UN punto crítico por zona,
+     * de la zona más recientemente reportada a la más vieja.
+     *
+     * El conteo es REAL: antes cada foco viajaba con `cantidadReportes = 1` fijo, así
+     * que el Inicio decía literalmente "· 1 reportes" en todas las tarjetas, siempre.
+     * Ahora la tarjeta representa la zona (su dirección y foto son las del reporte más
+     * nuevo, su nivel es el peor del grupo) y el número dice cuántos vecinos
+     * reportaron ahí.
+     */
+    private fun puntosCriticosDe(docs: List<DocumentSnapshot>): List<PuntoCritico> =
+        docs.groupBy { zonaDe(it) }
+            .values
+            // Los grupos de groupBy nunca vienen vacíos: maxOf/maxByOrNull son seguros.
+            .sortedByDescending { grupo -> grupo.maxOf { fechaMs(it) } }
+            .mapNotNull { grupo ->
+                val reciente = grupo.maxByOrNull { fechaMs(it) } ?: return@mapNotNull null
+                PuntoCritico(
+                    id = reciente.id,
+                    direccion = reciente.getString("direccion").orEmpty().ifBlank { "Chimbote, Áncash" },
+                    referencia = reciente.getString("tipo").orEmpty().ifBlank { "Foco reportado" },
+                    distanciaMetros = 0,
+                    cantidadReportes = grupo.size,
+                    severidad = peorSeveridad(grupo.map { parseSeveridad(it.getString("severidad")) }),
+                    fotoUrl = reciente.getString("fotoUrl").orEmpty()
+                )
+            }
+
+    /**
      * Focos activos con coordenadas para el mapa (C08) y el heatmap del Inicio.
      * Solo PENDIENTES (RECIBIDO/EN_PROCESO), igual que las zonas: así el mapa y la
      * lista de zonas cuentan lo mismo, y no aparecen pines de duplicado/anulado ni
      * de estados viejos. La zona se deriva igual que en zonasAfectadas.
      */
     suspend fun obtenerFocosMapa(): List<FocoMapa> {
-        val docs = db.collection(COLECCION).get().await().documents
+        // El filtro por estado lo hace el SERVIDOR: los terminales no viajan.
+        val docs = db.collection(COLECCION)
+            .whereIn("estado", ESTADOS_PENDIENTES)
+            .get().await().documents
         return docs
-            .filter { parseEstado(it.getString("estado")).esPendiente }
             .mapNotNull { doc ->
                 val lat = doc.getDouble("latitud") ?: return@mapNotNull null
                 val lng = doc.getDouble("longitud") ?: return@mapNotNull null
-                val zona = doc.getString("zona")?.trim()?.ifBlank { null }
-                    ?: doc.getString("direccion").orEmpty().substringBefore(",").trim().ifBlank { "Chimbote" }
                 FocoMapa(
                     id = doc.id,
                     latitud = lat,
@@ -192,7 +217,7 @@ class ReporteFirestoreDataSource(
                     ticket = doc.getString("ticket").orEmpty(),
                     estado = parseEstado(doc.getString("estado")),
                     fotoUrl = doc.getString("fotoUrl").orEmpty(),
-                    zona = zona,
+                    zona = zonaDe(doc),
                     confianza = (doc.getLong("confianza") ?: 0L).toInt(),
                     areaM2 = doc.getDouble("areaM2") ?: 0.0,
                     autor = doc.getString("autor").orEmpty(),
@@ -209,10 +234,13 @@ class ReporteFirestoreDataSource(
      * admin (es comunitaria); las ACCIONES de abajo sí.
      */
     suspend fun alertasAdmin(): List<AlertaAdmin> {
-        val docs = db.collection(COLECCION).get().await().documents
+        // El filtro por estado lo hace el SERVIDOR: la bandeja no se descarga los
+        // reportes ya cerrados, que son los que crecen sin techo con el tiempo.
+        val docs = db.collection(COLECCION)
+            .whereIn("estado", ESTADOS_PENDIENTES)
+            .get().await().documents
         return docs
-            .filter { parseEstado(it.getString("estado")).esPendiente }
-            .sortedByDescending { it.getTimestamp("creadoEn")?.toDate()?.time ?: 0L }
+            .sortedByDescending { fechaMs(it) }
             .map { doc ->
                 val estado = parseEstado(doc.getString("estado"))
                 val fecha = doc.getTimestamp("creadoEn")?.toDate()
@@ -271,16 +299,12 @@ class ReporteFirestoreDataSource(
      * focos, pintadas por su peor severidad. Alimenta la lista bajo el mapa.
      */
     suspend fun zonasAfectadas(): List<ZonaAfectada> {
-        val docs = db.collection(COLECCION).get().await().documents
+        // El filtro por estado lo hace el SERVIDOR (ver obtenerFocosMapa).
+        val docs = db.collection(COLECCION)
+            .whereIn("estado", ESTADOS_PENDIENTES)
+            .get().await().documents
         return docs
-            .filter { parseEstado(it.getString("estado")).esPendiente }
-            // Agrupa por la ZONA real guardada (barrio/distrito del Geocoder). Los
-            // reportes viejos (seed) no tienen ese campo: caen al método anterior
-            // (primera parte de la dirección), que para ellos funciona bien.
-            .groupBy { doc ->
-                doc.getString("zona")?.trim()?.ifBlank { null }
-                    ?: doc.getString("direccion").orEmpty().substringBefore(",").trim().ifBlank { "Chimbote" }
-            }
+            .groupBy { zonaDe(it) }
             .map { (zona, lista) ->
                 // Centro de la zona = promedio de las coordenadas de sus focos (para
                 // enfocar el mapa al tocarla). Si algún foco no trae coords, se ignora.
@@ -308,7 +332,7 @@ class ReporteFirestoreDataSource(
         val uid = auth.currentUser?.uid ?: return emptyList()
         val limite24h = System.currentTimeMillis() - 24 * 60 * 60 * 1000L
         return db.collection(COLECCION).whereEqualTo("userId", uid).get().await().documents
-            .sortedByDescending { it.getTimestamp("creadoEn")?.toDate()?.time ?: 0L }
+            .sortedByDescending { fechaMs(it) }
             .map { doc ->
                 val estado = parseEstado(doc.getString("estado"))
                 val ticket = doc.getString("ticket").orEmpty()
@@ -365,10 +389,15 @@ class ReporteFirestoreDataSource(
         val resueltos = docs.count { doc -> doc.getString("estado") == EstadoReporte.RESUELTO.name }
 
         val puntos = total * 20 + resueltos * 30
-        val nivel = (puntos / 200 + 1).coerceAtMost(NIVEL_MAX) // 5 niveles como tope
+        val nivel = (puntos / PUNTOS_POR_NIVEL + 1).coerceAtMost(NIVEL_MAX) // 5 niveles como tope
         val esMax = nivel == NIVEL_MAX
-        val objetivo = nivel * 200
-        val faltan = (objetivo - puntos).coerceAtLeast(0)
+
+        // Progreso DENTRO del nivel actual, no acumulado desde cero. Antes se
+        // publicaba el total (`puntos`) contra `nivel * 200`, así que la barra de
+        // Perfil arrancaba llena a la mitad apenas subías de nivel (200/400 en el
+        // nivel 2, 400/600 en el 3): nunca se veía vacía después del nivel 1.
+        val puntosDelNivel = puntos - (nivel - 1) * PUNTOS_POR_NIVEL
+        val faltan = (PUNTOS_POR_NIVEL - puntosDelNivel).coerceAtLeast(0)
 
         return PerfilCiudadano(
             iniciales = iniciales(nombre),
@@ -379,8 +408,9 @@ class ReporteFirestoreDataSource(
             puntosMinka = puntos,
             nivel = nivel,
             nivelTexto = "Nivel $nivel · ${tituloNivel(nivel)}",
-            puntosNivelActual = if (esMax) objetivo else puntos,
-            puntosNivelObjetivo = objetivo,
+            // En el tope la barra queda llena: no hay un nivel siguiente que llenar.
+            puntosNivelActual = if (esMax) PUNTOS_POR_NIVEL else puntosDelNivel,
+            puntosNivelObjetivo = PUNTOS_POR_NIVEL,
             faltanTexto = if (esMax) "¡Alcanzaste el nivel máximo!"
             else "Te faltan $faltan puntos para subir de nivel"
         )
@@ -424,16 +454,25 @@ class ReporteFirestoreDataSource(
      * todos los niveles.
      */
     suspend fun reportesFiltrados(desde: Long, hasta: Long, severidad: Severidad?): List<FilaReporte> {
-        val docs = db.collection(COLECCION).get().await().documents
+        // El rango de fechas y el orden los resuelve el SERVIDOR. Antes esta consulta
+        // se descargaba la colección ENTERA para después filtrar por fecha en memoria:
+        // el reporte de un mes costaba tantas lecturas como reportes históricos
+        // hubiera. Un rango + orden sobre el MISMO campo usa el índice automático de
+        // Firestore, así que esto no necesita ningún índice compuesto declarado.
+        //
+        // El nivel se sigue filtrando en memoria a propósito: sumarlo como filtro de
+        // igualdad junto al rango de fechas SÍ exigiría un índice compuesto, y una
+        // consulta que dependa de un índice inexistente falla en runtime.
+        val docs = db.collection(COLECCION)
+            .whereGreaterThanOrEqualTo("creadoEn", aTimestamp(desde))
+            .whereLessThanOrEqualTo("creadoEn", aTimestamp(hasta))
+            .orderBy("creadoEn", Query.Direction.DESCENDING)
+            .get().await().documents
         return docs
-            .filter { doc ->
-                val t = doc.getTimestamp("creadoEn")?.toDate()?.time ?: return@filter false
-                t in desde..hasta
-            }
             .filter { severidad == null || parseSeveridad(it.getString("severidad")) == severidad }
-            .sortedByDescending { it.getTimestamp("creadoEn")?.toDate()?.time ?: 0L }
             .map { doc ->
                 FilaReporte(
+                    id = doc.id,
                     ticket = doc.getString("ticket").orEmpty(),
                     direccion = doc.getString("direccion").orEmpty(),
                     tipo = doc.getString("tipo").orEmpty(),
@@ -473,6 +512,36 @@ class ReporteFirestoreDataSource(
     private fun formatearFecha(fecha: Date?): String =
         fecha?.let { SimpleDateFormat("dd MMM · HH:mm", Locale("es")).format(it) } ?: "—"
 
+    /** Momento de creación en epoch ms; 0 si el documento no lo trae. */
+    private fun fechaMs(doc: DocumentSnapshot): Long =
+        doc.getTimestamp("creadoEn")?.toDate()?.time ?: 0L
+
+    /**
+     * Zona a la que pertenece un foco. Usa la ZONA real guardada (barrio/distrito
+     * del Geocoder) y, para los reportes viejos que no tienen ese campo, cae a la
+     * primera parte de la dirección. Definido UNA vez: el mapa, las zonas afectadas
+     * y los puntos críticos del Inicio tienen que agrupar exactamente igual, si no
+     * las tres pantallas cuentan cosas distintas sobre los mismos datos.
+     */
+    private fun zonaDe(doc: DocumentSnapshot): String =
+        doc.getString("zona")?.trim()?.ifBlank { null }
+            ?: doc.getString("direccion").orEmpty().substringBefore(",").trim().ifBlank { "Chimbote" }
+
+    /**
+     * Cuenta los documentos de una consulta SIN traerlos: el servidor devuelve solo
+     * el número. Firestore lo factura muchísimo más barato que leer cada documento.
+     */
+    private suspend fun contar(consulta: Query): Int =
+        consulta.count().get(AggregateSource.SERVER).await().count.toInt()
+
+    /**
+     * Epoch ms a Timestamp, recortado al rango que Firestore acepta (año 1 a 9999).
+     * Sin el recorte, un extremo abierto tipo Long.MAX_VALUE reventaría la consulta
+     * con IllegalArgumentException en vez de traer "todo hasta hoy".
+     */
+    private fun aTimestamp(ms: Long): Timestamp =
+        Timestamp(Date(ms.coerceIn(MS_MIN_FIRESTORE, MS_MAX_FIRESTORE)))
+
     private fun parseSeveridad(valor: String?) =
         runCatching { Severidad.valueOf(valor ?: "") }.getOrDefault(Severidad.MEDIA)
 
@@ -490,11 +559,25 @@ class ReporteFirestoreDataSource(
         val total = docs.size
         val resueltos = docs.count { it.getString("estado") == EstadoReporte.RESUELTO.name }
         val puntos = total * 20 + resueltos * 30
-        return (puntos / 200 + 1).coerceAtMost(NIVEL_MAX)
+        return (puntos / PUNTOS_POR_NIVEL + 1).coerceAtMost(NIVEL_MAX)
     }
 
     companion object {
         private const val COLECCION = "reportes"
         private const val NIVEL_MAX = 5
+        private const val PUNTOS_POR_NIVEL = 200
+        private const val MAX_PUNTOS_INICIO = 6
+
+        /**
+         * Estados accionables. Se usa como filtro `whereIn` del SERVIDOR, así que va
+         * en texto: es lo que está guardado en el documento. Tiene que coincidir con
+         * [EstadoReporte.esPendiente]; el test lo verifica para que no se separen.
+         */
+        internal val ESTADOS_PENDIENTES =
+            listOf(EstadoReporte.RECIBIDO.name, EstadoReporte.EN_PROCESO.name)
+
+        // Rango de fechas que acepta un Timestamp de Firestore (año 1 a 9999).
+        private const val MS_MIN_FIRESTORE = -62_135_596_800_000L
+        private const val MS_MAX_FIRESTORE = 253_402_300_799_999L
     }
 }

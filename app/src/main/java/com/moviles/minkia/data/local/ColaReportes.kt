@@ -2,7 +2,10 @@ package com.moviles.minkia.data.local
 
 import android.content.Context
 import com.moviles.minkia.data.model.ReportePendiente
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,15 +29,30 @@ object ColaReportes {
 
     private lateinit var appContext: Context
     private val mutex = Mutex()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val _cantidad = MutableStateFlow(0)
     /** Cantidad de reportes en la cola. La UI la observa para el contador real. */
     val cantidad: StateFlow<Int> = _cantidad.asStateFlow()
 
+    /**
+     * Se llama desde Application.onCreate, o sea en el HILO PRINCIPAL. Por eso la
+     * carga inicial del contador se dispara en segundo plano: leer y parsear el
+     * JSON de la cola es IO de disco, y hacerlo acá mismo demoraba el arranque de
+     * la app en proporción a lo que hubiera encolado (violación de StrictMode y,
+     * con la cola grande, riesgo de ANR).
+     */
     fun init(context: Context) {
         appContext = context.applicationContext
-        // Carga inicial del contador (sin bloquear el arranque con IO pesado).
-        _cantidad.value = leer().size
+        scope.launch { recargarContador() }
+    }
+
+    /**
+     * Relee la cola de disco y actualiza el contador. Suspendida y pública dentro
+     * del módulo para que el arranque no la espere pero los tests sí puedan.
+     */
+    internal suspend fun recargarContador(): Unit = withContext(Dispatchers.IO) {
+        mutex.withLock { _cantidad.value = leer().size }
     }
 
     private fun archivo(): File = File(appContext.filesDir, "reportes_pendientes.json")
