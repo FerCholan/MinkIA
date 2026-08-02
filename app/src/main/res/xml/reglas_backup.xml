@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Reglas de copia de seguridad y de transferencia entre dispositivos (Android 12+).
+
+  Todo lo que MinkIA guarda en el almacenamiento interno es dato personal del
+  vecino: la cola de reportes pendientes lleva coordenadas GPS exactas de dónde
+  estuvo, las fotografías que tomó y el identificador de su cuenta. Con
+  allowBackup activo y sin estas exclusiones, ese material viajaba a la copia de
+  seguridad en la nube y a cualquier teléfono nuevo al que se restaurara.
+
+  Se excluye tambien la sesion (DataStore): un token restaurado en otro equipo
+  deja una sesion iniciada en un dispositivo que el vecino no controla.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="reportes_pendientes.json" />
+        <exclude domain="file" path="reportes_pendientes.bak" />
+        <exclude domain="file" path="reportes_pendientes.tmp" />
+        <exclude domain="file" path="reportes_pendientes.corrupto" />
+        <exclude domain="file" path="pendientes" />
+        <exclude domain="file" path="datastore/minkia_prefs.preferences_pb" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="reportes_pendientes.json" />
+        <exclude domain="file" path="reportes_pendientes.bak" />
+        <exclude domain="file" path="reportes_pendientes.tmp" />
+        <exclude domain="file" path="reportes_pendientes.corrupto" />
+        <exclude domain="file" path="pendientes" />
+        <exclude domain="file" path="datastore/minkia_prefs.preferences_pb" />
+    </device-transfer>
+</data-extraction-rules>

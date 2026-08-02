@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Paso del seguimiento que TODAVIA NO ocurrio.
+
+Era verde (verde_hoja_claro) y ahi estaba el problema: en esta app el verde
+significa "hecho" (el check de los pasos cumplidos es verde). Pintar de verde
+un paso futuro lo hacia leer como completado, asi que los tres pasos parecian
+iguales y el seguimiento daba la sensacion de estar congelado, aunque por
+dentro avanzaba bien. Gris neutro = todavia no paso.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="@color/verde_hoja_claro" />
+    <solid android:color="#CFD5CD" />
     <size android:width="8dp" android:height="8dp" />
 </shape>

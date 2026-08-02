@@ -29,10 +29,13 @@ class HomeViewModel(
     private val _focosState = MutableLiveData<UiState<List<FocoMapa>>>()
     val focosState: LiveData<UiState<List<FocoMapa>>> = _focosState
 
-    init {
-        cargarResumen()
-        cargarFocos()
-    }
+    // Sin init { cargar() } a propósito. La carga la pide la VISTA en su onResume
+    // (ver HomeFragment): así hay UN solo camino de carga, que corre tanto al
+    // entrar como al volver, en vez de dos (el init para la primera vez, el
+    // onResume para las demás) que había que coordinar con una bandera. Esa
+    // bandera era el bug: cuando la pestaña se restauraba con el ViewModel ya
+    // creado, el init no volvía a correr y la bandera saltaba el onResume, así
+    // que la pantalla se quedaba con los datos de la vez anterior.
 
     fun cargarResumen() = loadInto(_uiState) { repository.obtenerResumen() }
 

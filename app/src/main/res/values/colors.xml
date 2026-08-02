@@ -16,6 +16,8 @@
     <color name="texto_principal">#243027</color>
     <color name="texto_secundario">#5C655D</color>
     <color name="linea">#E3E7DF</color>
+    <!-- Texto de algo que todavia no ocurrio (paso pendiente del seguimiento). -->
+    <color name="texto_deshabilitado">#9AA39B</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#FF000000</color>

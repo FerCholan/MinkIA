@@ -5,11 +5,13 @@ import com.moviles.minkia.data.local.ColaReportes
 import com.moviles.minkia.data.model.Reporte
 import com.moviles.minkia.data.model.ReportePendiente
 import com.moviles.minkia.data.model.ResultadoAnalisis
+import com.moviles.minkia.data.model.ResultadoRegistro
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.data.source.AnalisisDataSource
 import com.moviles.minkia.data.source.AnalisisMockDataSource
 import com.moviles.minkia.data.source.ReporteFirestoreDataSource
 import com.moviles.minkia.data.source.ResultadoEnvio
+import com.moviles.minkia.data.sync.CambiosReportes
 import com.moviles.minkia.data.sync.SincronizadorReportes
 import java.util.UUID
 
@@ -18,9 +20,12 @@ import java.util.UUID
  * OFFLINE-FIRST del reporte. La UI habla solo con el repositorio.
  *
  * Guardado offline-first: con internet se envía directo (feedback inmediato); sin
- * internet o si el envío falla, el reporte va a la cola local ([ColaReportes]) y se
- * reintenta cuando vuelva la conexión. El reporte NUNCA se pierde: siempre se
- * confirma al vecino con su ticket.
+ * internet o si el envío falla de forma transitoria, el reporte va a la cola local
+ * ([ColaReportes]) y se reintenta cuando vuelva la conexión.
+ *
+ * El desenlace se declara en [ResultadoRegistro] y NO se confirma nada que no haya
+ * quedado guardado: un rechazo permanente de Firestore (regla de seguridad, dato
+ * inválido, sesión vencida) devuelve [ResultadoRegistro.Error], no un ticket.
  */
 class ReporteRepository(
     private val analisisDataSource: AnalisisDataSource = AnalisisMockDataSource(),
@@ -55,9 +60,9 @@ class ReporteRepository(
         latitud: Double,
         longitud: Double,
         fotoPath: String?,
-        areaM2: Double = 0.0,
+        porcentajeCobertura: Int = 0,
         confianza: Int = 0
-    ): Reporte {
+    ): ResultadoRegistro {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: error("No hay sesión activa")
 
         // El id local es TAMBIÉN el id del documento en Firestore (ver
@@ -80,7 +85,7 @@ class ReporteRepository(
             zona = zona,
             latitud = latitud,
             longitud = longitud,
-            areaM2 = areaM2,
+            porcentajeCobertura = porcentajeCobertura,
             confianza = confianza,
             fotoPath = fotoPath,
             creadoEn = System.currentTimeMillis(),
@@ -88,18 +93,42 @@ class ReporteRepository(
             autorNivel = autorNivel
         )
 
-        // Con internet, intento directo (el vecino ve su reporte al toque). Según el
-        // resultado: ENVIADO no se encola; REINTENTAR (sin red / transitorio) va a la
-        // cola; DESCARTAR (fallo permanente, p. ej. reglas) NO se encola, para no
-        // reintentar por siempre un envío que jamás va a pasar.
-        val resultado = if (SincronizadorReportes.hayInternet()) {
-            reporteDataSource.enviarReporte(pendiente)
-        } else {
-            ResultadoEnvio.REINTENTAR
-        }
-        if (resultado == ResultadoEnvio.REINTENTAR) ColaReportes.encolar(pendiente)
+        // SIEMPRE se intenta el envío directo. Antes esto estaba condicionado a
+        // SincronizadorReportes.hayInternet(), y un falso negativo de esa función
+        // (le pasaba con datos móviles, ver su KDoc) encolaba en silencio el
+        // reporte de un vecino que SÍ tenía internet: el reporte no aparecía en
+        // ninguna lista y la única señal era el cartel de "sin conexión".
+        //
+        // Preguntar antes no aportaba nada: si de verdad no hay red, el intento
+        // falla solo y rápido, enviarReporte lo clasifica como REINTENTAR y el
+        // reporte termina igual en la cola. La diferencia es que ahora la
+        // respuesta la da la RED, no una suposición nuestra.
+        //
+        // Según el resultado: ENVIADO no se encola; REINTENTAR (sin red /
+        // transitorio) va a la cola; DESCARTAR (fallo permanente, p. ej. reglas)
+        // NO se encola, para no reintentar por siempre un envío que jamás va a pasar.
+        var resultado = reporteDataSource.enviarReporte(pendiente)
 
-        return Reporte(
+        // UN segundo intento inmediato si el primero falló de forma transitoria
+        // PERO hay red. Ese es exactamente el caso de haber cambiado de wifi a
+        // datos con la foto recién tomada: la primera petición se va por un
+        // socket que quedó muerto en la red anterior y falla, aunque el teléfono
+        // esté navegando perfecto. Después de ese fallo la conexión rota ya salió
+        // del pool, así que el segundo intento abre una nueva sobre la red buena
+        // y normalmente pasa.
+        //
+        // Reintentar es seguro porque el envío es IDEMPOTENTE: el id del
+        // documento es el id local del reporte, así que un .set() repetido
+        // reescribe el mismo documento en vez de crear un duplicado (ver
+        // ReporteFirestoreDataSource.enviarReporte).
+        //
+        // Sin red no se reintenta: sería hacer esperar al vecino para nada,
+        // porque el reporte va a la cola igual y sale solo al volver la conexión.
+        if (resultado == ResultadoEnvio.REINTENTAR && SincronizadorReportes.hayInternet()) {
+            resultado = reporteDataSource.enviarReporte(pendiente)
+        }
+
+        val reporte = Reporte(
             ticket = ticket,
             tipo = tipo,
             severidad = severidad,
@@ -109,10 +138,36 @@ class ReporteRepository(
             longitud = longitud,
             fotoPath = fotoPath
         )
+
+        // Cada desenlace se declara tal cual es. DESCARTAR no encola ni confirma:
+        // devolver un ticket ahí sería mentirle al vecino sobre un reporte perdido.
+        return when (resultado) {
+            ResultadoEnvio.ENVIADO -> {
+                // El reporte YA está en el servidor: avisar para que el mapa, el
+                // inicio y la lista lo muestren sin esperar a nada (ver
+                // CambiosReportes). Sin esto, el vecino leía "¡Reporte enviado!"
+                // y después no lo encontraba en el mapa.
+                CambiosReportes.notificar()
+                ResultadoRegistro.Enviado(reporte)
+            }
+            ResultadoEnvio.REINTENTAR -> {
+                ColaReportes.encolar(pendiente)
+                ResultadoRegistro.Pendiente(reporte)
+            }
+            ResultadoEnvio.DESCARTAR -> ResultadoRegistro.Error(MENSAJE_RECHAZO)
+        }
     }
 
     private companion object {
         /** Dígitos hex del id que entran en el ticket visible. 8 = 4.294.967.296 combinaciones. */
         const val TICKET_LARGO = 8
+
+        /**
+         * Mensaje del rechazo permanente. Habla de lo que el vecino PUEDE hacer
+         * (revisar su sesión, volver a intentar) sin exponer detalles internos de
+         * las reglas de seguridad.
+         */
+        const val MENSAJE_RECHAZO =
+            "No se pudo registrar el reporte. Verifica que tu sesión siga activa y vuelve a intentarlo."
     }
 }

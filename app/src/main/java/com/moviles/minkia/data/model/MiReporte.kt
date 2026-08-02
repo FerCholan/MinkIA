@@ -16,7 +16,7 @@ data class MiReporte(
     val fechaTexto: String,
     val severidad: Severidad,
     val estado: EstadoReporte,
-    val areaM2: Double = 0.0,
+    val porcentajeCobertura: Int = 0,
     val vecinos: Int = 0,
     val fotoUrl: String = "",
     val tipo: String = "",

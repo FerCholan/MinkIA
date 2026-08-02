@@ -72,7 +72,7 @@ class ReporteFirestoreCiudadanoTest {
         val r = ds.misReportes().single()
         assertEquals(Severidad.MEDIA, r.severidad)
         assertEquals(EstadoReporte.RECIBIDO, r.estado)
-        assertEquals(0.0, r.areaM2, 1e-9)
+        assertEquals(0, r.porcentajeCobertura)
         assertEquals(0, r.vecinos)
         assertEquals(1, r.autorNivel)
         assertEquals("", r.ticket)

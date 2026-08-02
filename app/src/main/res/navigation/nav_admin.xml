@@ -47,7 +47,20 @@ fragment le pide el resto a ValidacionViewModel/AdminRepository.
         android:id="@+id/puntosCriticosFragment"
         android:name="com.moviles.minkia.ui.admin.PuntosCriticosFragment"
         android:label="Mapa"
-        tools:layout="@layout/fragment_admin_puntos" />
+        tools:layout="@layout/fragment_admin_puntos">
+
+        <!-- Tocar la ventanita de un marcador abre el reporte, igual que en el
+             mapa del ciudadano. Mismo destino y mismo fundido que desde la
+             bandeja: al admin lo lleva a Validación, que es SU pantalla de
+             detalle (la del ciudadano es de solo lectura; esta modera). -->
+        <action
+            android:id="@+id/action_puntos_a_validacion"
+            app:destination="@id/validacionFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
 
     <!-- A06: reporte municipal (exportación PDF/CSV). -->
     <fragment

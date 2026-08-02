@@ -36,11 +36,25 @@ class ConfirmacionFragment : BaseFragment<FragmentConfirmacionBinding>() {
         requireActivity().barraEstadoOscura() // fondo claro
 
         binding.tvTicket.text = flujo.reporte?.ticket.orEmpty()
+        mostrarEstadoSincronizacion()
 
         animarExito()
 
         binding.btnVolverInicio.setOnClickListener { cerrarFlujo(R.id.homeFragment) }
         binding.btnVerMapa.setOnClickListener { cerrarFlujo(R.id.mapaFragment) }
+    }
+
+    /**
+     * Ajusta el mensaje según dónde quedó REALMENTE el reporte. Si todavía está en
+     * la cola local, no se puede afirmar que "llegó al equipo de gestión": se avisa
+     * que se enviará solo al recuperar la conexión. El ticket es válido en ambos
+     * casos, así que el vecino puede hacer seguimiento igual.
+     */
+    private fun mostrarEstadoSincronizacion() {
+        if (!flujo.pendienteDeSincronizar) return
+        binding.tvConfTitulo.setText(R.string.conf_titulo_pendiente)
+        binding.tvConfSubtitulo.setText(R.string.conf_subtitulo_pendiente)
+        binding.tvConfSincronizacion.setText(R.string.conf_pendiente)
     }
 
     /** Momento de logro: el check "explota" suave con un rebote y una vibración. */

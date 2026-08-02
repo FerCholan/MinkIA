@@ -53,8 +53,16 @@ class AnalisisFragment : BaseFragment<FragmentAnalisisBinding>() {
         flujo.fotoPath?.let { binding.ivFoto.load(File(it)) }
 
         observar()
-        animarProgreso()
-        flujo.analizar()
+
+        // Rotar la pantalla recrea la VISTA, no el ViewModel del grafo (ver KDoc
+        // de flujo): la inferencia que ya está corriendo sigue corriendo. Volver
+        // a llamar a analizar() acá la reiniciaría desde cero cada vez que el
+        // vecino gira el teléfono, y con ella la barra de progreso. Como
+        // [analisis] es un LiveData sticky, al reobservar repinta solo el último
+        // estado, así que basta con disparar la inferencia la PRIMERA vez y
+        // animar solo mientras siga en Loading.
+        if (flujo.analisis.value == null) flujo.analizar()
+        if (flujo.analisis.value is UiState.Loading) animarProgreso()
     }
 
     private fun observar() {

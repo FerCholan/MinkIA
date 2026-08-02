@@ -30,7 +30,7 @@
 
     <string name="admin_val_titulo">Reporte %1$s</string>
     <string name="admin_val_ia">IA: %1$s · %2$d%%</string>
-    <string name="admin_val_area">%1$s m²</string>
+    <string name="admin_val_area">%1$d %% del encuadre</string>
     <string name="admin_val_descripcion">Descripción del vecino</string>
     <string name="admin_val_unificados">%1$d reportes ciudadanos fueron unificados automáticamente en este punto crítico.</string>
     <string name="admin_val_ubicacion">Dirección</string>
@@ -247,7 +247,7 @@
     <string name="form_volver">Volver</string>
     <string name="form_foto_analizada">Foto analizada</string>
     <string name="form_ia">IA %1$d%%</string>
-    <string name="form_deteccion">%1$s detectada · %2$s m²</string>
+    <string name="form_deteccion">%1$s detectada · cubre el %2$d %% de la foto</string>
     <string name="form_reanalizar">Reanalizar</string>
     <string name="form_severidad">Severidad del foco</string>
     <string name="form_sev_baja">Baja</string>
@@ -272,6 +272,10 @@
     <string name="conf_subtitulo">Tu alerta llegó al equipo de gestión de residuos. Gracias por cuidar tu barrio.</string>
     <string name="conf_ticket_label">Ticket</string>
     <string name="conf_sincronizado">Sincronizado</string>
+    <!-- Reporte guardado en la cola local: todavía no llegó al servidor. -->
+    <string name="conf_titulo_pendiente">¡Reporte guardado!</string>
+    <string name="conf_subtitulo_pendiente">Se enviará solo cuando vuelva la conexión. Guarda tu ticket para seguirlo.</string>
+    <string name="conf_pendiente">Pendiente de envío</string>
     <string name="conf_estado_recibido">Recibido</string>
     <string name="conf_estado_recibido_sub">Hoy · recién</string>
     <string name="conf_estado_validando">Validando con IA</string>
@@ -295,11 +299,14 @@
     <string name="detalle_titulo">Mi reporte %1$s</string>
     <string name="detalle_volver">Volver</string>
     <string name="detalle_ia">IA: %1$s · %2$d%%</string>
-    <string name="detalle_area">%1$s m²</string>
+    <string name="detalle_area">%1$d %% del encuadre</string>
     <string name="detalle_vecinos">%1$d vecinos</string>
     <string name="detalle_seguimiento">Seguimiento</string>
     <string name="detalle_recibido">Recibido</string>
-    <string name="detalle_validado">Validado</string>
+    <!-- Mismo nombre que EstadoReporte.EN_PROCESO.etiqueta y que ve el admin. Antes
+         decía "Validado", un estado que NO existe en el modelo: el vecino leía una
+         palabra, el administrador otra, y el enum una tercera, para lo mismo. -->
+    <string name="detalle_validado">En proceso</string>
     <string name="detalle_resuelto">Resuelto</string>
     <string name="detalle_autor_fmt">Reportado por %1$s</string>
     <string name="detalle_autor_anonimo">Reportado por un vecino</string>
@@ -394,6 +401,8 @@
     <string name="titulo_cerca_tuyo">Cerca de ti</string>
     <string name="btn_reintentar">Reintentar</string>
     <string name="error_generico">No se pudo cargar la información. Toca para reintentar.</string>
+    <string name="error_guardar">No se pudieron guardar los cambios. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="error_mapa">No se pudieron cargar los focos. Revisa tu conexión.</string>
     <string name="notif_vacio">Aún no tienes notificaciones.</string>
 
     <!-- Navegación inferior -->

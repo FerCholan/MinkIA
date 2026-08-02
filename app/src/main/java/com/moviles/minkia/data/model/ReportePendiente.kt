@@ -17,7 +17,7 @@ data class ReportePendiente(
     val zona: String,
     val latitud: Double,
     val longitud: Double,
-    val areaM2: Double,
+    val porcentajeCobertura: Int,
     val confianza: Int,
     val fotoPath: String?,   // ruta local persistente de la foto (o null si no hay)
     val creadoEn: Long,

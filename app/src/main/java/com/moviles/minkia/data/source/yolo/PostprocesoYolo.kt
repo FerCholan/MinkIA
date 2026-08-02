@@ -38,7 +38,6 @@ data class Deteccion(
 class PostprocesoYolo(
     private val umbralConfianza: Float = 0.40f,
     private val umbralNms: Float = 0.45f,
-    private val areaEncuadreM2: Double = 6.0,
     private val numCajas: Int = 8400
 ) {
 
@@ -100,7 +99,7 @@ class PostprocesoYolo(
                 tipo = "Sin residuos detectados",
                 confianza = 0,
                 severidad = Severidad.BAJA,
-                areaM2 = 0.0,
+                porcentajeCobertura = 0,
                 esBasura = false // no hay basura en la foto: no se puede reportar
             )
         }
@@ -121,9 +120,11 @@ class PostprocesoYolo(
             tipo = "Basura acumulada",
             confianza = confianza,
             severidad = severidad,
-            // Estimación: NO son m2 reales (no hay calibración de cámara), es la
-            // cobertura mapeada a un encuadre típico asumido (areaEncuadreM2).
-            areaM2 = cobertura * areaEncuadreM2
+            // Se informa la cobertura tal cual se mide: qué porcentaje del encuadre
+            // ocupan los residuos. Antes esto se multiplicaba por un área de
+            // encuadre asumida de 6 m² y se publicaba como si fueran metros
+            // cuadrados medidos, que es un dato que la app no puede conocer.
+            porcentajeCobertura = (cobertura * 100).roundToInt().coerceIn(0, 100)
         )
     }
 }

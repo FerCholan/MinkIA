@@ -225,9 +225,9 @@
                     android:layout_height="52dp"
                     android:layout_weight="1"
                     android:text="@string/admin_val_validar"
-                    android:textColor="@color/verde_bosque"
+                    android:textColor="@color/boton_validar_texto"
                     app:cornerRadius="14dp"
-                    app:strokeColor="@color/verde_bosque" />
+                    app:strokeColor="@color/boton_validar_borde" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNivel"
@@ -237,9 +237,9 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:text="@string/admin_val_nivel"
-                    android:textColor="@color/azul"
+                    android:textColor="@color/boton_nivel_texto"
                     app:cornerRadius="14dp"
-                    app:strokeColor="@color/azul" />
+                    app:strokeColor="@color/boton_nivel_borde" />
             </LinearLayout>
 
             <!-- Duplicado + anular -->
@@ -256,9 +256,9 @@
                     android:layout_height="52dp"
                     android:layout_weight="1"
                     android:text="@string/admin_val_duplicado"
-                    android:textColor="@color/texto_secundario"
+                    android:textColor="@color/boton_duplicado_texto"
                     app:cornerRadius="14dp"
-                    app:strokeColor="@color/linea" />
+                    app:strokeColor="@color/boton_duplicado_borde" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAnular"
@@ -268,9 +268,9 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:text="@string/admin_val_anular"
-                    android:textColor="@color/naranja_terracota"
+                    android:textColor="@color/boton_anular_texto"
                     app:cornerRadius="14dp"
-                    app:strokeColor="@color/naranja_terracota" />
+                    app:strokeColor="@color/boton_anular_borde" />
             </LinearLayout>
 
         </LinearLayout>

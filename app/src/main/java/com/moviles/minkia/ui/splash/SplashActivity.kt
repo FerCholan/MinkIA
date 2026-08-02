@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.moviles.minkia.core.BaseActivity
 import com.moviles.minkia.core.transicionFundido
 import com.moviles.minkia.data.local.PreferenciasRepository
@@ -51,10 +52,35 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         lifecycleScope.launch {
             delay(SPLASH_MS)
             animadoresPuntos.forEach { it.cancel() }
-            startActivity(Intent(this@SplashActivity, destinoSegunSesion(prefs.sesion.first())))
+            startActivity(Intent(this@SplashActivity, destinoSegunSesion(sesionValida())))
             transicionFundido() // el fondo andino se mantiene; solo cambia el contenido
             finish()
         }
+    }
+
+    /**
+     * La sesión que vale es la que tienen las DOS mitades de acuerdo: el usuario
+     * guardado en DataStore (para saltar el login y conocer el rol) y el usuario
+     * de Firebase Auth (que es el que firma cada pedido a Firestore).
+     *
+     * Antes se miraba solo DataStore, y de ahí salía el bug que obligaba a borrar
+     * los datos de la app: si el usuario de Firebase se perdía o su token dejaba
+     * de valer (contraseña cambiada, cuenta tocada desde la consola, credenciales
+     * limpiadas por el sistema), DataStore seguía diciendo "logueado", la app
+     * entraba igual, y cada consulta a Firestore volvía con PERMISSION_DENIED:
+     * Missing or insufficient permissions. La app quedaba adentro y rota, sin
+     * ningún camino de vuelta al login: por eso el único arreglo que encontraron
+     * los compañeros fue borrar los datos (que es justamente lo que limpia esta
+     * sesión desincronizada).
+     *
+     * Ahora, si Auth no tiene usuario, se descarta la sesión local y se vuelve al
+     * login, que es lo que arregla el problema de verdad y en un toque.
+     */
+    private suspend fun sesionValida(): Usuario? {
+        val guardada = prefs.sesion.first() ?: return null
+        if (FirebaseAuth.getInstance().currentUser != null) return guardada
+        prefs.cerrarSesion()
+        return null
     }
 
     /**

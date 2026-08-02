@@ -19,7 +19,7 @@ class AnalisisMockDataSource : AnalisisDataSource {
             tipo = "Basura acumulada",
             confianza = 86,
             severidad = Severidad.ALTA,
-            areaM2 = 4.5
+            porcentajeCobertura = 45
         )
     }
 }

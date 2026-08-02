@@ -110,19 +110,20 @@ class PostprocesoYoloTest {
         val r = post.procesar(out)
         assertEquals(0, r.confianza)
         assertEquals(Severidad.BAJA, r.severidad)
-        assertEquals(0.0, r.areaM2, 1e-6)
+        assertEquals(0, r.porcentajeCobertura)
     }
 
     @Test
     fun `procesar con cobertura alta da severidad ALTA`() {
-        val post = PostprocesoYolo(numCajas = 1, areaEncuadreM2 = 6.0)
+        val post = PostprocesoYolo(numCajas = 1)
         // caja 0.7 x 0.7 = 0.49 del encuadre (> 0.40)
         val out = salida(n = 1, caja(0.5f, 0.5f, 0.7f, 0.7f, 0.95f))
         val r = post.procesar(out)
         assertEquals(Severidad.ALTA, r.severidad)
         assertEquals(95, r.confianza)
         assertEquals("Basura acumulada", r.tipo)
-        assertEquals(0.49 * 6.0, r.areaM2, 1e-3)
+        // 49 % del encuadre: se informa la cobertura, no metros cuadrados inventados
+        assertEquals(49, r.porcentajeCobertura)
     }
 
     @Test

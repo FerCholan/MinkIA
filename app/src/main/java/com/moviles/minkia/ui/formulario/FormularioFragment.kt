@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import coil.load
@@ -33,6 +34,8 @@ import com.moviles.minkia.core.aplicarInsetInferior
 import com.moviles.minkia.core.aplicarInsetSuperior
 import com.moviles.minkia.core.barrasCabeceraVerde
 import com.moviles.minkia.data.model.Severidad
+import com.moviles.minkia.data.sync.EstadoRed
+import com.moviles.minkia.data.sync.SincronizadorReportes
 import com.moviles.minkia.databinding.FragmentFormularioBinding
 import com.moviles.minkia.ui.reporte.ReporteFlowViewModel
 import java.io.File
@@ -109,6 +112,7 @@ class FormularioFragment : BaseFragment<FragmentFormularioBinding>() {
         configurarTipo()
         seleccionarSeveridadInicial()
         observar()
+        observarRed()
 
         // Arranca bloqueado: hasta tener ubicación real, no se envía.
         bloquearEnvio(EstadoUbi.OBTENIENDO)
@@ -168,9 +172,9 @@ class FormularioFragment : BaseFragment<FragmentFormularioBinding>() {
 
         val resultado = flujo.resultadoAnalisis
         val tipo = resultado?.tipo ?: "Basura"
-        val areaM2 = resultado?.areaM2 ?: 0.0
+        val porcentajeCobertura = resultado?.porcentajeCobertura ?: 0
 
-        binding.tvDeteccion.text = getString(R.string.form_deteccion, tipo, areaM2.toString())
+        binding.tvDeteccion.text = getString(R.string.form_deteccion, tipo, porcentajeCobertura)
         binding.chipIa.text = getString(R.string.form_ia, resultado?.confianza ?: 0)
     }
 
@@ -337,7 +341,7 @@ class FormularioFragment : BaseFragment<FragmentFormularioBinding>() {
             zona = zona,
             latitud = latitud,
             longitud = longitud,
-            areaM2 = flujo.resultadoAnalisis?.areaM2 ?: 0.0,
+            porcentajeCobertura = flujo.resultadoAnalisis?.porcentajeCobertura ?: 0,
             confianza = flujo.resultadoAnalisis?.confianza ?: 0
         )
     }
@@ -367,6 +371,30 @@ class FormularioFragment : BaseFragment<FragmentFormularioBinding>() {
     override fun onResume() {
         super.onResume()
         if (!ubicacionLista && tienePermisoUbicacion()) obtenerUbicacion()
+    }
+
+    /**
+     * Muestra el aviso de "sin conexión" SOLO cuando de verdad no hay red, y en
+     * VIVO: se observa [EstadoRed.conectado] en vez de mirar el estado una sola
+     * vez al entrar. Llenar este formulario lleva su tiempo (hay que esperar el
+     * GPS, elegir el tipo, escribir), y en ese rato el vecino puede salir del
+     * wifi y quedar con datos, o entrar a un sitio con señal. El cartel aparece y
+     * se va solo, sin que tenga que salir y volver a la pantalla.
+     *
+     * El cartel estaba fijo en el XML, sin id y sin visibilidad: se veía siempre,
+     * hubiera o no internet. Un compañero con LTE andando leía "Sin conexión, tu
+     * reporte se guardará y se enviará solo cuando vuelva el internet" y daba por
+     * hecho que no se había enviado nada.
+     *
+     * Y ojo con lo que dice el cartel: es información, no un bloqueo. Sin red, el
+     * reporte igual se guarda en la cola local y sale solo cuando vuelva (ver
+     * ReporteRepository.guardar); el botón Enviar sigue habilitado.
+     */
+    private fun observarRed() {
+        binding.bannerOffline.isVisible = !SincronizadorReportes.hayInternet()
+        EstadoRed.conectado.observe(viewLifecycleOwner) { hay ->
+            binding.bannerOffline.isVisible = !hay
+        }
     }
 
     /** Ver BaseFragment.onBindingDestroy: corre antes de liberar el binding,

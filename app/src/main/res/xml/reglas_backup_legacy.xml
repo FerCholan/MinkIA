@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Equivalente de reglas_backup.xml para Android 11 y anteriores, que usan el
+  esquema antiguo de fullBackupContent. Mismo criterio: la cola de reportes, las
+  fotografias pendientes y la sesion no salen del dispositivo.
+-->
+<full-backup-content>
+    <exclude domain="file" path="reportes_pendientes.json" />
+    <exclude domain="file" path="reportes_pendientes.bak" />
+    <exclude domain="file" path="reportes_pendientes.tmp" />
+    <exclude domain="file" path="reportes_pendientes.corrupto" />
+    <exclude domain="file" path="pendientes" />
+    <exclude domain="file" path="datastore/minkia_prefs.preferences_pb" />
+</full-backup-content>

@@ -209,7 +209,16 @@ class CapturaFragment : BaseFragment<FragmentCapturaBinding>() {
      *   orden implícito de los callbacks de lifecycle.
      */
     override fun onBindingDestroy() {
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        // Solo si el paso se ABANDONA de verdad. Si la vista se destruye por un
+        // cambio de configuración (entrar acá con el teléfono en horizontal ya
+        // dispara uno: el portrait de onResume rota la pantalla y recrea la
+        // Activity), soltar la orientación acá la devolvería al sensor, el
+        // sensor la giraría de nuevo a horizontal, y el onResume de la Captura
+        // recreada volvería a forzar portrait: rotación en loop mientras el
+        // vecino sostenga el teléfono acostado.
+        if (!requireActivity().isChangingConfigurations) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
         cameraProvider?.unbindAll()
         cameraProvider = null
         camera = null

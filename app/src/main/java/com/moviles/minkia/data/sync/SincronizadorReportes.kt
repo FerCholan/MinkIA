@@ -1,8 +1,6 @@
 package com.moviles.minkia.data.sync
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import com.moviles.minkia.data.local.ColaReportes
 import com.moviles.minkia.data.source.ReporteFirestoreDataSource
 import com.moviles.minkia.data.source.ResultadoEnvio
@@ -71,19 +69,35 @@ object SincronizadorReportes {
                     ResultadoEnvio.REINTENTAR -> Unit // se conserva para el próximo intento
                 }
             }
+            // Si salió aunque sea uno, las pantallas tienen que enterarse AHORA.
+            // Este es el caso que obligaba a cerrar y abrir la app: el vecino
+            // cambia de red, su reporte sale de la cola en ese momento, y el mapa
+            // que está mirando sigue mostrando lo de antes porque nadie lo avisó.
+            if (enviados > 0) CambiosReportes.notificar()
             enviados
         }
     }
 
-    /** Hay conexión con capacidad de internet real (no solo "conectado a un wifi"). */
-    fun hayInternet(): Boolean {
-        val cm = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-            ?: return false
-        val red = cm.activeNetwork ?: return false
-        val caps = cm.getNetworkCapabilities(red) ?: return false
-        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-    }
+    /**
+     * ¿Hay una red con capacidad de internet? Es una PISTA para no gastar batería
+     * intentando enviar con el avión activado, y para el aviso de la UI. NO es la
+     * autoridad sobre si el envío va a funcionar: eso lo decide el intento real
+     * (ver ReporteRepository.guardar).
+     *
+     * La conectividad la sabe [EstadoRed], que es también quien atiende los
+     * cambios de red. Esto queda como atajo para el código que ya lo llamaba.
+     *
+     * Antes exigía NET_CAPABILITY_VALIDATED y ahí estaba el bug de "no funciona
+     * con datos móviles"; el porqué está en EstadoRed.consultar.
+     */
+    fun hayInternet(): Boolean = EstadoRed.hayInternet()
 
-    private const val TIMEOUT_MS = 20_000L
+    /**
+     * Techo por reporte. Contempla el peor caso REAL: subir la foto a Cloudinary
+     * con datos móviles lentos y después escribir en Firestore. Los 20 s de antes
+     * mataban casi toda subida fuera de wifi, y como el timeout se traduce en
+     * REINTENTAR, el reporte volvía a la cola para volver a fallar en el próximo
+     * intento: la cola no bajaba nunca.
+     */
+    private const val TIMEOUT_MS = 90_000L
 }

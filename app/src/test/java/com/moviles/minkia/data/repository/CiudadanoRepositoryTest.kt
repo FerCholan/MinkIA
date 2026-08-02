@@ -37,7 +37,7 @@ class CiudadanoRepositoryTest {
         estado: EstadoReporte = EstadoReporte.RECIBIDO
     ) = MiReporte(
         id = id, ticket = ticket, direccion = "Av. Pardo 123", fechaTexto = "12 mar · 10:30",
-        severidad = Severidad.ALTA, estado = estado, areaM2 = 4.5, vecinos = 7,
+        severidad = Severidad.ALTA, estado = estado, porcentajeCobertura = 4, vecinos = 7,
         fotoUrl = "https://foto", tipo = "Basura", confianza = 86,
         autor = "Fernando", autorNivel = 3
     )
@@ -46,7 +46,7 @@ class CiudadanoRepositoryTest {
         id = id, latitud = -9.07, longitud = -78.59, severidad = Severidad.MEDIA,
         direccion = "Jr. Bolognesi 456", tipo = "Escombros", ticket = ticket,
         estado = EstadoReporte.EN_PROCESO, fotoUrl = "https://otra", zona = "Bellamar",
-        confianza = 70, areaM2 = 2.0, autor = "Vecina", autorNivel = 2
+        confianza = 70, porcentajeCobertura = 2, autor = "Vecina", autorNivel = 2
     )
 
     @Test

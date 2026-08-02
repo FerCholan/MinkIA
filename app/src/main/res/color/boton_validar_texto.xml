@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Color de texto para los botones de moderación (ValidacionFragment).
+
+Existe porque esos botones traían el color escrito como valor PLANO en el
+layout (android:textColor / app:strokeColor), y un color plano se aplica a
+TODOS los estados: el botón deshabilitado se veía idéntico al habilitado. Un
+botón que parece disponible y no responde al toque confunde más que no
+mostrarlo. Con este selector, apagado se ve apagado.
+
+El gris de deshabilitado es el mismo para los cuatro botones a propósito: "no
+disponible" no es una identidad de la acción, es un estado, y tiene que leerse
+igual en todos.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:color="#9AA39B" />
+    <item android:color="@color/verde_bosque" />
+</selector>
