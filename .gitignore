@@ -29,3 +29,6 @@ informe/
 
 # archivos temporales de bloqueo de Word
 ~$*
+
+# Keystore de firma release (no se versiona)
+minkia-release.jks

@@ -21,9 +21,8 @@ class MapaViewModel(
     private val _uiState = MutableLiveData<UiState<List<FocoMapa>>>()
     val uiState: LiveData<UiState<List<FocoMapa>>> = _uiState
 
-    init {
-        cargar()
-    }
+    // Sin init { cargar() }: la carga la pide la vista en su onResume, un solo
+    // camino para entrar y para volver. El porqué está en HomeViewModel.
 
     fun cargar() = loadInto(_uiState) { repository.focosMapa() }
 

@@ -13,11 +13,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.moviles.minkia.R
 import com.moviles.minkia.core.BaseFragment
 import com.moviles.minkia.core.UiState
 import com.moviles.minkia.core.aplicarInsetSuperior
 import com.moviles.minkia.data.model.FocoMapa
+import com.moviles.minkia.data.sync.CambiosReportes
 import com.moviles.minkia.ui.detalle.DetalleFragment
 import com.moviles.minkia.data.model.Severidad
 import com.moviles.minkia.databinding.FragmentMapaBinding
@@ -34,6 +36,10 @@ class MapaFragment : BaseFragment<FragmentMapaBinding>() {
     private var mapa: GoogleMap? = null
     private var focos: List<FocoMapa> = emptyList()
     private var filtro: Severidad? = null // null = Todos
+
+    // La primera entrega de CambiosReportes.version es el valor que ya está
+    // puesto, no un cambio: se ignora para no cargar dos veces junto al onResume.
+    private var primerAviso = true
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentMapaBinding.inflate(inflater, container, false)
@@ -70,10 +76,40 @@ class MapaFragment : BaseFragment<FragmentMapaBinding>() {
                     focos = estado.data
                     pintarMarcadores()
                 }
-                // Mismo criterio que antes: sin foco no hay marcadores, sin aviso visible.
-                is UiState.Error -> Unit
+                // Antes esto era Unit: si la consulta fallaba (sesión sin permisos,
+                // sin red), el mapa quedaba vacío y con cara de estar bien. El vecino
+                // concluía que en su barrio no hay focos, cuando en realidad nunca se
+                // pudieron leer. Un mapa vacío por error TIENE que decirlo.
+                is UiState.Error -> avisarFalloDeCarga()
             }
         }
+
+        // Un reporte puede llegar al servidor MIENTRAS este mapa está en
+        // pantalla: sale de la cola apenas vuelve la conexión (típico al cambiar
+        // de red). Sin este aviso no había forma de enterarse sin salir y
+        // volver, o directamente sin reiniciar la app. Ver CambiosReportes.
+        CambiosReportes.version.observe(viewLifecycleOwner) {
+            if (primerAviso) primerAviso = false else viewModel.cargar()
+        }
+    }
+
+    /**
+     * Carga los focos cada vez que el mapa vuelve al frente. Es el ÚNICO camino
+     * de carga de esta pantalla (el ViewModel ya no carga en su init), así que
+     * corre igual la primera vez que entrás y cada vez que volvés, sin banderas
+     * que coordinar. Así aparecen tanto tus reportes nuevos como los de otros
+     * vecinos, que llegan al servidor sin que esta app se entere.
+     */
+    override fun onResume() {
+        super.onResume()
+        viewModel.cargar()
+    }
+
+    /** Avisa que los focos no se pudieron leer, y ofrece reintentar en el acto. */
+    private fun avisarFalloDeCarga() {
+        Snackbar.make(binding.root, R.string.error_mapa, Snackbar.LENGTH_LONG)
+            .setAction(R.string.btn_reintentar) { viewModel.cargar() }
+            .show()
     }
 
     /** Cambia el filtro de severidad, resalta el chip elegido y repinta el mapa. */

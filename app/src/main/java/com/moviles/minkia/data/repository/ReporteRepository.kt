@@ -11,6 +11,7 @@ import com.moviles.minkia.data.source.AnalisisDataSource
 import com.moviles.minkia.data.source.AnalisisMockDataSource
 import com.moviles.minkia.data.source.ReporteFirestoreDataSource
 import com.moviles.minkia.data.source.ResultadoEnvio
+import com.moviles.minkia.data.sync.CambiosReportes
 import com.moviles.minkia.data.sync.SincronizadorReportes
 import java.util.UUID
 
@@ -92,14 +93,39 @@ class ReporteRepository(
             autorNivel = autorNivel
         )
 
-        // Con internet, intento directo (el vecino ve su reporte al toque). Según el
-        // resultado: ENVIADO no se encola; REINTENTAR (sin red / transitorio) va a la
-        // cola; DESCARTAR (fallo permanente, p. ej. reglas) NO se encola, para no
-        // reintentar por siempre un envío que jamás va a pasar.
-        val resultado = if (SincronizadorReportes.hayInternet()) {
-            reporteDataSource.enviarReporte(pendiente)
-        } else {
-            ResultadoEnvio.REINTENTAR
+        // SIEMPRE se intenta el envío directo. Antes esto estaba condicionado a
+        // SincronizadorReportes.hayInternet(), y un falso negativo de esa función
+        // (le pasaba con datos móviles, ver su KDoc) encolaba en silencio el
+        // reporte de un vecino que SÍ tenía internet: el reporte no aparecía en
+        // ninguna lista y la única señal era el cartel de "sin conexión".
+        //
+        // Preguntar antes no aportaba nada: si de verdad no hay red, el intento
+        // falla solo y rápido, enviarReporte lo clasifica como REINTENTAR y el
+        // reporte termina igual en la cola. La diferencia es que ahora la
+        // respuesta la da la RED, no una suposición nuestra.
+        //
+        // Según el resultado: ENVIADO no se encola; REINTENTAR (sin red /
+        // transitorio) va a la cola; DESCARTAR (fallo permanente, p. ej. reglas)
+        // NO se encola, para no reintentar por siempre un envío que jamás va a pasar.
+        var resultado = reporteDataSource.enviarReporte(pendiente)
+
+        // UN segundo intento inmediato si el primero falló de forma transitoria
+        // PERO hay red. Ese es exactamente el caso de haber cambiado de wifi a
+        // datos con la foto recién tomada: la primera petición se va por un
+        // socket que quedó muerto en la red anterior y falla, aunque el teléfono
+        // esté navegando perfecto. Después de ese fallo la conexión rota ya salió
+        // del pool, así que el segundo intento abre una nueva sobre la red buena
+        // y normalmente pasa.
+        //
+        // Reintentar es seguro porque el envío es IDEMPOTENTE: el id del
+        // documento es el id local del reporte, así que un .set() repetido
+        // reescribe el mismo documento en vez de crear un duplicado (ver
+        // ReporteFirestoreDataSource.enviarReporte).
+        //
+        // Sin red no se reintenta: sería hacer esperar al vecino para nada,
+        // porque el reporte va a la cola igual y sale solo al volver la conexión.
+        if (resultado == ResultadoEnvio.REINTENTAR && SincronizadorReportes.hayInternet()) {
+            resultado = reporteDataSource.enviarReporte(pendiente)
         }
 
         val reporte = Reporte(
@@ -116,7 +142,14 @@ class ReporteRepository(
         // Cada desenlace se declara tal cual es. DESCARTAR no encola ni confirma:
         // devolver un ticket ahí sería mentirle al vecino sobre un reporte perdido.
         return when (resultado) {
-            ResultadoEnvio.ENVIADO -> ResultadoRegistro.Enviado(reporte)
+            ResultadoEnvio.ENVIADO -> {
+                // El reporte YA está en el servidor: avisar para que el mapa, el
+                // inicio y la lista lo muestren sin esperar a nada (ver
+                // CambiosReportes). Sin esto, el vecino leía "¡Reporte enviado!"
+                // y después no lo encontraba en el mapa.
+                CambiosReportes.notificar()
+                ResultadoRegistro.Enviado(reporte)
+            }
             ResultadoEnvio.REINTENTAR -> {
                 ColaReportes.encolar(pendiente)
                 ResultadoRegistro.Pendiente(reporte)

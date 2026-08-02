@@ -1,11 +1,13 @@
 package com.moviles.minkia.ui.detalle
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -169,30 +171,62 @@ class DetalleFragment : BaseFragment<FragmentDetalleBinding>() {
         }
     }
 
+    /**
+     * Pinta en qué punto del recorrido está el reporte: Recibido (1) -> En proceso
+     * (2) -> Resuelto (3). DUPLICADO y ANULADO no llegan acá (los atiende
+     * [mostrarSeguimiento] con su propio cartel), pero se contemplan igual para
+     * que el `when` sea exhaustivo sin un `else` que tape un estado nuevo.
+     *
+     * El punto NO alcanza para leer el avance: también se marca la ETIQUETA. El
+     * paso actual va en negrita y en color fuerte; los que faltan, apagados. Sin
+     * eso, los tres pasos se veían igual de "listos" y el seguimiento parecía
+     * congelado aunque por dentro avanzara bien (ver dot_inactivo.xml, que además
+     * era verde, o sea el color de "hecho").
+     */
     private fun pintarTimeline(estado: EstadoReporte) {
-        // Flujo: Recibido (1) -> Validado/En proceso (2) -> Resuelto (3).
-        // DUPLICADO y ANULADO son ramas terminales que no avanzaron: se quedan en 1.
         val activo = when (estado) {
             EstadoReporte.RECIBIDO, EstadoReporte.DUPLICADO, EstadoReporte.ANULADO -> 1
             EstadoReporte.EN_PROCESO -> 2
             EstadoReporte.RESUELTO -> 3
         }
         val dots = listOf(binding.dot1, binding.dot2, binding.dot3)
+        val etiquetas = listOf(binding.tvPaso1, binding.tvPaso2, binding.tvPaso3)
+
         dots.forEachIndexed { idx, dot ->
             val paso = idx + 1
+            val cumplido = paso < activo ||
+                (paso == activo && estado == EstadoReporte.RESUELTO)
             pintarDot(
                 dot,
                 when {
-                    paso < activo -> R.drawable.ic_check_chip
-                    paso == activo && estado == EstadoReporte.RESUELTO -> R.drawable.ic_check_chip
+                    cumplido -> R.drawable.ic_check_chip
                     paso == activo -> R.drawable.dot_activo
                     else -> R.drawable.dot_inactivo
                 }
             )
+            pintarEtiquetaPaso(etiquetas[idx], cumplido, paso == activo)
         }
     }
 
     private fun pintarDot(dot: ImageView, recurso: Int) = dot.setImageResource(recurso)
+
+    /**
+     * Cumplido: verde, como el check. Actual: negrita y naranja, que es donde el
+     * vecino tiene que mirar. Pendiente: gris y en peso normal, para que se note
+     * que todavía no llegó.
+     */
+    private fun pintarEtiquetaPaso(vista: TextView, cumplido: Boolean, esActual: Boolean) {
+        val color = when {
+            cumplido -> R.color.verde_hoja
+            esActual -> R.color.naranja_terracota
+            else -> R.color.texto_deshabilitado
+        }
+        vista.setTextColor(ContextCompat.getColor(requireContext(), color))
+        vista.typeface = Typeface.create(
+            Typeface.DEFAULT,
+            if (esActual) Typeface.BOLD else Typeface.NORMAL
+        )
+    }
 
     /** Drawable de la insignia según el nivel del autor (1..5). */
     private fun insigniaNivel(nivel: Int) = when (nivel.coerceIn(1, 5)) {

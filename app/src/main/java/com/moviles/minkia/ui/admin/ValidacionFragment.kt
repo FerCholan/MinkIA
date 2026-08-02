@@ -41,6 +41,10 @@ class ValidacionFragment : BaseFragment<FragmentAdminValidacionBinding>() {
     private val reporteId: String by lazy { requireArguments().getString(ARG_REPORTE_ID).orEmpty() }
     private var severidad: Severidad = Severidad.MEDIA
 
+    // Estado REAL del reporte que se está moderando. Decide qué acciones tienen
+    // sentido: ver habilitarBotones.
+    private var estado: EstadoReporte = EstadoReporte.RECIBIDO
+
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentAdminValidacionBinding.inflate(inflater, container, false)
 
@@ -80,6 +84,7 @@ class ValidacionFragment : BaseFragment<FragmentAdminValidacionBinding>() {
     /** Pinta los datos REALES de la alerta cargada por id (reemplaza el bloque que antes leía los trece extras). */
     private fun pintarAlerta(a: AlertaAdmin) {
         severidad = a.severidad
+        estado = a.estado
         val ticket = a.ticket.ifBlank { "#MK" }
 
         binding.fotoReporte.permitirAmpliar = true
@@ -223,12 +228,46 @@ class ValidacionFragment : BaseFragment<FragmentAdminValidacionBinding>() {
         AccionModeracion.ANULAR -> R.string.admin_val_anulado_ok
     }
 
+    /**
+     * Qué acciones puede tocar el admin AHORA. Cruza dos cosas:
+     *
+     * - [habilitado]: si hay una acción en vuelo, todo se apaga para no mandar
+     *   dos cambios encima del mismo reporte.
+     * - El ESTADO actual del reporte: una acción que ya se aplicó, o que no
+     *   corresponde al punto del flujo, no se ofrece. Antes se habilitaban las
+     *   cinco siempre, así que un reporte que YA estaba EN_PROCESO seguía
+     *   ofreciendo "Validar (en proceso)": el admin lo tocaba, confirmaba, y
+     *   escribía en Firestore el mismo estado que ya tenía. No rompía nada, pero
+     *   mentía sobre lo que quedaba por hacer, que en una bandeja de moderación
+     *   es justo lo que no puede pasar.
+     *
+     * El flujo es RECIBIDO -> EN_PROCESO -> RESUELTO, con DUPLICADO y ANULADO
+     * como ramas laterales (ver EstadoReporte). De ahí sale la tabla:
+     *
+     * - Validar: SOLO desde RECIBIDO, porque es el paso que lleva a EN_PROCESO.
+     * - Resolver / Duplicado / Anular / Cambiar nivel: mientras el reporte siga
+     *   pendiente. Sobre uno ya cerrado (resuelto, duplicado o anulado) no se
+     *   vuelve a moderar; ese rastro queda como está para la auditoría.
+     */
     private fun habilitarBotones(habilitado: Boolean) {
-        binding.btnResolver.isEnabled = habilitado
+        val pendiente = estado.esPendiente
+
+        // Validar se OCULTA, no se apaga. Los botones de esta pantalla traen el
+        // color y el borde escritos a mano en el XML (android:textColor y
+        // app:strokeColor con un color plano), y eso pisa el color de estado
+        // deshabilitado de Material: apagado se ve EXACTAMENTE igual que
+        // encendido. Un botón que parece disponible y no responde al toque es
+        // peor que el problema original. Escondiéndolo, el admin ve solo lo que
+        // de verdad puede hacer. Como el botón mide 0dp con layout_weight, al
+        // irse deja que "Cambiar nivel" ocupe la fila entera, sin huecos.
+        binding.btnValidar.visibility =
+            if (estado == EstadoReporte.RECIBIDO) View.VISIBLE else View.GONE
+
         binding.btnValidar.isEnabled = habilitado
-        binding.btnNivel.isEnabled = habilitado
-        binding.btnDuplicado.isEnabled = habilitado
-        binding.btnAnular.isEnabled = habilitado
+        binding.btnResolver.isEnabled = habilitado && pendiente
+        binding.btnNivel.isEnabled = habilitado && pendiente
+        binding.btnDuplicado.isEnabled = habilitado && pendiente
+        binding.btnAnular.isEnabled = habilitado && pendiente
     }
 
     private fun colorSev(s: Severidad) = when (s) {

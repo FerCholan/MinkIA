@@ -23,6 +23,7 @@ import com.moviles.minkia.core.aplicarPulsacion
 import com.moviles.minkia.core.recortarEsquinasInferiores
 import com.moviles.minkia.data.model.FocoMapa
 import com.moviles.minkia.data.model.ResumenCiudadano
+import com.moviles.minkia.data.sync.CambiosReportes
 import com.moviles.minkia.databinding.FragmentHomeBinding
 
 /**
@@ -42,6 +43,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     // la que llegue segunda; ver [pintarHeatmap].
     private var mapaPreview: GoogleMap? = null
     private var focos: List<FocoMapa>? = null
+
+    // La primera entrega de CambiosReportes.version es el valor que ya está
+    // puesto, no un cambio: se ignora para no cargar dos veces junto al onResume.
+    private var primerAviso = true
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentHomeBinding.inflate(inflater, container, false)
@@ -75,6 +80,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 pintarHeatmap()
             }
         }
+
+        // Un reporte de la cola puede salir MIENTRAS este Inicio está en pantalla
+        // (típico al cambiar de red): sin este aviso, ni el contador ni el mapa de
+        // calor se enteraban hasta reiniciar la app. Ver CambiosReportes.
+        CambiosReportes.version.observe(viewLifecycleOwner) {
+            if (primerAviso) {
+                primerAviso = false
+            } else {
+                viewModel.cargarResumen()
+                viewModel.cargarFocos()
+            }
+        }
+    }
+
+    /**
+     * Carga el resumen y los focos cada vez que la pantalla vuelve al frente. Es
+     * el ÚNICO camino de carga (el ViewModel ya no carga en su init): un reporte
+     * recién enviado tiene que sumar en "Tus reportes" y aparecer en el mapa de
+     * calor sin obligar a reiniciar la app. Ver ReportesFragment.onResume.
+     */
+    override fun onResume() {
+        super.onResume()
+        viewModel.cargarResumen()
+        viewModel.cargarFocos()
     }
 
     /** Mapa de calor del Inicio: Google Map sin gestos con un heatmap de los focos. */

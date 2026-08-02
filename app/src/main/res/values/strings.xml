@@ -303,7 +303,10 @@
     <string name="detalle_vecinos">%1$d vecinos</string>
     <string name="detalle_seguimiento">Seguimiento</string>
     <string name="detalle_recibido">Recibido</string>
-    <string name="detalle_validado">Validado</string>
+    <!-- Mismo nombre que EstadoReporte.EN_PROCESO.etiqueta y que ve el admin. Antes
+         decía "Validado", un estado que NO existe en el modelo: el vecino leía una
+         palabra, el administrador otra, y el enum una tercera, para lo mismo. -->
+    <string name="detalle_validado">En proceso</string>
     <string name="detalle_resuelto">Resuelto</string>
     <string name="detalle_autor_fmt">Reportado por %1$s</string>
     <string name="detalle_autor_anonimo">Reportado por un vecino</string>
@@ -398,6 +401,8 @@
     <string name="titulo_cerca_tuyo">Cerca de ti</string>
     <string name="btn_reintentar">Reintentar</string>
     <string name="error_generico">No se pudo cargar la información. Toca para reintentar.</string>
+    <string name="error_guardar">No se pudieron guardar los cambios. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="error_mapa">No se pudieron cargar los focos. Revisa tu conexión.</string>
     <string name="notif_vacio">Aún no tienes notificaciones.</string>
 
     <!-- Navegación inferior -->

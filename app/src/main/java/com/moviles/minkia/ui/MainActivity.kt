@@ -47,6 +47,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var insetInferior = 0
     private var enFlujoReporte = false
 
+    // Grafo que se resolvió para el rol de la sesión (0 = todavía sin resolver).
+    // Se guarda en el estado de la instancia para que una recreación no tenga que
+    // volver a esperar a DataStore para armarlo: ver configurarGrafoSegunRol.
+    private var grafoActivo = 0
+
     override fun inflateBinding(inflater: LayoutInflater) = ActivityMainBinding.inflate(inflater)
 
     override fun onViewReady(savedInstanceState: Bundle?) {
@@ -125,7 +130,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         binding.fabReportar.aplicarPulsacion()
 
-        configurarGrafoSegunRol()
+        configurarGrafoSegunRol(savedInstanceState?.getInt(ESTADO_GRAFO, 0) ?: 0)
+    }
+
+    /**
+     * Guarda QUÉ grafo se resolvió, no el rol: es lo único que [onViewReady]
+     * necesita para rearmar la pantalla sin volver a preguntarle a DataStore.
+     * Ver [configurarGrafoSegunRol] para por qué esa diferencia importa.
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ESTADO_GRAFO, grafoActivo)
     }
 
     /**
@@ -135,44 +150,77 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
      * el FAB. [PreferenciasRepository.sesion] es la única fuente de verdad sobre
      * quién está logueado (a diferencia de un extra del Intent, sobrevive a que
      * el sistema mate y recree el proceso), pero leerla es asincrónico
-     * (DataStore), así que todo esto corre dentro de [lifecycleScope]. Durante
-     * ese instante breve el NavHostFragment queda sin grafo asignado y no dibuja
-     * nada, pero el fondo (@color/fondo del root, ver activity_main.xml) ya
-     * cubre toda la pantalla, así que no se ve un frame en blanco.
+     * (DataStore), así que en el arranque en frío esto corre dentro de
+     * [lifecycleScope]. Durante ese instante breve el NavHostFragment queda sin
+     * grafo asignado y no dibuja nada, pero el fondo (@color/fondo del root, ver
+     * activity_main.xml) ya cubre toda la pantalla, así que no se ve un frame en
+     * blanco.
      *
      * El NavHostFragment lo retiene el FragmentManager entre rotaciones (mismo
      * mecanismo que usa AuthActivity.configurarDestinoInicial, ver su KDoc), así
-     * que en cada recreación de la Activity este método vuelve a correr, vuelve
-     * a resolver el mismo grafo para el mismo usuario, y es el propio
-     * NavController quien restaura el back stack guardado en vez de reiniciar en
-     * el destino de partida: rotar la pantalla no devuelve a la pestaña inicial.
+     * que en cada recreación de la Activity este método vuelve a correr y es el
+     * propio NavController quien restaura el back stack guardado en vez de
+     * reiniciar en el destino de partida: rotar la pantalla no devuelve a la
+     * pestaña inicial.
+     *
+     * Pero en esa recreación el grafo NO puede llegar tarde. Leer la sesión
+     * suspende (DataStore), y mientras tanto el FragmentManager ya restauró los
+     * fragments del NavHostFragment y los pone en pantalla en el onStart de esta
+     * misma Activity: si todavía no hay grafo, esos fragments se crean contra un
+     * NavController sin destino actual, y el primero que pida su ViewModel de
+     * grafo (navGraphViewModels, los cuatro pasos del flujo de reporte) muere
+     * con "No destination with ID ... is on the NavController's back stack. The
+     * current destination is null". Rotar el teléfono dentro del flujo de
+     * reporte cerraba la app por esto, no por la cámara.
+     *
+     * Por eso hay dos caminos. Con estado guardado ([grafoGuardado] != 0) el rol
+     * ya se resolvió antes de rotar: el grafo se aplica ACÁ MISMO, sincrónico,
+     * dentro de onCreate, antes de que se restaure un solo fragment. Sin estado
+     * guardado (arranque en frío) no hay nada que restaurar todavía, así que el
+     * camino asincrónico es seguro.
      */
-    private fun configurarGrafoSegunRol() {
+    private fun configurarGrafoSegunRol(grafoGuardado: Int) {
+        if (grafoGuardado != 0) {
+            aplicarGrafo(grafoGuardado)
+            return
+        }
         lifecycleScope.launch {
             val usuario = prefs.sesion.first()
-            val navHost = supportFragmentManager.findFragmentById(R.id.navHostMain) as NavHostFragment
-            val nav = navHost.navController
+            aplicarGrafo(
+                if (usuario?.esAdmin == true) R.navigation.nav_admin else R.navigation.nav_ciudadano
+            )
+        }
+    }
 
-            if (usuario?.esAdmin == true) {
-                nav.graph = nav.navInflater.inflate(R.navigation.nav_admin)
-                binding.bottomNav.menu.clear()
-                binding.bottomNav.inflateMenu(R.menu.admin_nav_menu)
-                binding.bottomNav.setupWithNavController(nav)
-                // El FAB de "Reportar" es una acción del ciudadano (C09): el admin
-                // modera lo que otros reportan, no reporta. El resto de la lógica
-                // del FAB (posicionamiento, pop, elevación), arriba, corre igual
-                // para los dos roles; acá solo se lo oculta.
-                binding.fabReportar.visibility = View.GONE
-            } else {
-                nav.graph = nav.navInflater.inflate(R.navigation.nav_ciudadano)
-                binding.bottomNav.menu.clear()
-                binding.bottomNav.inflateMenu(R.menu.bottom_nav_menu)
-                binding.bottomNav.setupWithNavController(nav)
-                animarSeleccionEnCadaCambioDeDestino(nav)
-                ocultarNavegacionEnFlujoReporte(nav)
-                cablearFab(nav)
-                mostrarCoachMarksSiCorresponde()
-            }
+    /**
+     * Arma el NavHostFragment, el menú del nav y lo que cuelgue de ellos para el
+     * [grafo] ya resuelto. Se llama UNA sola vez por instancia de la Activity
+     * (ver [configurarGrafoSegunRol]): volver a inflar el grafo sobre un
+     * NavController que ya tiene uno reemplazaría el back stack restaurado por
+     * el destino inicial, que es justo lo que rotar no debe hacer.
+     */
+    private fun aplicarGrafo(grafo: Int) {
+        grafoActivo = grafo
+        val navHost = supportFragmentManager.findFragmentById(R.id.navHostMain) as NavHostFragment
+        val nav = navHost.navController
+        nav.graph = nav.navInflater.inflate(grafo)
+        binding.bottomNav.menu.clear()
+
+        if (grafo == R.navigation.nav_admin) {
+            binding.bottomNav.inflateMenu(R.menu.admin_nav_menu)
+            binding.bottomNav.setupWithNavController(nav)
+            // El FAB de "Reportar" es una acción del ciudadano (C09): el admin
+            // modera lo que otros reportan, no reporta. El resto de la lógica
+            // del FAB (posicionamiento, pop, elevación), arriba, corre igual
+            // para los dos roles; acá solo se lo oculta.
+            binding.fabReportar.visibility = View.GONE
+        } else {
+            binding.bottomNav.inflateMenu(R.menu.bottom_nav_menu)
+            binding.bottomNav.setupWithNavController(nav)
+            animarSeleccionEnCadaCambioDeDestino(nav)
+            ocultarNavegacionEnFlujoReporte(nav)
+            cablearFab(nav)
+            mostrarCoachMarksSiCorresponde()
         }
     }
 
@@ -254,4 +302,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
+    private companion object {
+        /** Clave del grafo resuelto dentro del estado guardado de la instancia. */
+        const val ESTADO_GRAFO = "estado_grafo_rol"
+    }
 }

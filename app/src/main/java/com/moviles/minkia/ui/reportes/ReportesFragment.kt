@@ -15,6 +15,7 @@ import com.moviles.minkia.core.aplicarInsetSuperior
 import com.moviles.minkia.core.mostrarSkeleton
 import com.moviles.minkia.ui.detalle.DetalleFragment
 import com.moviles.minkia.data.model.MiReporte
+import com.moviles.minkia.data.sync.CambiosReportes
 import com.moviles.minkia.databinding.FragmentReportesBinding
 
 /**
@@ -28,6 +29,10 @@ class ReportesFragment : BaseFragment<FragmentReportesBinding>() {
     private val adapter = MiReporteAdapter { vista, r -> abrirDetalle(vista, r) }
 
     private var todos: List<MiReporte> = emptyList()
+
+    // La primera entrega de CambiosReportes.version es el valor que ya está
+    // puesto, no un cambio: se ignora para no cargar dos veces junto al onResume.
+    private var primerAviso = true
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentReportesBinding.inflate(inflater, container, false)
@@ -70,6 +75,28 @@ class ReportesFragment : BaseFragment<FragmentReportesBinding>() {
                 }
             }
         }
+
+        // Un reporte de la cola puede salir MIENTRAS esta lista está en pantalla
+        // (típico al cambiar de red): sin este aviso no aparecía hasta reiniciar
+        // la app. Ver CambiosReportes.
+        CambiosReportes.version.observe(viewLifecycleOwner) {
+            if (primerAviso) primerAviso = false else viewModel.cargar()
+        }
+    }
+
+    /**
+     * Carga el historial cada vez que la pantalla vuelve al frente. Es el ÚNICO
+     * camino de carga (el ViewModel ya no carga en su init), así que corre igual
+     * al entrar y al volver.
+     *
+     * Hace falta porque al navegar al flujo de reporte este fragment NO se
+     * destruye: queda en el back stack (FragmentNavigator hace replace +
+     * addToBackStack) y al volver reaparece con su ViewModel y su LiveData
+     * reemitiendo el último valor, o sea la lista de ANTES del reporte nuevo.
+     */
+    override fun onResume() {
+        super.onResume()
+        viewModel.cargar()
     }
 
     /** 0 = Todos, 1 = Pendientes, 2 = Resueltos. */

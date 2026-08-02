@@ -63,7 +63,17 @@ service cloud.firestore {
       allow read: if request.auth != null;
 
       // Editar. El DUEÑO solo toca lo que él mismo escribió a mano, más la URL de la
-      // foto (el reintento de la cola puede resubirla y obtener otra distinta).
+      // foto (el reintento de la cola puede resubirla y obtener otra distinta) y su
+      // propio nombre visible.
+      //
+      // Sobre `autor`: es el nombre con el que el vecino firma el reporte, y él ya
+      // lo controla desde "Mis datos" (nombre real o apodo, según su preferencia de
+      // privacidad). Se guarda dentro del reporte porque la regla de `usuarios` no
+      // deja que un vecino lea el perfil de otro, así que no hay forma de
+      // resolverlo al leer. Cuando cambia su apodo, la app reescribe este campo en
+      // sus reportes (ver PerfilRepository.resincronizarAutorDeMisReportes); sin
+      // tenerlo en esta lista, ese cambio quedaría rechazado y el apodo no se vería
+      // nunca. No abre nada nuevo: el dueño ya podía elegir ese texto al reportar.
       //
       // Antes la regla solo prohibía cambiar userId, estado y severidad, o sea que el
       // dueño podía reescribir su ticket, su nivel de autor, la confianza que reportó
@@ -76,7 +86,7 @@ service cloud.firestore {
       // documento ya existe en el servidor y no debe volver a RECIBIDO.
       allow update: if (request.auth != null
                         && resource.data.userId == request.auth.uid
-                        && camposTocados().hasOnly(['descripcion', 'tipo', 'fotoUrl']))
+                        && camposTocados().hasOnly(['descripcion', 'tipo', 'fotoUrl', 'autor']))
                     || esAdmin();
 
       // Borrar: SOLO el admin. El vecino ya no elimina su propio reporte: se conserva

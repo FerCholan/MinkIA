@@ -280,8 +280,13 @@
                     android:textColorHint="@color/texto_secundario" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Banner offline -->
+            <!-- Banner offline. Arranca OCULTO: lo muestra FormularioFragment solo
+                 cuando de verdad no hay red (ver actualizarBannerOffline). Venía sin
+                 id y sin visibility, o sea SIEMPRE visible: el vecino con datos
+                 móviles leía "sin conexión" mientras navegaba perfecto, y creía que
+                 su reporte no se había enviado. -->
             <TextView
+                android:id="@+id/bannerOffline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -290,7 +295,8 @@
                 android:padding="14dp"
                 android:text="@string/form_banner_offline"
                 android:textColor="@color/naranja_terracota_osc"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="gone" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEnviar"

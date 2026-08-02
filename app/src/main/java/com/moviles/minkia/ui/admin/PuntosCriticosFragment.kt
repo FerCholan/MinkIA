@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -48,6 +49,11 @@ class PuntosCriticosFragment : BaseFragment<FragmentAdminPuntosBinding>() {
         mapaFragment.getMapAsync { m ->
             mapa = m
             m.moveCamera(CameraUpdateFactory.newLatLngZoom(CHIMBOTE, 12.5f))
+            // Tocar la ventanita de un marcador abre el reporte para moderarlo,
+            // el mismo gesto que ya existía en el mapa del ciudadano.
+            m.setOnInfoWindowClickListener { marcador ->
+                (marcador.tag as? FocoMapa)?.let { abrirValidacion(it) }
+            }
             // El mapa puede quedar listo antes o después que los focos del ViewModel:
             // repinta con lo que ya haya (aplicarFiltro no hace nada con listas vacías).
             aplicarFiltro(binding.etBuscar.text?.toString().orEmpty())
@@ -104,14 +110,39 @@ class PuntosCriticosFragment : BaseFragment<FragmentAdminPuntosBinding>() {
         val m = mapa ?: return
         m.clear()
         lista.forEach { foco ->
-            m.addMarker(
+            val marcador = m.addMarker(
                 MarkerOptions()
                     .position(LatLng(foco.latitud, foco.longitud))
                     .title(foco.direccion.ifBlank { "Foco de basura" })
                     .snippet(foco.tipo)
                     .icon(BitmapDescriptorFactory.defaultMarker(hueSeveridad(foco.severidad)))
             )
+            // El foco viaja COLGADO del marcador: es lo que permite saber, al
+            // tocar su ventanita, cuál de todos se tocó. Sin esto el marcador es
+            // un dibujo sin identidad y el mapa del admin quedaba muerto: se
+            // abría el globo con la dirección y ahí terminaba todo, mientras que
+            // en el mapa del ciudadano el mismo gesto abre el reporte.
+            marcador?.tag = foco
         }
+    }
+
+    /**
+     * Abre el reporte tocado para moderarlo. El admin va a Validación (SU pantalla
+     * de detalle: además de mostrar el reporte, permite resolver, anular o cambiar
+     * el nivel), mientras que el mismo gesto en el mapa del ciudadano abre el
+     * Detalle, que es de solo lectura. Mismo gesto, la pantalla que le sirve a cada
+     * rol.
+     *
+     * Viaja SOLO el id del documento, igual que desde la bandeja (ver
+     * AlertasFragment.abrirValidacion): [FocoMapa.id] ya ES el id real del
+     * documento en Firestore, así que Validación puede pedir el reporte entero con
+     * eso y nada más.
+     */
+    private fun abrirValidacion(foco: FocoMapa) {
+        findNavController().navigate(
+            R.id.action_puntos_a_validacion,
+            Bundle().apply { putString(ValidacionFragment.ARG_REPORTE_ID, foco.id) }
+        )
     }
 
     private fun pintarZonas(lista: List<ZonaAfectada>) {

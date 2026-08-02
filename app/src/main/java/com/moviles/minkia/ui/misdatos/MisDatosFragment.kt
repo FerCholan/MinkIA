@@ -75,8 +75,10 @@ class MisDatosFragment : BaseFragment<FragmentMisDatosBinding>() {
                         binding.btnGuardar.isEnabled = true
                     }
                 }
+                // Falló GUARDAR, no cargar: el aviso genérico ("No se pudo cargar
+                // la información") mandaba a buscar el problema al lado equivocado.
                 is UiState.Error -> {
-                    Toast.makeText(requireContext(), R.string.error_generico, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), R.string.error_guardar, Toast.LENGTH_LONG).show()
                     binding.btnGuardar.isEnabled = true
                 }
             }

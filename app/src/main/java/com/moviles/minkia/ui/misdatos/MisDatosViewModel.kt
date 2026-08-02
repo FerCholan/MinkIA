@@ -90,6 +90,18 @@ class MisDatosViewModel(
                 repository.guardarDni(dni)
                 repository.guardarNickname(apodo)
                 repository.guardarUsarApodo(usarApodo && apodo.isNotEmpty())
+
+                // El nombre que se muestra en los reportes es una foto tomada al
+                // crearlos, así que cambiar el apodo acá no se ve por ningún lado
+                // hasta que se propaga. Va DESPUÉS de las tres escrituras para
+                // leer el nombre visible ya actualizado.
+                //
+                // En runCatching a propósito: si esto falla (red que se corta a
+                // mitad), el perfil YA quedó guardado, y decirle al vecino que no
+                // se guardó nada sería mentirle. Los reportes se re-sincronizan
+                // solos la próxima vez que toque Guardar.
+                runCatching { repository.resincronizarAutorDeMisReportes() }
+
                 ResultadoGuardar.Guardado
             }
         }
